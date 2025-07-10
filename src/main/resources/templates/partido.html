@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Crear Partido de Pádel</title>
+    <style>
+        :root {
+            --color-fondo: #f5f7fa;
+            --color-azul: #3440b4;
+            --color-verde: #33b633;
+            --color-texto: #ffffff;
+            --color-borde: #f5f7fa;
+        }
+        /* Estilos básicos para que se vea un poco mejor */
+        body {
+            font-family: Arial, sans-serif;
+            background-image: url('/images/background_partido.jpg');
+            background-size: cover;
+            margin: 0;
+            padding: 20px;
+            display: flex;
+            justify-content: left;
+            align-items: center;
+            min-height: 100vh;
+        }
+        .container {
+            background-color: var(--color-azul); /* Azul de fondo */
+            padding: 30px;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            width: 100%;
+            max-width: 500px;
+        }
+        h1 {
+            text-align: center;
+            color: #fffdfd;
+            margin-bottom: 25px;
+        }
+        .form-group {
+            margin-bottom: 18px;
+        }
+        label {
+            display: block;
+            margin-bottom: 8px;
+            color: #fdfdfd;
+            font-weight: bold;
+        }
+        input[type="text"],
+        input[type="date"],
+        input[type="time"],
+        input[type="number"],
+        select,
+        textarea {
+            width: calc(100% - 20px); /* Ajuste para el padding */
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            box-sizing: border-box; /* Incluir padding y borde en el ancho */
+            font-size: 16px;
+        }
+        textarea {
+            resize: vertical;
+            min-height: 80px;
+        }
+        .button-container {
+            text-align: center;
+            margin-top: 30px;
+        }
+        button {
+            background-color: var(--color-verde);
+            color: white;
+            padding: 12px 25px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 18px;
+            transition: background-color 0.3s ease;
+        }
+        button:hover {
+            background-color: #0056b3;
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <h1>Crear Partido de Pádel</h1>
+    <form th:action="@{/createMatch}" method="post">
+        <div class="form-group">
+            <label for="nombrePartido">Nombre del Partido:</label>
+            <input type="text" id="nombrePartido" name="nombrePartido" placeholder="Ej: Partido casual en La Pista" required>
+        </div>
+
+        <div class="form-group">
+            <label for="fecha">Fecha:</label>
+            <input type="date" id="fecha" name="fecha" required>
+        </div>
+
+        <div class="form-group" >
+            <label for="hora">Hora:</label>
+            <input type="time" id="hora" name="hora" required>
+        </div>
+
+        <div class="form-group">
+            <label for="club">Club:</label>
+            <select name="club" id="club" required>
+                <option value="">Selecciona un club</option>
+                <option value="La pala">La pala</option>
+                <option value="El Parche">El Parche</option>
+                <option value="Locos">Locos</option>
+                <option value="Padel Point">Padel Point</option>
+            </select>
+        </div>
+
+        <div class="form-group">
+            <label for="nivelJuego">Nivel de Juego Requerido:</label>
+            <select id="nivelJuego" name="nivelJuego" required>
+                <option value="">Selecciona un nivel</option>
+                <option value="iniciacion">Iniciación (6)</option>
+                <option value="intermedio">Intermedio (5 a 4)</option>
+                <option value="alto">Alto (3 a 2)</option>
+                <option value="avanzado">Avanzado (1 a 2)</option>
+            </select>
+        </div>
+
+        <div class="form-group">
+            <label for="cancha">Seleccionar la Cancha:</label>
+            <select id="cancha" name="cancha" required>
+                <option value="">Selecciona una cancha</option>
+                <option value="cancha1">Cancha 1</option>
+                <option value="cancha2">Cancha 2</option>
+                <option value="cancha3">Cancha 3</option>
+                <option value="cancha4">Cancha 4</option>
+            </select>
+        </div>
+
+
+
+        <div class="button-container">
+            <button type="submit">Crear Partido</button>
+        </div>
+    </form>
+</div>
+</body>
+</html>

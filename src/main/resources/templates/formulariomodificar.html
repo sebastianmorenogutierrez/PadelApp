@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>Editar Perfil</title>
+    <style>
+        body {
+          font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+          background: linear-gradient(135deg, #2c3e50, #3440b4);
+          color: #fff; display: flex; flex-direction: column;
+          align-items: center; justify-content: center; min-height: 100vh;
+          padding: 20px;
+        }
+        .form-container {
+          background-color: rgba(0, 0, 0, 0.4);
+          padding: 25px; border-radius: 12px;
+          box-shadow: 0 6px 15px rgba(0, 0, 0, 0.3);
+          width: 100%; max-width: 420px;
+        }
+        h1 { margin-bottom: 25px; font-size: 2rem; }
+        label { font-weight: bold; color: #cfd8ff; margin-top: 10px; display: block; }
+        input {
+          width: 100%; padding: 8px;
+          border-radius: 6px; border: none; margin-bottom: 15px;
+          font-size: 1rem;
+        }
+        button {
+          padding: 10px 20px; font-size: 1rem;
+          border: none; border-radius: 6px;
+          background-color: #28a745; color: white;
+          cursor: pointer;
+        }
+        button:hover { background-color: #218838; }
+    </style>
+</head>
+<body>
+<h1>Editar Perfil de Usuario</h1>
+
+<form th:action="@{/modificar}" method="post" class="form-container" th:object="${usuario}">
+
+    <input type="hidden" th:field="*{individuo.id_individuo}" />
+
+    <label>Nombre:</label>
+    <input th:field="*{individuo.nombre}" type="text" required />
+
+    <label>Apellido:</label>
+    <input th:field="*{individuo.apellido}" type="text" required />
+
+    <label>Correo:</label>
+    <input th:field="*{individuo.correo}" type="email" required />
+
+    <label>Teléfono:</label>
+    <input th:field="*{individuo.telefono}" type="text" />
+
+    <label>Edad:</label>
+    <input th:field="*{individuo.edad}" type="number" min="0" />
+
+    <label>Cédula:</label>
+    <input th:field="*{individuo.cedula}" type="text" />
+
+    <button type="submit">Guardar Cambios</button>
+
+</form>
+</body>
+</html>

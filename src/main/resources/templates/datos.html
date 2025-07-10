@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Perfil del Usuario</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background: linear-gradient(135deg, #2c3e50, #3440b4);
+      color: #fff; display: flex; flex-direction: column;
+      align-items: center; justify-content: center;
+      min-height: 100vh; padding: 20px;
+    }
+    h1 {
+      margin-bottom: 30px; font-size: 2.2rem;
+      text-shadow: 1px 1px 4px rgba(0, 0, 0, 0.4);
+    }
+    .perfil-container {
+      background-color: rgba(0, 0, 0, 0.4);
+      padding: 25px 30px; border-radius: 12px;
+      box-shadow: 0 6px 15px rgba(0, 0, 0, 0.3);
+      width: 100%; max-width: 420px;
+    }
+    .perfil-container label {
+      font-weight: bold; margin-top: 15px;
+      display: block; font-size: 0.95rem; color: #cfd8ff;
+    }
+    .perfil-container p {
+      font-size: 1rem; margin-bottom: 10px; color: #ffffff;
+    }
+    .button-container {
+      display: flex; justify-content: center;
+      gap: 20px; margin-top: 25px;
+      flex-wrap: wrap;
+    }
+    button {
+      padding: 10px 20px; font-size: 1rem;
+      border: none; border-radius: 6px; cursor: pointer;
+      transition: background-color 0.3s ease;
+    }
+    #modificar-btn { background-color: #28a745; color: white; }
+    #modificar-btn:hover { background-color: #218838; }
+    #volver-btn { background-color: #17a2b8; color: white; }
+    #volver-btn:hover { background-color: #138496; }
+    #eliminar-btn { background-color: #dc3545; color: white; }
+    #eliminar-btn:hover { background-color: #c82333; }
+  </style>
+</head>
+<body>
+<h1 th:text="|Perfil de ${usuario.individuo.nombre}|">Perfil del Usuario</h1>
+
+<div class="perfil-container">
+  <label>Nombre:</label>
+  <p th:text="${usuario.individuo.nombre}">Cargando...</p>
+
+  <label>Apellido:</label>
+  <p th:text="${usuario.individuo.apellido}">Cargando...</p>
+
+  <label>Correo:</label>
+  <p th:text="${usuario.individuo.correo}">Cargando...</p>
+
+  <label>Teléfono:</label>
+  <p th:text="${usuario.individuo.telefono}">Cargando...</p>
+
+  <label>Edad:</label>
+  <p th:text="${usuario.individuo.edad}">Cargando...</p>
+
+  <label>Cédula:</label>
+  <p th:text="${usuario.individuo.cedula}">Cargando...</p>
+</div>
+
+<div class="button-container">
+  <a th:href="@{/modificar}" style="text-decoration: none;">
+    <button id="modificar-btn">Modificar</button>
+  </a>
+  <a th:href="@{/indice}" style="text-decoration: none;">
+    <button id="volver-btn">Volver</button>
+  </a>
+  <a th:href="@{/eliminarCuenta}" onclick="return confirm('¿Estás seguro de que deseas eliminar tu cuenta? Esta acción no se puede deshacer.')" style="text-decoration: none;">
+    <button id="eliminar-btn">Eliminar Cuenta</button>
+  </a>
+</div>
+</body>
+</html>

@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tu Club PadelApp | La Pasión por el Padel</title>
+    <style>
+        :root {
+            --color-fondo: #f5f7fa;
+            --color-azul: #3440b4;
+            --color-verde: #33b633;
+            --color-texto: #212529;
+            --color-borde: #f5f7fa;
+        }
+
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            background-image: url('/images/padel_principal.png');
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+            margin: 0;
+            padding: 0;
+            color: var(--color-texto);
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+        }
+
+        header {
+            background-color: var(--color-azul);
+            color: white;
+            padding: 20px 0;
+            text-align: center;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+        }
+
+        header h1 {
+            font-size: 26px;
+            margin: 0;
+        }
+
+        main {
+            flex: 1;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 40px 20px;
+        }
+
+        .content-box {
+            background-color: var(--color-azul); /* Azul de fondo */
+            color: #ffffff; /* Texto claro */
+            padding: 40px;
+            border-radius: 20px;
+            max-width: 600px;
+            width: 100%;
+            box-shadow: 0 0 30px rgba(0,0,0,0.15);
+            text-align: center;
+        }
+
+        .content-box h1 {
+            font-size: 32px;
+            margin-bottom: 20px;
+            color: #ffffff; /* Título en blanco */
+        }
+
+        .content-box p {
+            font-size: 18px;
+            margin-bottom: 30px;
+            color: #f0f0f0; /* Gris claro para contraste suave */
+        }
+
+        .button-group {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            flex-wrap: wrap;
+        }
+
+        .button-group a {
+            padding: 12px 24px;
+            background-color: #ffffff; /* Botones en blanco */
+            color: var(--color-azul); /* Texto en azul */
+            text-decoration: none;
+            font-weight: bold;
+            border-radius: 6px;
+            font-size: 16px;
+            transition: background-color 0.3s ease, color 0.3s ease;
+            min-width: 140px;
+            text-align: center;
+        }
+
+        .button-group a:hover {
+            background-color: var(--color-verde);
+            color: white;
+        }
+
+        footer {
+            background-color: var(--color-azul);
+            color: white;
+            text-align: center;
+            padding: 20px;
+            font-size: 0.95em;
+        }
+    </style>
+</head>
+<body>
+<header>
+    <h1>Tu Club PadelApp</h1>
+</header>
+
+<main>
+    <div class="content-box">
+        <h1>Bienvenido a Tu Club PadelApp</h1>
+        <p>¡Conéctate con la pasión por el pádel! Elige una opción para continuar:</p>
+
+        <div class="button-group">
+            <a th:href="@{/login}">Iniciar Sesión</a>
+            <a th:href="@{/registro}">Registrarse</a>
+        </div>
+    </div>
+</main>
+
+<footer>
+    &copy; 2025 Tu Club de Pádel. Todos los derechos reservados.
+</footer>
+</body>
+</html>

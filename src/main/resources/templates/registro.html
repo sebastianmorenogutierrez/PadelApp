@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Registro - PadelApp</title>
+    <style>
+        :root {
+            --color-fondo: ##f5f7fa;
+            --color-azul: #3440b4;
+            --color-verde: #33b633;
+            --color-texto: #212529;
+            --color-borde: #ced4da;
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            background-image: url('/images/cancha_padel.jpg');
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+            margin: 0;
+            padding: 0;
+        }
+
+        .container {
+            max-width: 500px;
+            margin: 60px auto;
+            padding: 40px;
+            background-color: #739EF5;
+            border-radius: 20px;
+            box-shadow: 0 0 30px rgba(0,0,0,0.2);
+            color: var(--color-texto);
+        }
+
+        h2 {
+            text-align: center;
+            margin-bottom: 30px;
+            color: var(--color-azul);
+        }
+
+        label {
+            font-weight: bold;
+            display: block;
+            margin-top: 15px;
+            margin-bottom: 5px;
+        }
+
+        input, select {
+            width: 100%;
+            padding: 10px;
+            border-radius: 6px;
+            border: 1px solid var(--color-borde);
+            font-size: 15px;
+        }
+
+        select {
+            background-color: white;
+        }
+
+        button {
+            margin-top: 30px;
+            width: 100%;
+            padding: 12px;
+            background-color: var(--color-azul);
+            border: none;
+            color: white;
+            font-size: 16px;
+            font-weight: bold;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        button:hover {
+            background-color: var(--color-verde);
+        }
+
+        hr {
+            margin: 25px 0;
+            border: none;
+            border-top: 1px solid var(--color-borde);
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                margin: 30px 15px;
+                padding: 30px 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <h2>Formulario de Registro</h2>
+    <form th:action="@{/registro}" th:object="${usuario}" method="post">
+        <label for="nombreUsuario">Nombre de Usuario</label>
+        <input type="text" id="nombreUsuario" th:field="*{nombreUsuario}" required>
+
+        <label for="pass_usuario">Contraseña</label>
+        <input type="password" id="pass_usuario" th:field="*{pass_usuario}" required>
+
+        <hr>
+
+        <label for="nombreIndividuo">Nombre</label>
+        <input type="text" id="nombreIndividuo" th:field="*{individuo.nombre}" required>
+
+        <label for="apellidoIndividuo">Apellido</label>
+        <input type="text" id="apellidoIndividuo" th:field="*{individuo.apellido}" required>
+
+        <label for="cedulaIndividuo">Cédula</label>
+        <input type="number" id="cedulaIndividuo" th:field="*{individuo.cedula}" required>
+
+        <label for="correoIndividuo">Correo Electrónico</label>
+        <input type="email" id="correoIndividuo" th:field="*{individuo.correo}" required>
+
+        <label for="telefonoIndividuo">Teléfono</label>
+        <input type="text" id="telefonoIndividuo" th:field="*{individuo.telefono}" required>
+
+        <label for="edadIndividuo">Edad</label>
+        <input type="number" id="edadIndividuo" th:field="*{individuo.edad}" required>
+
+        <hr>
+
+        <label for="perfil">Perfil</label>
+        <select id="perfil" th:field="*{perfil}" required>
+            <option th:each="p : ${perfiles}" th:value="${p.id_perfil}" th:text="${p.descripcion_perfil}"></option>
+        </select>
+
+        <button type="submit">Registrarse</button>
+    </form>
+</div>
+</body>
+</html>
