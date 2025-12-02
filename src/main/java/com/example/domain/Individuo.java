@@ -3,8 +3,9 @@ package com.example.domain;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.Email;
-import lombok.Data;
-
+import jakarta.validation.constraints.NotNull; // Importado para validación numérica
+import jakarta.validation.constraints.Min;   // Importado para validación numérica
+import lombok.Data; // Manteniendo Lombok
 import java.io.Serializable;
 
 @Data
@@ -31,13 +32,22 @@ public class Individuo implements Serializable {
     @Email(message = "Debe ser un correo válido")
     private String correo;
 
-    @NotEmpty(message = "La edad no puede estar vacía")
-    private String edad;
+    // ✅ CORRECCIÓN: Edad cambiada a Integer con validaciones numéricas
+    @NotNull(message = "La edad no puede estar vacía")
+    @Min(value = 10, message = "La edad mínima es 10 años")
+    private Integer edad; // ⬅️ Tipo de dato corregido
 
     @NotEmpty(message = "La cédula no puede estar vacía")
     private String cedula;
 
     private boolean eliminado = false;
+
+    /*
+     * ----------------------------------------
+     * Getters y Setters (Necesarios si no usas @Data,
+     * o si quieres anular la implementación de Lombok)
+     * ----------------------------------------
+     */
 
     public Long getId_individuo() {
         return id_individuo;
@@ -79,11 +89,12 @@ public class Individuo implements Serializable {
         this.correo = correo;
     }
 
-    public String getEdad() {
+    // ✅ Getter y Setter de Edad ahora usan Integer
+    public Integer getEdad() {
         return edad;
     }
 
-    public void setEdad(String edad) {
+    public void setEdad(Integer edad) {
         this.edad = edad;
     }
 

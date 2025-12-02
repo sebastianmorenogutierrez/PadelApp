@@ -2,34 +2,461 @@
 <html lang="es" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <title>Modificar Individuo</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Editar Jugador - Sistema de Gestión</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        /* Estilos CSS de tu plantilla base de jugadores (Se omite por brevedad aquí, pero DEBE ser el mismo que el proporcionado en el prompt) */
+        /* Incluir aquí TODO el bloque <style> de tu archivo original */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            color: #333;
+        }
+
+        .container {
+            display: flex;
+            min-height: 100vh;
+        }
+
+        /* Sidebar */
+        .sidebar {
+            width: 280px;
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            padding: 2rem 0;
+            box-shadow: 4px 0 20px rgba(0, 0, 0, 0.1);
+            border-right: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .logo {
+            text-align: center;
+            padding: 0 2rem 2rem;
+            border-bottom: 1px solid rgba(102, 126, 234, 0.2);
+            margin-bottom: 2rem;
+        }
+
+        .logo h2 {
+            color: #667eea;
+            font-size: 1.5rem;
+            font-weight: 700;
+        }
+
+        /* Menu sections */
+        .menu-section-title {
+            padding: 0 2rem 0.5rem;
+            color: #888;
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            font-weight: 600;
+        }
+
+        .menu-item {
+            display: block;
+            padding: 1rem 2rem;
+            text-decoration: none;
+            color: #555;
+            transition: all 0.3s ease;
+            border-left: 4px solid transparent;
+            position: relative;
+        }
+
+        .menu-item:hover,
+        .menu-item.active {
+            background: linear-gradient(90deg, rgba(102, 126, 234, 0.1) 0%, rgba(118, 75, 162, 0.05) 100%);
+            color: #667eea;
+            border-left-color: #667eea;
+            transform: translateX(5px);
+        }
+
+        .menu-item i {
+            margin-right: 0.8rem;
+            width: 20px;
+            text-align: center;
+        }
+
+        .menu-item.accent {
+            background: linear-gradient(135deg, #33b633 0%, #2ca52c 100%);
+            color: white;
+            border-radius: 0 25px 25px 0;
+            margin: 0.5rem 0;
+        }
+
+        .menu-item.accent:hover {
+            background: linear-gradient(135deg, #2ca52c 0%, #228b22 100%);
+            transform: translateX(10px);
+        }
+
+        .menu-item.danger {
+            background: linear-gradient(135deg, #ff4d4d 0%, #e03c3c 100%);
+            color: white;
+            border-radius: 0 25px 25px 0;
+            margin-top: 1rem;
+        }
+
+        .menu-item.danger:hover {
+            background: linear-gradient(135deg, #e03c3c 0%, #cc2929 100%);
+            transform: translateX(10px);
+        }
+
+        /* Main Content */
+        .main-content {
+            flex: 1;
+            padding: 2rem;
+            overflow-y: auto;
+        }
+
+        .content-header {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            padding: 2rem;
+            border-radius: 20px;
+            margin-bottom: 2rem;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            animation: fadeInUp 0.6s ease;
+        }
+
+        .content-header h1 {
+            color: #667eea;
+            font-size: 2.5rem;
+            margin-bottom: 0.5rem;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .content-header p {
+            color: #666;
+            font-size: 1.1rem;
+        }
+
+        /* Form Container (New/Modified) */
+        .form-container {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            padding: 2rem;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            animation: fadeInUp 0.6s ease 0.2s both;
+        }
+
+        .form-title {
+            font-size: 1.8rem;
+            font-weight: 600;
+            color: #764ba2;
+            margin-bottom: 1.5rem;
+            border-bottom: 2px solid #eee;
+            padding-bottom: 0.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.8rem;
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .form-label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 600;
+            color: #555;
+            font-size: 1rem;
+        }
+
+        .form-input, .form-select {
+            width: 100%;
+            padding: 0.8rem 1rem;
+            border: 2px solid rgba(102, 126, 234, 0.2);
+            border-radius: 10px;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+            background: rgba(255, 255, 255, 0.8);
+            box-sizing: border-box;
+        }
+
+        .form-input:focus, .form-select:focus {
+            outline: none;
+            border-color: #667eea;
+            background: white;
+            box-shadow: 0 0 15px rgba(102, 126, 234, 0.2);
+        }
+
+        /* Buttons */
+        .btn {
+            padding: 0.8rem 1.5rem;
+            border: none;
+            border-radius: 10px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .btn-save {
+            background: linear-gradient(135deg, #33b633 0%, #2ca52c 100%);
+            color: white;
+            box-shadow: 0 4px 10px rgba(51, 182, 51, 0.3);
+        }
+
+        .btn-save:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 15px rgba(51, 182, 51, 0.5);
+        }
+
+        .btn-cancel {
+            background: #ccc;
+            color: #333;
+        }
+
+        .btn-cancel:hover {
+            background: #bbb;
+        }
+
+        /* Utility */
+        .button-group {
+            display: flex;
+            justify-content: flex-end;
+            gap: 1rem;
+            margin-top: 2rem;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .container {
+                flex-direction: column;
+            }
+
+            .sidebar {
+                width: 100%;
+                padding: 1rem 0;
+            }
+
+            .main-content {
+                padding: 1rem;
+            }
+
+            .content-header h1 {
+                font-size: 2rem;
+            }
+
+            .form-title {
+                font-size: 1.5rem;
+            }
+        }
+
+        /* Animations */
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+    </style>
 </head>
 <body>
-    <h1>Modificar Individuo</h1><br>
-    <a th:href="@{/indice}">Regresar</a>
-    <br>
-    <form th:action="@{/salvar}" method="post" th:object="${individuo}">
-        <label>Nombre:</label>
-        <input type="text" name="nombre" th:field="*{nombre}">
-        <span th:if="${#fields.hasErrors('nombre')}" th:errores="*{nombre}">Error en Nombre</span>
-        <br>
-        <label>Apellido:</label>
-        <input type="text" name="apellido" th:field="*{apellido}">
-        <span th:if="${#fields.hasErrors('apellido')}" th:errores="*{apellido}">Error en Apellido</span>
-        <br>
-        <label>edad:</label>
-        <input type="number" name="edad" th:field="*{edad}">
-        <span th:if="${#fields.hasErrors('edad')}" th:errores="*{edad}">Error en Edad</span>
-        <br>
-        <label>correo:</label>
-        <input type="email" name="correo" th:field="*{correo}">
-        <span th:if="${#fields.hasErrors('correo')}" th:errores="*{correo}">Error en Correo</span>
-        <br>
-        <label>Telefono:</label>
-        <input type="tel" name="Telefono" th:field="*{telefono}">
-        <span th:if="${#fields.hasErrors('Telefono')}" th:errores="*{telefono}">Error en Telefono</span>
-        <br>
-        <input  type="submit" name="salvar" value="Modificar">
-    </form>
+<div class="container">
+    <nav class="sidebar">
+        <div class="logo">
+            <h2><i class="fas fa-trophy"></i> Sistema</h2>
+        </div>
+
+        <div class="menu-section-title">Navegación Principal</div>
+        <a th:href="@{/indice}" class="menu-item">
+            <i class="fas fa-home"></i> Inicio
+        </a>
+
+        <div class="menu-section-title" style="margin-top: 2rem;">Gestión Principal</div>
+        <a th:href="@{/partido}" class="menu-item">
+            <i class="fas fa-gamepad"></i> Partidos
+        </a>
+        <a th:href="@{/equipo}" class="menu-item">
+            <i class="fas fa-users"></i> Equipos
+        </a>
+        <a th:href="@{/torneo}" class="menu-item">
+            <i class="fas fa-trophy"></i> Torneos
+        </a>
+        <a th:href="@{/jugadores}" class="menu-item active">
+            <i class="fas fa-user-friends"></i> Jugadores
+        </a>
+
+        <div class="menu-section-title" style="margin-top: 2rem;">Usuario & Datos</div>
+        <a href="#" onclick="openEmailModal(); return false;" class="menu-item accent">
+            <i class="fas fa-paper-plane"></i> Correo Masivo
+        </a>
+        <a th:href="@{/datos}" class="menu-item">
+            <i class="fas fa-user-cog"></i> Mi Perfil
+        </a>
+        <a th:href="@{/exportarExcel}" class="menu-item accent">
+            <i class="fas fa-file-excel"></i> Exportar Excel
+        </a>
+
+        <form th:action="@{/login}" method="post" style="margin: 2rem 0 0 0;">
+            <a href="#" onclick="this.parentNode.submit()" class="menu-item danger">
+                <i class="fas fa-sign-out-alt"></i> Cerrar Sesión
+            </a>
+        </form>
+    </nav>
+
+    <main class="main-content">
+        <div class="content-header">
+            <h1><i class="fas fa-edit"></i> Edición de Jugador</h1>
+            <p th:text="'Modifica los datos de: ' + ${individuo.nombre} + ' ' + ${individuo.apellido} + ' (ID: ' + ${individuo.id_individuo} + ')'">
+                Modifica los datos de un individuo específico.
+            </p>
+        </div>
+
+        <div class="form-container">
+            <h3 class="form-title">
+                <i class="fas fa-id-card"></i> Datos Personales del Individuo
+            </h3>
+
+            <form th:action="@{/cambiar/guardar}" th:object="${individuo}" method="post">
+
+                <input type="hidden" th:field="*{id_individuo}" />
+
+                <div class="form-group">
+                    <label class="form-label" for="nombre">Nombre</label>
+                    <input type="text" id="nombre" th:field="*{nombre}" class="form-input" required
+                           placeholder="Ingrese el nombre" />
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label" for="apellido">Apellido</label>
+                    <input type="text" id="apellido" th:field="*{apellido}" class="form-input" required
+                           placeholder="Ingrese el apellido" />
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label" for="cedula">Cédula</label>
+                    <input type="text" id="cedula" th:field="*{cedula}" class="form-input"
+                           placeholder="Ingrese el número de cédula (DNI/ID)" />
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label" for="correo">Correo Electrónico</label>
+                    <input type="email" id="correo" th:field="*{correo}" class="form-input" required
+                           placeholder="ejemplo@correo.com" />
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label" for="telefono">Teléfono</label>
+                    <input type="tel" id="telefono" th:field="*{telefono}" class="form-input"
+                           placeholder="Número de contacto" />
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label" for="edad">Edad</label>
+                    <input type="number" id="edad" th:field="*{edad}" class="form-input" min="1" max="120"
+                           placeholder="Edad" />
+                </div>
+
+                <div class="button-group">
+                    <a th:href="@{/jugadores}" class="btn btn-cancel">
+                        <i class="fas fa-times"></i> Cancelar
+                    </a>
+                    <button type="submit" class="btn btn-save">
+                        <i class="fas fa-save"></i> Guardar Cambios
+                    </button>
+                </div>
+
+            </form>
+        </div>
+    </main>
+</div>
+
+<div id="emailModal" class="modal">
+    <div class="modal-content">
+        <div class="modal-header">
+            <h2 class="modal-title">
+                <i class="fas fa-paper-plane"></i> Enviar Correo Masivo
+            </h2>
+            <span class="close" onclick="closeEmailModal()">&times;</span>
+        </div>
+
+        <form th:action="@{/enviar-correo-masivo}" method="post" id="emailForm">
+            <input type="hidden" name="tipoEvento" value="GENERAL">
+
+            <div class="form-group">
+                <label class="form-label" for="asunto">Asunto del Correo</label>
+                <input type="text" id="asunto" name="asunto" class="form-input" required
+                       placeholder="Escriba un asunto claro y conciso">
+            </div>
+
+            <div class="form-group">
+                <label class="form-label" for="mensaje">Mensaje</label>
+                <textarea id="mensaje" name="mensaje" class="form-input form-textarea" required
+                          placeholder="Escriba el cuerpo del mensaje que se enviará a todos los jugadores..."></textarea>
+            </div>
+
+            <div style="text-align: right; margin-top: 20px;">
+                <button type="button" class="btn" style="background: #ccc; color: #333;" onclick="closeEmailModal()">
+                    <i class="fas fa-times"></i> Cancelar
+                </button>
+                <button type="submit" class="btn-email" id="sendEmailBtn">
+                    <i class="fas fa-paper-plane"></i> Enviar Correo
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<script>
+    // Las funciones del modal de correo masivo también son necesarias si están en la barra lateral
+    function openEmailModal() {
+        document.getElementById('emailModal').style.display = 'block';
+        document.body.style.overflow = 'hidden';
+    }
+
+    function closeEmailModal() {
+        document.getElementById('emailModal').style.display = 'none';
+        document.body.style.overflow = 'auto';
+        document.getElementById('emailForm').reset();
+
+        const sendBtn = document.getElementById('sendEmailBtn');
+        sendBtn.innerHTML = '<i class="fas fa-paper-plane"></i> Enviar Correo';
+        sendBtn.disabled = false;
+    }
+
+    window.onclick = function(event) {
+        const modal = document.getElementById('emailModal');
+        if (event.target == modal) {
+            closeEmailModal();
+        }
+    }
+
+    // Lógica para el botón de guardar (puede agregar un estado de carga)
+    document.addEventListener('DOMContentLoaded', function() {
+        const form = document.querySelector('form[th\\:action="@{/cambiar/guardar}"]');
+        if (form) {
+            form.addEventListener('submit', function(e) {
+                const saveBtn = form.querySelector('.btn-save');
+                saveBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Guardando...';
+                saveBtn.disabled = true;
+                // Dejar que el formulario se envíe...
+            });
+        }
+    });
+
+</script>
 </body>
 </html>

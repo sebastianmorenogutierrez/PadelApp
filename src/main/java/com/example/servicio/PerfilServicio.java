@@ -5,4 +5,5 @@ import java.util.List;
 
 public interface PerfilServicio {
     List<Perfil> listarTodos();
+    Perfil buscarPorId(Integer id);
 }

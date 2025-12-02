@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title th:text="${tipoEvento} + ' - Notificación'"></title>
+    <style>
+        body { font-family: Arial, sans-serif; background-color: #f4f4f4; margin: 0; padding: 0; }
+        .container { max-width: 600px; margin: 20px auto; background-color: #ffffff; border-radius: 8px; overflow: hidden; box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); }
+        .header { background-color: #007bff; color: white; padding: 20px; text-align: center; }
+        .content { padding: 30px; line-height: 1.6; color: #333333; }
+        .footer { background-color: #eeeeee; padding: 20px; text-align: center; font-size: 12px; color: #777777; }
+        .message-box { border-left: 5px solid #007bff; padding: 15px; background-color: #f9f9f9; margin: 20px 0; }
+    </style>
+</head>
+<body>
+<div class="container">
+    <div class="header">
+        <h1 th:text="${tipoEvento}">Notificación Importante</h1>
+    </div>
+    <div class="content">
+        <p>Estimado/a <strong th:text="${nombreJugador}">[Nombre del Jugador]</strong>,</p>
+
+        <p>Recibiste este mensaje debido a un evento o comunicación de nuestro sistema. Aquí están los detalles:</p>
+
+        <div class="message-box">
+            <p><strong>Mensaje:</strong></p>
+            <p th:utext="${mensaje}">Este es el cuerpo del mensaje que el administrador envió.</p>
+        </div>
+
+        <p>Por favor, no respondas a este correo. Si tienes alguna pregunta, contacta al soporte.</p>
+
+        <p>Gracias por tu atención.</p>
+    </div>
+    <div class="footer">
+        <p>&copy; <span th:text="${#dates.format(#dates.createNow(), 'yyyy')}">2025</span> Tu Empresa. Todos los derechos reservados.</p>
+    </div>
+</div>
+</body>
+</html>

@@ -1,108 +1,67 @@
-package com.example.domain;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
+package com.example.domain; // Usamos el paquete base para PadelMatch
+
+import com.example.domain.usuario.Usuario;
+import jakarta.persistence.*;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
+import java.io.Serializable;
 import java.time.LocalDate;
 import java.time.LocalTime;
+import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
+import lombok.Data; // Asumo que usas Lombok
 
+@Data // Si usas Lombok, simplifica Getters/Setters
 @Entity
-@Table(name = "padel_matches") // This maps the entity to a table named 'padel_matches' in your DB
-public class PadelMatch {
+@Table(name = "padel_match")
+public class PadelMatch implements Serializable {
+
+    private static final long serialVersionUID = 1L;
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id; // Unique identifier for each match
+    private Long id_match; // Usamos Long para seguir la convención del Torneo
 
+    @NotBlank(message = "El nombre del partido es obligatorio")
     private String nombrePartido;
+
+    @NotNull(message = "La fecha es obligatoria")
     private LocalDate fecha;
+
+    @NotNull(message = "La hora es obligatoria")
     private LocalTime hora;
+
+    @NotBlank(message = "El club es obligatorio")
     private String club;
+
+    // ⭐️ CAMBIO AÑADIDO: Número máximo de jugadores para el PDF y la lógica de inscripción.
+    @NotNull(message = "El número máximo de jugadores es obligatorio")
+    private Integer numeroJugadores = 4; // Por defecto 4 para un partido de dobles
+
     private String nivelJuego;
     private String cancha;
+    private boolean activo = true;
+    private String estado = "programado"; // Opciones: programado, en curso, finalizado
+    private LocalDateTime fechaCreacion;
 
-    // Default constructor (required by JPA)
+    // Usuario que crea/es dueño del partido (ManyToOne)
+    @ManyToOne
+    @JoinColumn(name = "creador_id", referencedColumnName = "id_usuario")
+    private Usuario creador;
+
+    // Relación Many-to-Many: Jugadores en el partido
+    @ManyToMany(fetch = FetchType.EAGER) // Eager fetch para listar jugadores fácilmente
+    @JoinTable(
+            name = "match_jugadores",
+            joinColumns = @JoinColumn(name = "match_id"),
+            inverseJoinColumns = @JoinColumn(name = "usuario_id")
+    )
+    private List<Usuario> jugadores = new ArrayList<>();
+
+    // Constructores, Getters/Setters (generados por @Data de Lombok)
+
     public PadelMatch() {
-    }
-
-    // Constructor with all fields (optional, but good for testing)
-    public PadelMatch(String nombrePartido, LocalDate fecha, LocalTime hora, String club, String nivelJuego, String cancha) {
-        this.nombrePartido = nombrePartido;
-        this.fecha = fecha;
-        this.hora = hora;
-        this.club = club;
-        this.nivelJuego = nivelJuego;
-        this.cancha = cancha;
-    }
-
-    // Getters and Setters for all fields
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    public String getNombrePartido() {
-        return nombrePartido;
-    }
-
-    public void setNombrePartido(String nombrePartido) {
-        this.nombrePartido = nombrePartido;
-    }
-
-    public LocalDate getFecha() {
-        return fecha;
-    }
-
-    public void setFecha(LocalDate fecha) {
-        this.fecha = fecha;
-    }
-
-    public LocalTime getHora() {
-        return hora;
-    }
-
-    public void setHora(LocalTime hora) {
-        this.hora = hora;
-    }
-
-    public String getClub() {
-        return club;
-    }
-
-    public void setClub(String club) {
-        this.club = club;
-    }
-
-    public String getNivelJuego() {
-        return nivelJuego;
-    }
-
-    public void setNivelJuego(String nivelJuego) {
-        this.nivelJuego = nivelJuego;
-    }
-
-    public String getCancha() {
-        return cancha;
-    }
-
-    public void setCancha(String cancha) {
-        this.cancha = cancha;
-    }
-
-    @Override
-    public String toString() {
-        return "PadelMatch{" +
-                "id=" + id +
-                ", nombrePartido='" + nombrePartido + '\'' +
-                ", fecha=" + fecha +
-                ", hora=" + hora +
-                ", club='" + club + '\'' +
-                ", nivelJuego='" + nivelJuego + '\'' +
-                ", cancha='" + cancha + '\'' +
-                '}';
+        this.fechaCreacion = LocalDateTime.now();
     }
 }

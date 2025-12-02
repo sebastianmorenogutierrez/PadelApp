@@ -44,4 +44,5 @@ public class Perfil implements Serializable {
     public void setEliminado(boolean eliminado) {
         this.eliminado = eliminado;
     }
+
 }

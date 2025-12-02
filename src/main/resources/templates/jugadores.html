@@ -2,106 +2,987 @@
 <html lang="es" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <title>Jugadores Registrados</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Jugadores Registrados - Sistema de Gestión</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
     <style>
         * {
-          box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
         }
 
         body {
-          font-family: Arial, sans-serif;
-          margin: 0;
-          padding: 40px;
-          position: relative;
-          min-height: 100vh;
-          z-index: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            color: #333;
         }
 
-        /* Imagen de fondo */
-        body::before {
-          content: "";
-          position: fixed;
-          top: 0;
-          left: 0;
-          width: 100%;
-          height: 100%;
-          background-image: url('/images/jugadores_fondo.jpg'); /* Asegúrate de que esta ruta sea correcta */
-          background-size: cover;
-          background-position: center;
-          background-repeat: no-repeat;
-          z-index: -2;
-        }
-        body::after {
-          content: "";
-          position: fixed;
-          top: 0;
-          left: 0;
-          width: 100%;
-          height: 100%;
-          background-color: rgba(52, 64, 180, 0.4); /* Azul translúcido */
-          z-index: -1;
+        .container {
+            display: flex;
+            min-height: 100vh;
         }
 
-        h1 {
-          color: #ffffff;
-          text-align: center;
-          margin-bottom: 30px;
-          text-shadow: 1px 1px 4px rgba(0, 0, 0, 0.6);
+        /* Sidebar */
+        .sidebar {
+            width: 280px;
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            padding: 2rem 0;
+            box-shadow: 4px 0 20px rgba(0, 0, 0, 0.1);
+            border-right: 1px solid rgba(255, 255, 255, 0.2);
         }
 
-        table {
-          width: 100%;
-          border-collapse: collapse;
-          background-color: rgba(255, 255, 255, 0.95); /* Fondo blanco casi opaco */
-          box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
-          border-radius: 8px;
-          overflow: hidden;
+        .logo {
+            text-align: center;
+            padding: 0 2rem 2rem;
+            border-bottom: 1px solid rgba(102, 126, 234, 0.2);
+            margin-bottom: 2rem;
         }
 
-        th, td {
-          padding: 12px 15px;
-          border: 1px solid #ccc;
-          text-align: left;
+        .logo h2 {
+            color: #667eea;
+            font-size: 1.5rem;
+            font-weight: 700;
         }
 
-        th {
-          background-color: #3440b4;
-          color: white;
+        /* Menu sections */
+        .menu-section-title {
+            padding: 0 2rem 0.5rem;
+            color: #888;
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            font-weight: 600;
         }
 
-        tr:hover {
-          background-color: #f1f1f1;
+        .menu-item {
+            display: block;
+            padding: 1rem 2rem;
+            text-decoration: none;
+            color: #555;
+            transition: all 0.3s ease;
+            border-left: 4px solid transparent;
+            position: relative;
+        }
+
+        .menu-item:hover,
+        .menu-item.active {
+            background: linear-gradient(90deg, rgba(102, 126, 234, 0.1) 0%, rgba(118, 75, 162, 0.05) 100%);
+            color: #667eea;
+            border-left-color: #667eea;
+            transform: translateX(5px);
+        }
+
+        .menu-item i {
+            margin-right: 0.8rem;
+            width: 20px;
+            text-align: center;
+        }
+
+        .menu-item.accent {
+            background: linear-gradient(135deg, #33b633 0%, #2ca52c 100%);
+            color: white;
+            border-radius: 0 25px 25px 0;
+            margin: 0.5rem 0;
+        }
+
+        .menu-item.accent:hover {
+            background: linear-gradient(135deg, #2ca52c 0%, #228b22 100%);
+            transform: translateX(10px);
+        }
+
+        .menu-item.danger {
+            background: linear-gradient(135deg, #ff4d4d 0%, #e03c3c 100%);
+            color: white;
+            border-radius: 0 25px 25px 0;
+            margin-top: 1rem;
+        }
+
+        .menu-item.danger:hover {
+            background: linear-gradient(135deg, #e03c3c 0%, #cc2929 100%);
+            transform: translateX(10px);
+        }
+
+        /* Main Content */
+        .main-content {
+            flex: 1;
+            padding: 2rem;
+            overflow-y: auto;
+        }
+
+        .content-header {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            padding: 2rem;
+            border-radius: 20px;
+            margin-bottom: 2rem;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .content-header h1 {
+            color: #667eea;
+            font-size: 2.5rem;
+            margin-bottom: 0.5rem;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .content-header p {
+            color: #666;
+            font-size: 1.1rem;
+        }
+
+        /* Action Bar (New) */
+        .action-bar {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            padding: 1.5rem 2rem;
+            border-radius: 15px;
+            margin-bottom: 2rem;
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+
+        .btn-email {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 0.8rem 1.5rem;
+            border: none;
+            border-radius: 10px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .btn-email:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+        }
+
+        /* Stats Row */
+        .stats-row {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .stat-card {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            padding: 1.5rem;
+            border-radius: 15px;
+            box-shadow: 0 4px 15px rgba(102, 126, 234, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            text-align: center;
+            transition: all 0.3s ease;
+        }
+
+        .stat-card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 25px rgba(102, 126, 234, 0.15);
+        }
+
+        .stat-number {
+            font-size: 2.5rem;
+            font-weight: 800;
+            color: #667eea;
+            display: block;
+        }
+
+        .stat-label {
+            color: #666;
+            font-size: 0.9rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-top: 0.5rem;
+        }
+
+        /* Table Container */
+        .table-container {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            padding: 2rem;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            overflow-x: auto;
+        }
+
+        .table-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+
+        .table-title {
+            font-size: 1.5rem;
+            font-weight: 600;
+            color: #667eea;
+            display: flex;
+            align-items: center;
+            gap: 0.8rem;
+        }
+
+        .search-box {
+            position: relative;
+            flex: 1;
+            max-width: 300px;
+        }
+
+        .search-input {
+            width: 100%;
+            padding: 0.8rem 1rem 0.8rem 3rem;
+            border: 2px solid rgba(102, 126, 234, 0.2);
+            border-radius: 25px;
+            font-size: 0.9rem;
+            transition: all 0.3s ease;
+            background: rgba(255, 255, 255, 0.8);
+        }
+
+        .search-input:focus {
+            outline: none;
+            border-color: #667eea;
+            background: white;
+            box-shadow: 0 0 15px rgba(102, 126, 234, 0.2);
+        }
+
+        .search-icon {
+            position: absolute;
+            left: 1rem;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #667eea;
+            font-size: 1rem;
+        }
+
+        /* Table Styles */
+        .jugadores-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 1rem;
+        }
+
+        .jugadores-table thead tr {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+        }
+
+        .jugadores-table th,
+        .jugadores-table td {
+            padding: 1rem 0.8rem;
+            text-align: left;
+            border-bottom: 1px solid rgba(102, 126, 234, 0.1);
+            font-size: 0.9rem;
+        }
+
+        .jugadores-table th {
+            font-weight: 600;
+            text-transform: uppercase;
+            font-size: 0.8rem;
+            letter-spacing: 0.5px;
+            position: sticky;
+            top: 0;
+            z-index: 10;
+        }
+
+        .jugadores-table tbody tr {
+            transition: all 0.3s ease;
+        }
+
+        .jugadores-table tbody tr:hover {
+            background: rgba(102, 126, 234, 0.05);
+            transform: scale(1.01);
+        }
+
+        .jugadores-table td {
+            color: #555;
+        }
+
+        /* User Avatar */
+        .user-info {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .user-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: 600;
+            font-size: 1.1rem;
+        }
+
+        .user-details {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .user-name {
+            font-weight: 600;
+            color: #333;
+        }
+
+        .username {
+            font-size: 0.8rem;
+            color: #666;
+        }
+
+        /* Action Buttons */
+        .action-buttons {
+            display: flex;
+            gap: 0.5rem;
+            flex-wrap: wrap;
+        }
+
+        .btn {
+            padding: 0.6rem 1rem;
+            border: none;
+            border-radius: 8px;
+            font-size: 0.85rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .btn-edit {
+            background: linear-gradient(135deg, #33b633 0%, #2ca52c 100%);
+            color: white;
+            box-shadow: 0 2px 8px rgba(51, 182, 51, 0.3);
+        }
+
+        .btn-edit:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 15px rgba(51, 182, 51, 0.5);
+        }
+
+        .btn-delete {
+            background: linear-gradient(135deg, #ff4d4d 0%, #e03c3c 100%);
+            color: white;
+            box-shadow: 0 2px 8px rgba(255, 77, 77, 0.3);
+        }
+
+        .btn-delete:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 15px rgba(255, 77, 77, 0.5);
+        }
+
+        /* Contact Info */
+        .contact-info {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-size: 0.9rem;
+        }
+
+        .contact-info i {
+            color: #667eea;
+            width: 16px;
+        }
+
+        /* Age Badge */
+        .age-badge {
+            background: rgba(102, 126, 234, 0.1);
+            color: #667eea;
+            padding: 0.3rem 0.8rem;
+            border-radius: 15px;
+            font-weight: 600;
+            font-size: 0.85rem;
+            border: 1px solid rgba(102, 126, 234, 0.2);
+        }
+
+        /* Empty State */
+        .empty-state {
+            text-align: center;
+            padding: 3rem;
+            color: #666;
+        }
+
+        .empty-state i {
+            font-size: 4rem;
+            color: #ccc;
+            margin-bottom: 1rem;
+        }
+
+        .empty-state h3 {
+            margin-bottom: 1rem;
+            color: #667eea;
+        }
+
+        /* Email Modal Styles (NEW) */
+        .modal {
+            display: none; /* Oculto por defecto */
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            overflow: auto;
+            background-color: rgba(0,0,0,0.4);
+            backdrop-filter: blur(4px);
+        }
+
+        .modal-content {
+            background: #fff;
+            margin: 10% auto; /* 10% desde arriba y centrado */
+            padding: 30px;
+            border-radius: 15px;
+            width: 90%;
+            max-width: 600px;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+            animation: modalopen 0.4s;
+        }
+
+        @keyframes modalopen {
+            from {opacity: 0; transform: translateY(-50px);}
+            to {opacity: 1; transform: translateY(0);}
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+            padding-bottom: 10px;
+            border-bottom: 1px solid #eee;
+        }
+
+        .modal-title {
+            color: #667eea;
+            font-size: 1.8rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .close {
+            color: #aaa;
+            font-size: 28px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: color 0.3s;
+        }
+
+        .close:hover,
+        .close:focus {
+            color: #667eea;
+            text-decoration: none;
+        }
+
+        .form-group {
+            margin-bottom: 1rem;
+        }
+
+        .form-label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 600;
+            color: #444;
+        }
+
+        .form-input {
+            width: 100%;
+            padding: 0.8rem;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            font-size: 1rem;
+            transition: border-color 0.3s;
+            box-sizing: border-box;
+        }
+
+        .form-input:focus {
+            border-color: #667eea;
+            outline: none;
+            box-shadow: 0 0 5px rgba(102, 126, 234, 0.5);
+        }
+
+        .form-textarea {
+            resize: vertical;
+            min-height: 150px;
+        }
+
+        /* Loading animation for row interactions */
+        .row-loading {
+            opacity: 0.7;
+            pointer-events: none;
+        }
+
+        .row-loading td {
+            position: relative;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 1200px) {
+            .jugadores-table th:nth-child(n+6),
+            .jugadores-table td:nth-child(n+6) {
+                display: none;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                flex-direction: column;
+            }
+
+            .sidebar {
+                width: 100%;
+                padding: 1rem 0;
+            }
+
+            .main-content {
+                padding: 1rem;
+            }
+
+            .content-header h1 {
+                font-size: 2rem;
+            }
+
+            .stats-row {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .table-header {
+                flex-direction: column;
+                align-items: stretch;
+            }
+
+            .search-box {
+                max-width: none;
+            }
+
+            .jugadores-table {
+                font-size: 0.8rem;
+            }
+
+            .jugadores-table th,
+            .jugadores-table td {
+                padding: 0.5rem;
+            }
+
+            .user-info {
+                flex-direction: column;
+                gap: 0.5rem;
+                text-align: center;
+            }
+        }
+
+        /* Animations */
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .content-header {
+            animation: fadeInUp 0.6s ease;
+        }
+
+        .stats-row {
+            animation: fadeInUp 0.6s ease 0.1s both;
+        }
+
+        .table-container {
+            animation: fadeInUp 0.6s ease 0.2s both;
         }
     </style>
 </head>
 <body>
-<h1>Jugadores Registrados</h1>
-<table>
-    <thead>
-    <tr>
-        <th>ID Usuario</th>
-        <th>Nombre Usuario</th>
-        <th>Nombre</th>
-        <th>Apellido</th>
-        <th>Cédula</th>
-        <th>Correo</th>
-        <th>Teléfono</th>
-        <th>Edad</th>
-    </tr>
-    </thead>
-    <tbody>
-    <tr th:each="jugador : ${jugadores}">
-        <td th:text="${jugador.id_usuario}">1</td>
-        <td th:text="${jugador.nombreUsuario}">usuario</td>
-        <td th:text="${jugador.individuo.nombre}">Nombre</td>
-        <td th:text="${jugador.individuo.apellido}">Apellido</td>
-        <td th:text="${jugador.individuo.cedula}">Cédula</td>
-        <td th:text="${jugador.individuo.correo}">Correo</td>
-        <td th:text="${jugador.individuo.telefono}">Teléfono</td>
-        <td th:text="${jugador.individuo.edad}">Edad</td>
-    </tr>
-    </tbody>
-</table>
+<div class="container">
+    <nav class="sidebar">
+        <div class="logo">
+            <h2><i class="fas fa-trophy"></i> Sistema</h2>
+        </div>
+
+        <div class="menu-section-title">Navegación Principal</div>
+        <a th:href="@{/indice}" class="menu-item">
+            <i class="fas fa-home"></i> Inicio
+        </a>
+
+        <div class="menu-section-title" style="margin-top: 2rem;">Gestión Principal</div>
+        <a th:href="@{/partido}" class="menu-item">
+            <i class="fas fa-gamepad"></i> Partidos
+        </a>
+        <a th:href="@{/equipo}" class="menu-item">
+            <i class="fas fa-users"></i> Equipos
+        </a>
+        <a th:href="@{/torneo}" class="menu-item">
+            <i class="fas fa-trophy"></i> Torneos
+        </a>
+        <a th:href="@{/jugadores}" class="menu-item active">
+            <i class="fas fa-user-friends"></i> Jugadores
+        </a>
+
+        <div class="menu-section-title" style="margin-top: 2rem;">Usuario & Datos</div>
+        <a href="#" onclick="openEmailModal(); return false;" class="menu-item accent">
+            <i class="fas fa-paper-plane"></i> Correo Masivo
+        </a>
+        <a th:href="@{/datos}" class="menu-item">
+            <i class="fas fa-user-cog"></i> Mi Perfil
+        </a>
+        <a th:href="@{/exportarExcel}" class="menu-item accent">
+            <i class="fas fa-file-excel"></i> Exportar Excel
+        </a>
+
+        <form th:action="@{/login}" method="post" style="margin: 2rem 0 0 0;">
+            <a href="#" onclick="this.parentNode.submit()" class="menu-item danger">
+                <i class="fas fa-sign-out-alt"></i> Cerrar Sesión
+            </a>
+        </form>
+    </nav>
+
+    <main class="main-content">
+        <div class="content-header">
+            <h1><i class="fas fa-user-friends"></i> Jugadores Registrados</h1>
+            <p>Gestiona y administra todos los jugadores del sistema</p>
+        </div>
+
+        <div class="action-bar">
+            <h3 class="table-title">
+                <i class="fas fa-paper-plane"></i>
+                Herramienta de Comunicación Masiva
+            </h3>
+            <button class="btn-email" onclick="openEmailModal()">
+                <i class="fas fa-envelope"></i>
+                Enviar Correo Masivo
+            </button>
+        </div>
+        <div class="stats-row">
+            <div class="stat-card">
+                <span class="stat-number" th:text="${#lists.size(jugadores)}">0</span>
+                <span class="stat-label">Total Jugadores</span>
+            </div>
+            <div class="stat-card">
+                <span class="stat-number">24</span>
+                <span class="stat-label">Activos</span>
+            </div>
+            <div class="stat-card">
+                <span class="stat-number">156</span>
+                <span class="stat-label">Partidos Jugados</span>
+            </div>
+            <div class="stat-card">
+                <span class="stat-number">68%</span>
+                <span class="stat-label">Tasa Participación</span>
+            </div>
+        </div>
+
+        <div class="table-container">
+            <div class="table-header">
+                <h3 class="table-title">
+                    <i class="fas fa-list"></i>
+                    Lista de Jugadores
+                </h3>
+                <div class="search-box">
+                    <i class="fas fa-search search-icon"></i>
+                    <input type="text" class="search-input" id="searchInput" placeholder="Buscar jugadores...">
+                </div>
+            </div>
+
+            <div th:if="${#lists.isEmpty(jugadores)}" class="empty-state">
+                <i class="fas fa-user-friends"></i>
+                <h3>No hay jugadores registrados</h3>
+                <p>Los jugadores aparecerán aquí una vez que se registren en el sistema</p>
+            </div>
+
+            <table class="jugadores-table" th:unless="${#lists.isEmpty(jugadores)}">
+                <thead>
+                <tr>
+                    <th><i class="fas fa-user"></i> Jugador</th>
+                    <th><i class="fas fa-hashtag"></i> ID</th>
+                    <th><i class="fas fa-id-card"></i> Cédula</th>
+                    <th><i class="fas fa-envelope"></i> Correo</th>
+                    <th><i class="fas fa-phone"></i> Teléfono</th>
+                    <th><i class="fas fa-calendar"></i> Edad</th>
+                    <th><i class="fas fa-cogs"></i> Acciones</th>
+                </tr>
+                </thead>
+                <tbody id="playersTableBody">
+                <tr th:each="jugador : ${jugadores}" class="player-row">
+                    <td>
+                        <div class="user-info">
+                            <div class="user-avatar"
+                                 th:text="${#strings.substring(#strings.defaultString(jugador.individuo.nombre, 'X'), 0, 1)}">A</div>
+                            <div class="user-details">
+                                            <span class="user-name"
+                                                  th:text="${#strings.defaultString(jugador.individuo.nombre, 'Sin Nombre') + ' ' + #strings.defaultString(jugador.individuo.apellido, '')}">
+                                            Nombre Apellido
+                                        </span>
+                                <span class="username" th:text="'@' + ${jugador.nombreUsuario}">@usuario</span>
+                            </div>
+                        </div>
+                    </td>
+                    <td th:text="${jugador.id_usuario}" class="user-id">1</td>
+                    <td th:text="${jugador.individuo.cedula ?: 'N/A'}">12345678</td>
+                    <td>
+                        <div class="contact-info">
+                            <i class="fas fa-envelope"></i>
+                            <span th:text="${jugador.individuo.correo ?: 'Sin Correo'}">correo@ejemplo.com</span>
+                        </div>
+                    </td>
+                    <td>
+                        <div class="contact-info">
+                            <i class="fas fa-phone"></i>
+                            <span th:text="${jugador.individuo.telefono ?: 'Sin Teléfono'}">123-456-7890</span>
+                        </div>
+                    </td>
+                    <td>
+                        <span class="age-badge" th:text="${(jugador.individuo.edad ?: 'N/A') + ' años'}">25 años</span>
+                    </td>
+                    <td>
+                        <div class="action-buttons">
+                            <button class="btn btn-edit"
+                                    th:data-id="${jugador.individuo.id_individuo}"
+                                    onclick="editPlayer(this)">
+                                <i class="fas fa-edit"></i> Editar
+                            </button>
+                            <button class="btn btn-delete"
+                                    th:data-id="${jugador.individuo.id_individuo}"
+                                    th:data-name="${#strings.defaultString(jugador.individuo.nombre, 'Jugador')}"
+                                    onclick="deletePlayer(this)">
+                                <i class="fas fa-trash"></i> Eliminar
+                            </button>
+                        </div>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+    </main>
+</div>
+
+<div id="emailModal" class="modal">
+    <div class="modal-content">
+        <div class="modal-header">
+            <h2 class="modal-title">
+                <i class="fas fa-paper-plane"></i> Enviar Correo Masivo
+            </h2>
+            <span class="close" onclick="closeEmailModal()">&times;</span>
+        </div>
+
+        <form th:action="@{/enviar-correo-masivo}" method="post" id="emailForm">
+            <input type="hidden" name="tipoEvento" value="GENERAL">
+
+            <div class="form-group">
+                <label class="form-label" for="asunto">Asunto del Correo</label>
+                <input type="text" id="asunto" name="asunto" class="form-input" required
+                       placeholder="Escriba un asunto claro y conciso">
+            </div>
+
+            <div class="form-group">
+                <label class="form-label" for="mensaje">Mensaje</label>
+                <textarea id="mensaje" name="mensaje" class="form-input form-textarea" required
+                          placeholder="Escriba el cuerpo del mensaje que se enviará a todos los jugadores..."></textarea>
+            </div>
+
+            <div style="text-align: right; margin-top: 20px;">
+                <button type="button" class="btn" style="background: #ccc; color: #333;" onclick="closeEmailModal()">
+                    <i class="fas fa-times"></i> Cancelar
+                </button>
+                <button type="submit" class="btn-email" id="sendEmailBtn">
+                    <i class="fas fa-paper-plane"></i> Enviar Correo
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        // Search functionality
+        const searchInput = document.getElementById('searchInput');
+        const tableBody = document.getElementById('playersTableBody');
+        const rows = tableBody ? tableBody.querySelectorAll('.player-row') : [];
+
+        if (searchInput && rows.length > 0) {
+            searchInput.addEventListener('input', function() {
+                const searchTerm = this.value.toLowerCase();
+
+                rows.forEach(row => {
+                    const text = row.textContent.toLowerCase();
+                    if (text.includes(searchTerm)) {
+                        row.style.display = '';
+                    } else {
+                        row.style.display = 'none';
+                    }
+                });
+            });
+        }
+
+        // Animate stats logic (kept as in original)
+        // Note: The original had an IntersectionObserver which is cleaner,
+        // but for simplicity, the current one is maintained if it's the intended implementation.
+        const observerOptions = {
+            threshold: 0.5,
+            rootMargin: '0px'
+        };
+
+        const statsObserver = new IntersectionObserver(function(entries) {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    const statNumbers = entry.target.querySelectorAll('.stat-number');
+                    statNumbers.forEach(stat => {
+                        const finalNumber = stat.textContent;
+                        const isPercentage = finalNumber.includes('%');
+                        const number = parseInt(finalNumber);
+
+                        if (!isNaN(number)) {
+                            let current = 0;
+                            const increment = number / 30;
+
+                            const timer = setInterval(() => {
+                                current += increment;
+                                if (current >= number) {
+                                    current = number;
+                                    clearInterval(timer);
+                                }
+                                stat.textContent = Math.floor(current) + (isPercentage ? '%' : '');
+                            }, 50);
+                        }
+                    });
+                }
+            });
+        }, observerOptions);
+
+        // Observe stats cards
+        const statsCards = document.querySelectorAll('.stat-card');
+        statsCards.forEach(card => statsObserver.observe(card));
+
+        // Animate table rows (kept as in original)
+        const rowObserver = new IntersectionObserver(function(entries) {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.style.opacity = '1';
+                    entry.target.style.transform = 'translateX(0)';
+                }
+            });
+        }, { threshold: 0.1 });
+
+        rows.forEach((row, index) => {
+            row.style.opacity = '0';
+            row.style.transform = 'translateX(-20px)';
+            row.style.transition = `opacity 0.6s ease ${index * 0.05}s, transform 0.6s ease ${index * 0.05}s`;
+            rowObserver.observe(row);
+        });
+
+        // Email Form Submission Handling (NEW)
+        document.getElementById('emailForm').addEventListener('submit', function(e) {
+            const sendBtn = document.getElementById('sendEmailBtn');
+            sendBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Enviando...';
+            sendBtn.disabled = true;
+            // Note: The form action is set to @{/enviar-correo-masivo} for your Spring/Thymeleaf backend
+        });
+
+    });
+
+    // Email Modal Functions (NEW)
+    function openEmailModal() {
+        document.getElementById('emailModal').style.display = 'block';
+        document.body.style.overflow = 'hidden'; // Evitar scroll de fondo
+    }
+
+    function closeEmailModal() {
+        document.getElementById('emailModal').style.display = 'none';
+        document.body.style.overflow = 'auto'; // Restaurar scroll
+        document.getElementById('emailForm').reset(); // Opcional: limpiar el formulario al cerrar
+
+        // Reset button state just in case
+        const sendBtn = document.getElementById('sendEmailBtn');
+        sendBtn.innerHTML = '<i class="fas fa-paper-plane"></i> Enviar Correo';
+        sendBtn.disabled = false;
+    }
+
+    // Close modal when clicking outside (NEW)
+    window.onclick = function(event) {
+        const modal = document.getElementById('emailModal');
+        if (event.target == modal) {
+            closeEmailModal();
+        }
+    }
+
+    // ✅ CORRECCIÓN DE JAVASCRIPT: La función ahora acepta 'this' (el elemento botón)
+    function editPlayer(buttonElement) {
+        // Lee el ID directamente del atributo data-id del botón
+        const playerId = buttonElement.getAttribute('data-id');
+
+        const row = buttonElement.closest('tr');
+        row.classList.add('row-loading');
+
+        buttonElement.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Cargando...';
+        buttonElement.disabled = true;
+
+        setTimeout(() => {
+            window.location.href = `/cambiar/${playerId}`;
+        }, 500);
+    }
+
+    // ✅ CORRECCIÓN DE JAVASCRIPT: La función ahora acepta 'this' (el elemento botón)
+    function deletePlayer(buttonElement) {
+        // Lee el ID y el nombre de los atributos data-* del botón
+        const playerId = buttonElement.getAttribute('data-id');
+        const playerName = buttonElement.getAttribute('data-name');
+
+        const confirmed = confirm(`¿Estás seguro que deseas eliminar al jugador "${playerName}"?\n\nEsta acción no se puede deshacer.`);
+
+        if (confirmed) {
+            const row = buttonElement.closest('tr');
+            row.classList.add('row-loading');
+
+            buttonElement.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Eliminando...';
+            buttonElement.disabled = true;
+
+            setTimeout(() => {
+                window.location.href = `/borrar/${playerId}`;
+            }, 800);
+        }
+    }
+
+    // Add loading states to navigation links
+    document.querySelectorAll('.menu-item').forEach(link => {
+        link.addEventListener('click', function(e) {
+            if (this.getAttribute('href') !== '#' && !this.onclick) { // Excluir enlaces con onclick (como el de Correo Masivo)
+                this.style.opacity = '0.7';
+                const originalHTML = this.innerHTML;
+                this.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Cargando...';
+
+                // Restore original content if navigation doesn't happen (for some reason)
+                setTimeout(() => {
+                    this.innerHTML = originalHTML;
+                    this.style.opacity = '1';
+                }, 5000);
+            }
+        });
+    });
+</script>
 </body>
 </html>
-}

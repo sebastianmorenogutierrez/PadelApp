@@ -1,6 +1,6 @@
 package com.example.web;
 
-import com.example.domain.Usuario;
+import com.example.domain.usuario.Usuario;
 import com.example.servicio.UsuarioServicio;
 import com.example.servicio.IndividuoServicio;
 import com.example.servicio.PerfilServicio;
@@ -32,25 +32,32 @@ public class UsuarioController {
         return "jugadores"; // Este es el nombre del archivo Thymeleaf: jugadores.html
     }
 
+
+    // Archivo: UsuarioController.java
+
     @GetMapping("/registro")
     public String mostrarFormularioRegistro(Model model) {
+
         Usuario usuario = new Usuario();
         usuario.setIndividuo(new Individuo());
-
         model.addAttribute("usuario", usuario);
+
         model.addAttribute("perfiles", perfilServicio.listarTodos());
-        return "registro";
+
+        return "registro"; // Retorna el nombre de tu plantilla (registro.html)
     }
 
-    @PostMapping("/registro")
+    @PostMapping("/API/registro")
     public String procesarRegistro(@Valid Usuario usuario, Errors errors, Model model) {
         if (errors.hasErrors()) {
             model.addAttribute("perfiles", perfilServicio.listarTodos());
-            model.addAttribute("individuos", individuoServicio.listaIndividuos());
             return "registro";
         }
-
+        usuario.setPerfil(perfilServicio.buscarPorId(2));
         usuarioServicio.registrarNuevoUsuario(usuario);
+
         return "redirect:/login";
     }
 }
+
+

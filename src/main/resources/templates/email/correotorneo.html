@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Nuevo Torneo</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 0;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+        }
+        .container {
+            max-width: 600px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        .email-card {
+            background: white;
+            border-radius: 20px;
+            overflow: hidden;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+        }
+        .header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            padding: 30px 20px;
+            text-align: center;
+            color: white;
+        }
+        .header h1 {
+            margin: 0;
+            font-size: 28px;
+            font-weight: 700;
+        }
+        .trophy {
+            font-size: 40px;
+            margin-bottom: 10px;
+        }
+        .content {
+            padding: 30px;
+        }
+        .greeting {
+            font-size: 18px;
+            font-weight: 600;
+            color: #667eea;
+            margin-bottom: 20px;
+        }
+        .torneo-info {
+            background: #f8f9fa;
+            border-radius: 15px;
+            padding: 25px;
+            margin: 20px 0;
+            border-left: 5px solid #667eea;
+        }
+        .torneo-nombre {
+            font-size: 22px;
+            font-weight: 700;
+            color: #333;
+            margin-bottom: 15px;
+        }
+        .info-item {
+            display: flex;
+            align-items: center;
+            margin-bottom: 10px;
+            font-size: 16px;
+            color: #555;
+        }
+        .info-icon {
+            margin-right: 10px;
+            width: 20px;
+            text-align: center;
+            color: #667eea;
+        }
+        .cta-button {
+            display: inline-block;
+            background: linear-gradient(135deg, #33b633 0%, #2ca52c 100%);
+            color: white;
+            padding: 12px 30px;
+            border-radius: 25px;
+            text-decoration: none;
+            font-weight: 600;
+            margin: 20px 0;
+        }
+        .footer {
+            background: #f8f9fa;
+            padding: 20px;
+            text-align: center;
+            font-size: 14px;
+            color: #666;
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <div class="email-card">
+        <div class="header">
+            <div class="trophy">🏆</div>
+            <h1>¡Nuevo Torneo Disponible!</h1>
+        </div>
+
+        <div class="content">
+            <div class="greeting">
+                ¡Hola <span th:text="${nombreJugador}">Jugador</span>!
+            </div>
+
+            <p style="color: #555; font-size: 16px; line-height: 1.6;">
+                ¡Tenemos grandes noticias! Se ha creado un nuevo torneo y queremos invitarte a participar.
+            </p>
+
+            <div class="torneo-info">
+                <div class="torneo-nombre" th:text="${torneo.nombre}">Nombre del Torneo</div>
+
+                <div class="info-item">
+                    <span class="info-icon">📅</span>
+                    <strong>Fecha de inicio:</strong>&nbsp;
+                    <span th:text="${#temporals.format(torneo.fechaInicio, 'dd/MM/yyyy')}">01/01/2024</span>
+                </div>
+
+                <div class="info-item">
+                    <span class="info-icon">🏁</span>
+                    <strong>Fecha de fin:</strong>&nbsp;
+                    <span th:text="${#temporals.format(torneo.fechaFin, 'dd/MM/yyyy')}">31/01/2024</span>
+                </div>
+
+                <div class="info-item" th:if="${torneo.ubicacion}">
+                    <span class="info-icon">📍</span>
+                    <strong>Ubicación:</strong>&nbsp;
+                    <span th:text="${torneo.ubicacion}">Ubicación</span>
+                </div>
+            </div>
+
+            <p style="color: #555; font-size: 16px; line-height: 1.6;">
+                ¡No te pierdas esta oportunidad de demostrar tus habilidades y competir con los mejores jugadores!
+            </p>
+
+            <p style="color: #666; font-size: 14px; margin-top: 25px;">
+                Para más información y registro, ingresa al sistema de gestión deportiva.
+            </p>
+        </div>
+
+        <div class="footer">
+            <div style="font-size: 18px; font-weight: 700; color: #667eea; margin-bottom: 5px;">
+                Sistema de Gestión Deportiva
+            </div>
+            <p style="margin: 0; font-size: 12px;">
+                © 2024 Todos los derechos reservados
+            </p>
+        </div>
+    </div>
+</div>
+</body>
+</html>

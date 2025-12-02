@@ -1,6 +1,6 @@
 package com.example.web;
 
-import com.example.domain.Usuario;
+import com.example.domain.usuario.Usuario;
 import com.example.servicio.UsuarioServicio;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;

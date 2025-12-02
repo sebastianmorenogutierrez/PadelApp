@@ -23,6 +23,7 @@
             background-size: cover;
             background-position: center;
             background-repeat: no-repeat;
+            background-attachment: fixed;
             margin: 0;
             padding: 0;
             color: var(--color-texto);
@@ -32,97 +33,313 @@
         }
 
         header {
-            background-color: var(--color-azul);
+            background-color: rgba(52, 64, 180, 0.95);
             color: white;
-            padding: 20px 0;
-            text-align: center;
+            padding: 15px 40px;
             box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: sticky;
+            top: 0;
+            z-index: 100;
         }
 
         header h1 {
-            font-size: 26px;
+            font-size: 28px;
             margin: 0;
         }
 
-        main {
-            flex: 1;
+        .auth-buttons {
             display: flex;
-            justify-content: center;
-            align-items: center;
-            padding: 40px 20px;
+            gap: 15px;
         }
 
-        .content-box {
-            background-color: var(--color-azul); /* Azul de fondo */
-            color: #ffffff; /* Texto claro */
-            padding: 40px;
-            border-radius: 20px;
-            max-width: 600px;
-            width: 100%;
-            box-shadow: 0 0 30px rgba(0,0,0,0.15);
-            text-align: center;
-        }
-
-        .content-box h1 {
-            font-size: 32px;
-            margin-bottom: 20px;
-            color: #ffffff; /* Título en blanco */
-        }
-
-        .content-box p {
-            font-size: 18px;
-            margin-bottom: 30px;
-            color: #f0f0f0; /* Gris claro para contraste suave */
-        }
-
-        .button-group {
-            display: flex;
-            justify-content: center;
-            gap: 20px;
-            flex-wrap: wrap;
-        }
-
-        .button-group a {
-            padding: 12px 24px;
-            background-color: #ffffff; /* Botones en blanco */
-            color: var(--color-azul); /* Texto en azul */
+        .auth-buttons a {
+            padding: 10px 20px;
+            background-color: #ffffff;
+            color: var(--color-azul);
             text-decoration: none;
             font-weight: bold;
             border-radius: 6px;
-            font-size: 16px;
+            font-size: 14px;
             transition: background-color 0.3s ease, color 0.3s ease;
-            min-width: 140px;
-            text-align: center;
         }
 
-        .button-group a:hover {
+        .auth-buttons a:hover {
             background-color: var(--color-verde);
             color: white;
         }
 
+        main {
+            flex: 1;
+            padding: 60px 20px;
+        }
+
+        .hero-section {
+            background-color: rgba(52, 64, 180, 0.9);
+            color: white;
+            padding: 60px 40px;
+            border-radius: 20px;
+            max-width: 1200px;
+            margin: 0 auto 40px;
+            text-align: center;
+            box-shadow: 0 0 30px rgba(0,0,0,0.2);
+        }
+
+        .hero-section h2 {
+            font-size: 42px;
+            margin-bottom: 20px;
+        }
+
+        .hero-section p {
+            font-size: 20px;
+            margin-bottom: 0;
+        }
+
+        .video-section {
+            max-width: 1200px;
+            margin: 50px auto;
+            padding: 0 20px;
+        }
+
+        .video-section h2 {
+            color: var(--color-azul);
+            font-size: 32px;
+            margin-bottom: 30px;
+            text-align: center;
+            text-shadow: 2px 2px 4px rgba(255,255,255,0.8);
+        }
+
+        .video-with-cards {
+            display: grid;
+            grid-template-columns: 1fr 2fr 1fr;
+            gap: 20px;
+            align-items: center;
+        }
+
+        .video-container {
+            position: relative;
+            width: 100%;
+            padding-bottom: 56.25%; /* Relación de aspecto 16:9 */
+            height: 0;
+            overflow: hidden;
+            border-radius: 15px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.3);
+            background-color: #000;
+        }
+
+        .video-container iframe {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            border-radius: 15px;
+        }
+
+        .side-card {
+            background-color: rgba(255, 255, 255, 0.95);
+            padding: 25px;
+            border-radius: 15px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+
+        .side-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 6px 20px rgba(0,0,0,0.15);
+        }
+
+        .side-card h3 {
+            color: var(--color-azul);
+            font-size: 22px;
+            margin-bottom: 15px;
+        }
+
+        .side-card p {
+            font-size: 15px;
+            line-height: 1.6;
+            color: var(--color-texto);
+        }
+
+        .content-section {
+            max-width: 1200px;
+            margin: 50px auto 0;
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 30px;
+            padding: 0 20px;
+        }
+
+        .info-card {
+            background-color: rgba(255, 255, 255, 0.95);
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .info-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 6px 20px rgba(0,0,0,0.15);
+        }
+
+        .info-card h3 {
+            color: var(--color-azul);
+            font-size: 24px;
+            margin-bottom: 15px;
+        }
+
+        .info-card p {
+            font-size: 16px;
+            line-height: 1.6;
+            color: var(--color-texto);
+        }
+
+        .info-card.centered {
+            grid-column: 2 / 3;
+        }
+
+        .about-section {
+            max-width: 1200px;
+            margin: 50px auto;
+            background-color: rgba(255, 255, 255, 0.95);
+            padding: 40px;
+            border-radius: 15px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+        }
+
+        .about-section h2 {
+            color: var(--color-azul);
+            font-size: 32px;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        .about-section p {
+            font-size: 16px;
+            line-height: 1.8;
+            color: var(--color-texto);
+            margin-bottom: 15px;
+        }
+
         footer {
-            background-color: var(--color-azul);
+            background-color: rgba(52, 64, 180, 0.95);
             color: white;
             text-align: center;
             padding: 20px;
             font-size: 0.95em;
+        }
+
+        @media (max-width: 768px) {
+            header {
+                flex-direction: column;
+                gap: 15px;
+                padding: 20px;
+            }
+
+            .hero-section h2 {
+                font-size: 32px;
+            }
+
+            .hero-section p {
+                font-size: 16px;
+            }
+
+            .video-with-cards {
+                grid-template-columns: 1fr;
+            }
+
+            .content-section {
+                grid-template-columns: 1fr;
+            }
+
+            .info-card.centered {
+                grid-column: 1 / 2;
+            }
+
+            .video-section h2 {
+                font-size: 24px;
+            }
         }
     </style>
 </head>
 <body>
 <header>
     <h1>Tu Club PadelApp</h1>
+    <div class="auth-buttons">
+        <a th:href="@{/Api/login}">Iniciar Sesión</a>
+        <a th:href="@{/APi/registro}">Registrarse</a>
+    </div>
 </header>
 
 <main>
-    <div class="content-box">
-        <h1>Bienvenido a Tu Club PadelApp</h1>
-        <p>¡Conéctate con la pasión por el pádel! Elige una opción para continuar:</p>
+    <div class="hero-section">
+        <h2>Bienvenido a Tu Club PadelApp</h2>
+        <p>Donde la pasión por el pádel cobra vida. Únete a nuestra comunidad deportiva.</p>
+    </div>
 
-        <div class="button-group">
-            <a th:href="@{/login}">Iniciar Sesión</a>
-            <a th:href="@{/registro}">Registrarse</a>
+    <!-- SECCIÓN DE VIDEO CON TARJETAS LATERALES -->
+    <div class="video-section">
+        <h2>Descubre todo del Pádel por 3 pequeños desarrolladores 😎 </h2>
+        <div class="video-with-cards">
+            <!-- Tarjeta izquierda: Beneficios del Pádel -->
+            <div class="side-card">
+                <h3>🏆 Beneficios del Pádel</h3>
+                <p>Mejora tu condición física, coordinación y reflejos. Es ideal para socializar, hacer nuevos amigos y mantener un estilo de vida activo y saludable. Además, es perfecto para liberar el estrés.</p>
+            </div>
+
+            <!-- Video en el centro -->
+            <div class="video-container">
+                <iframe src="https://www.youtube.com/embed/KGwIxW1JbOw?si=C4Juv9K5buAr4qyo"
+                        frameborder="0"
+                        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                        allowfullscreen>
+                </iframe>
+            </div>
+
+            <!-- Tarjeta derecha: ¿Qué es el Pádel? -->
+            <div class="side-card">
+                <h3>🎾 ¿Qué es el Pádel?</h3>
+                <p>El pádel es un deporte de raqueta que se juega en parejas. Combina elementos del tenis y el squash, jugándose en una pista cerrada con paredes que forman parte del juego. Es dinámico, divertido y accesible para todas las edades.</p>
+            </div>
         </div>
+    </div>
+
+    <div class="content-section">
+        <div class="info-card">
+            <h3>👥 Nuestra Comunidad</h3>
+            <p>Forma parte de una comunidad vibrante de jugadores apasionados. Organiza partidos, participa en torneos, mejora tu técnica y disfruta de eventos exclusivos para miembros.</p>
+        </div>
+
+        <div class="info-card">
+            <h3>📅 Reserva tu Cancha</h3>
+            <p>Sistema de reservas fácil y rápido. Encuentra el horario perfecto para ti, reserva tu cancha favorita y gestiona tus partidos desde cualquier lugar.</p>
+        </div>
+
+        <div class="info-card">
+            <h3>🎓 Clases y Entrenamiento</h3>
+            <p>Ofrecemos clases para todos los niveles, desde principiantes hasta avanzados. Nuestros entrenadores certificados te ayudarán a mejorar tu técnica y estrategia de juego.</p>
+        </div>
+
+        <div class="info-card centered">
+            <h3>🌟 Instalaciones Premium</h3>
+            <p>Canchas de última generación, vestuarios modernos, tienda especializada y zona de descanso. Todo lo que necesitas para vivir la mejor experiencia de pádel.</p>
+        </div>
+    </div>
+
+    <div class="about-section">
+        <h2>¿Por qué elegir Tu Club PadelApp?</h2>
+        <p>Somos más que un club de pádel, somos una comunidad apasionada por este deporte. Ofrecemos las mejores instalaciones, un ambiente familiar y profesional, y una plataforma digital que facilita la gestión de tus actividades deportivas.</p>
+        <p>Ya seas principiante o jugador experimentado, aquí encontrarás el espacio ideal para disfrutar del pádel. Únete a nosotros y descubre por qué somos el club preferido de miles de jugadores.</p>
+        <p style="text-align: center; margin-top: 30px; font-weight: bold; color: var(--color-azul); font-size: 18px;">
+            ¡Regístrate ahora y comienza tu aventura en el mundo del pádel!
+        </p>
     </div>
 </main>
 

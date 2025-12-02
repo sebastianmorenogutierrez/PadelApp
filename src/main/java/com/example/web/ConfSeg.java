@@ -14,40 +14,52 @@ import org.springframework.security.web.SecurityFilterChain;
 @Configuration
 public class ConfSeg {
 
+    private final UsuarioDetailsServices usuarioDetailsServices;
+
+    public ConfSeg(UsuarioDetailsServices usuarioDetailsServices) {
+        this.usuarioDetailsServices = usuarioDetailsServices;
+    }
+
     @Bean
     public PasswordEncoder passwordEncoder() {
-
         return new BCryptPasswordEncoder();
     }
 
     @Bean
-    public AuthenticationManager authenticationManager(
-            AuthenticationConfiguration authConfig,
-            UsuarioDetailsServices usuarioDetailsServices,
-            PasswordEncoder passwordEncoder
-
-    ) throws Exception {
+    public DaoAuthenticationProvider authenticationProvider() {
         DaoAuthenticationProvider authProvider = new DaoAuthenticationProvider();
         authProvider.setUserDetailsService(usuarioDetailsServices);
-        authProvider.setPasswordEncoder(passwordEncoder);
+        authProvider.setPasswordEncoder(passwordEncoder());
+        return authProvider;
+    }
 
+    @Bean
+    public AuthenticationManager authenticationManager(AuthenticationConfiguration authConfig) throws Exception {
         return authConfig.getAuthenticationManager();
     }
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http
+                .authenticationProvider(authenticationProvider())
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/", "/principal", "/registro", "/reserva", "/css/**", "/js/**", "/images/**", "/login", "/indice").permitAll()
+                        .requestMatchers("/", "/principal", "/login", "/registro", "/css/**", "/js/**", "/images/**").permitAll()
                         .anyRequest().authenticated()
                 )
                 .formLogin(form -> form
                         .loginPage("/login")
-                        .defaultSuccessUrl("/indice", true)
+                        .defaultSuccessUrl("/redirigir", true)
+                        .failureUrl("/login?error=true")
                         .permitAll()
                 )
-                .logout(logout -> logout.permitAll());
+                .logout(logout -> logout
+                        .logoutSuccessUrl("/login?logout=true")
+                        .permitAll()
+                );
 
         return http.build();
     }
+
+
+
 }

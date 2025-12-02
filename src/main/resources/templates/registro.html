@@ -92,8 +92,8 @@
 <body>
 <div class="container">
     <h2>Formulario de Registro</h2>
-    <form th:action="@{/registro}" th:object="${usuario}" method="post">
-        <label for="nombreUsuario">Nombre de Usuario</label>
+    <form th:action="@{/API/registro}" th:object="${usuario}" method="post">
+    <label for="nombreUsuario">Nombre de Usuario</label>
         <input type="text" id="nombreUsuario" th:field="*{nombreUsuario}" required>
 
         <label for="pass_usuario">Contraseña</label>
@@ -108,23 +108,24 @@
         <input type="text" id="apellidoIndividuo" th:field="*{individuo.apellido}" required>
 
         <label for="cedulaIndividuo">Cédula</label>
-        <input type="number" id="cedulaIndividuo" th:field="*{individuo.cedula}" required>
+        <input type="text" id="cedulaIndividuo" th:field="*{individuo.cedula}" required
+               pattern="\d+" inputmode="numeric" maxlength="15"
+               title="Solo números permitidos">
 
         <label for="correoIndividuo">Correo Electrónico</label>
         <input type="email" id="correoIndividuo" th:field="*{individuo.correo}" required>
 
         <label for="telefonoIndividuo">Teléfono</label>
-        <input type="text" id="telefonoIndividuo" th:field="*{individuo.telefono}" required>
+        <input type="text" id="telefonoIndividuo" th:field="*{individuo.telefono}" required
+               pattern="\d{10}" inputmode="numeric" maxlength="10"
+               title="Debe contener exactamente 10 dígitos numéricos">
 
         <label for="edadIndividuo">Edad</label>
-        <input type="number" id="edadIndividuo" th:field="*{individuo.edad}" required>
+        <input type="number" id="edadIndividuo" th:field="*{individuo.edad}" required
+               min="1" max="120"
+               title="Edad válida entre 1 y 120 años">
 
         <hr>
-
-        <label for="perfil">Perfil</label>
-        <select id="perfil" th:field="*{perfil}" required>
-            <option th:each="p : ${perfiles}" th:value="${p.id_perfil}" th:text="${p.descripcion_perfil}"></option>
-        </select>
 
         <button type="submit">Registrarse</button>
     </form>

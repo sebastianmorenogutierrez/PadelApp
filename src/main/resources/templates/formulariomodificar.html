@@ -4,38 +4,148 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
     <title>Editar Perfil</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
     <style>
+        /* Restablecimiento y Fuente */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        /* Estilo del Body: Fondo degradado y centrado del contenido principal */
         body {
           font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-          background: linear-gradient(135deg, #2c3e50, #3440b4);
-          color: #fff; display: flex; flex-direction: column;
-          align-items: center; justify-content: center; min-height: 100vh;
+          /* Fondo de base: #667eea a #764ba2 */
+          background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+          color: #333; /* Color de texto principal más oscuro */
+          display: flex;
+          flex-direction: column;
+          align-items: center;
+          justify-content: center;
+          min-height: 100vh;
           padding: 20px;
         }
+
+        /* Contenedor del Formulario */
         .form-container {
-          background-color: rgba(0, 0, 0, 0.4);
-          padding: 25px; border-radius: 12px;
-          box-shadow: 0 6px 15px rgba(0, 0, 0, 0.3);
-          width: 100%; max-width: 420px;
+          /* Fondo semitransparente con desenfoque (como en el formulario de base) */
+          background: rgba(255, 255, 255, 0.95);
+          backdrop-filter: blur(20px);
+          padding: 30px 40px; /* Un poco más de padding */
+          border-radius: 25px; /* Bordes redondeados grandes */
+          box-shadow: 0 15px 35px rgba(0, 0, 0, 0.1);
+          border: 1px solid rgba(255, 255, 255, 0.2);
+          width: 100%;
+          max-width: 450px; /* Ancho máximo adaptado para un formulario de perfil */
+          position: relative;
+          overflow: hidden;
+          animation: fadeInUp 0.8s ease; /* Animación de entrada */
         }
-        h1 { margin-bottom: 25px; font-size: 2rem; }
-        label { font-weight: bold; color: #cfd8ff; margin-top: 10px; display: block; }
+
+        /* Barra de color superior (decoración) */
+        .form-container::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 5px;
+            background: linear-gradient(90deg, #667eea 0%, #764ba2 100%);
+        }
+
+        /* Título */
+        h1 {
+            /* Estilo de título degradado de la base */
+            font-size: 2.5rem;
+            font-weight: 700;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 25px;
+            text-align: center;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.7rem;
+        }
+
+        /* Etiquetas */
+        label {
+            display: block;
+            margin-bottom: 0.8rem;
+            font-weight: 600;
+            color: #667eea; /* Color principal de la base */
+            font-size: 1rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-top: 15px; /* Separación superior */
+        }
+
+        /* Campos de Entrada */
         input {
-          width: 100%; padding: 8px;
-          border-radius: 6px; border: none; margin-bottom: 15px;
-          font-size: 1rem;
+            width: 100%;
+            padding: 1rem 1.2rem; /* Aumento de padding */
+            border: 2px solid rgba(102, 126, 234, 0.2);
+            border-radius: 15px; /* Bordes redondeados grandes */
+            font-size: 1rem;
+            transition: all 0.3s ease;
+            background: rgba(255, 255, 255, 0.8);
+            color: #333;
+            margin-bottom: 5px; /* Menor margen inferior para que se vea mejor */
         }
+
+        input:focus {
+            outline: none;
+            border-color: #667eea; /* Color de foco */
+            background: white;
+            box-shadow: 0 0 10px rgba(102, 126, 234, 0.2);
+            transform: translateY(-2px);
+        }
+
+        /* Botón de Enviar */
         button {
-          padding: 10px 20px; font-size: 1rem;
-          border: none; border-radius: 6px;
-          background-color: #28a745; color: white;
-          cursor: pointer;
+            width: 100%; /* Botón de ancho completo */
+            margin-top: 30px;
+            padding: 1rem 2.5rem;
+            border: none;
+            border-radius: 15px;
+            font-weight: 600;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            /* Estilo de botón primario de la base */
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.8rem;
         }
-        button:hover { background-color: #218838; }
+
+        button:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 25px rgba(102, 126, 234, 0.6);
+            /* No se necesita color de fondo hover ya que es un degradado */
+        }
+
+        /* Animación de entrada */
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
     </style>
 </head>
 <body>
-<h1>Editar Perfil de Usuario</h1>
+<h1><i class="fas fa-user-cog"></i> Editar Perfil</h1>
 
 <form th:action="@{/modificar}" method="post" class="form-container" th:object="${usuario}">
 
@@ -54,12 +164,12 @@
     <input th:field="*{individuo.telefono}" type="text" />
 
     <label>Edad:</label>
-    <input th:field="*{individuo.edad}" type="number" min="0" />
+    <input th:field="*{individuo.edad}" type="number" min="0" pattern="\d*" title="Solo números" />
 
     <label>Cédula:</label>
-    <input th:field="*{individuo.cedula}" type="text" />
+    <input th:field="*{individuo.cedula}" type="text" pattern="[0-9]*" title="Solo números, sin guiones ni puntos" />
 
-    <button type="submit">Guardar Cambios</button>
+    <button type="submit"><i class="fas fa-save"></i> Guardar Cambios</button>
 
 </form>
 </body>

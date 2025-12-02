@@ -11,7 +11,8 @@ public interface IndividuoServicio {
 
     void borrar(Individuo individuo);
 
-    Individuo localizarIndividuo(Individuo individuo);
+    // ✅ CORRECCIÓN: Ahora espera un Long (el ID) en lugar de un objeto Individuo
+    Individuo localizarIndividuo(Long idIndividuo);
 
     Individuo localizarPorNombreUsuario(String nombreUsuario); // método agregado
 }

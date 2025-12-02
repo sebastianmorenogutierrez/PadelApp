@@ -2,8 +2,9 @@ package com.example.web;
 
 import com.example.domain.Individuo;
 import com.example.servicio.UsuarioServicio;
-import com.example.domain.Usuario;
+import com.example.domain.usuario.Usuario;
 import com.example.servicio.IndividuoServicio;
+import com.example.servicio.CorreoServicio;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 import jakarta.validation.Valid;
@@ -12,20 +13,17 @@ import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.CommandLineRunner;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.Errors;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-
-
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.io.IOException;
 import java.util.List;
+import java.util.stream.Collectors;
+import java.util.concurrent.CompletableFuture;
 
 @Controller
 public class ControladorREST {
@@ -35,6 +33,45 @@ public class ControladorREST {
 
     @Autowired
     private UsuarioServicio usuarioServicio;
+
+    @Autowired
+    private CorreoServicio correoServicio;
+
+// --- MÉTODOS DE CORREO MASIVO ---
+
+    @PostMapping("/enviar-correo-masivo")
+    public String enviarCorreoMasivo(
+            @RequestParam("asunto") String asunto,
+            @RequestParam("mensaje") String mensaje,
+            @RequestParam(value = "tipoEvento", defaultValue = "NOTIFICACIÓN GENERAL") String tipoEvento,
+            RedirectAttributes redirectAttributes) {
+
+        List<Usuario> jugadoresActivos = usuarioServicio.listarTodos()
+                .stream()
+                .filter(usuario -> !usuario.isEliminado() && usuario.getIndividuo() != null && !usuario.getIndividuo().isEliminado())
+                .collect(Collectors.toList());
+
+        if (jugadoresActivos.isEmpty()) {
+            redirectAttributes.addFlashAttribute("mensajeAdvertencia", "No hay jugadores activos para enviar correos.");
+            return "redirect:/jugadores";
+        }
+
+        try {
+            CompletableFuture<Void> futuroEnvio = correoServicio.enviarCorreoMasivo(jugadoresActivos, asunto, mensaje, tipoEvento);
+            redirectAttributes.addFlashAttribute("mensajeExito",
+                    "El envío masivo de correos a " + jugadoresActivos.size() +
+                            " jugadores ha sido iniciado en segundo plano.");
+
+        } catch (Exception e) {
+            System.err.println("Error al iniciar el proceso de envío masivo: " + e.getMessage());
+            redirectAttributes.addFlashAttribute("mensajeError", "Error interno al iniciar el envío de correos: " + e.getMessage());
+        }
+
+        return "redirect:/jugadores";
+    }
+
+
+
 
     @GetMapping("/")
     public String comienzo(Model model) {
@@ -51,10 +88,43 @@ public class ControladorREST {
     @PostMapping("/salvar")
     public String salvar(@Valid Individuo individuo, Errors errors) {
         if (errors.hasErrors()) {
+            return "agregar";
+        }
+        individuoServicio.salvar(individuo);
+        return "redirect:/jugadores";
+    }
+
+    @PostMapping("/cambiar/guardar")
+    public String guardarCambios(@Valid @ModelAttribute("individuo") Individuo individuo, Errors errors, Model model) {
+        if (errors.hasErrors()) {
             return "cambiar";
         }
         individuoServicio.salvar(individuo);
-        return "redirect:/";
+        return "redirect:/jugadores";
+    }
+
+    @GetMapping("/cambiar/{idIndividuo}")
+    public String editarJugador(@PathVariable("idIndividuo") Long idIndividuo, Model model) {
+        Individuo individuo = individuoServicio.localizarIndividuo(idIndividuo);
+        if (individuo != null) {
+            model.addAttribute("individuo", individuo);
+            return "cambiar";
+        } else {
+            return "redirect:/jugadores";
+        }
+    }
+
+    @GetMapping("/borrar/{idIndividuo}")
+    public String eliminarJugador(@PathVariable("idIndividuo") Long idIndividuo, RedirectAttributes redirectAttributes) {
+        Individuo individuo = individuoServicio.localizarIndividuo(idIndividuo);
+        if (individuo != null) {
+            individuo.setEliminado(true);
+            individuoServicio.salvar(individuo);
+            redirectAttributes.addFlashAttribute("mensajeExito", "Jugador eliminado correctamente.");
+        } else {
+            redirectAttributes.addFlashAttribute("mensajeError", "Error: Jugador no encontrado.");
+        }
+        return "redirect:/jugadores";
     }
 
     @GetMapping("/datos")
@@ -69,33 +139,30 @@ public class ControladorREST {
         }
     }
 
-    @GetMapping("/cambiar/{id_individuo}")
-    public String cambiar(Individuo individuo, Model model) {
-        individuo = individuoServicio.localizarIndividuo(individuo);
-        model.addAttribute("individuo", individuo);
-        return "cambiar";
-    }
-
-    @GetMapping("/borrar/{id_individuo}")
-    public String borrar(Individuo individuo) {
-        Individuo actual = individuoServicio.localizarIndividuo(individuo);
-        if (actual != null) {
-            actual.setEliminado(true);
-            individuoServicio.salvar(actual);
-            System.out.println("Individuo marcado como eliminado: " + actual.getNombre());
-        }
-        return "redirect:/";
-    }
-
     @GetMapping("/indice")
-    public String mostrarIndice() {
-        return "indice";
-    }
+    public String mostrarIndice(Model model, Authentication authentication) {
+        String nombreUsuario = authentication.getName();
+        // Usamos el método que trae al usuario para verificar que no esté eliminado
+        Usuario usuarioAutenticado = usuarioServicio.obtenerUsuarioActual(nombreUsuario);
 
+        if (usuarioAutenticado != null && usuarioAutenticado.getIndividuo() != null) {
 
-    @GetMapping("/torneo")
-    public String mostrarTorneos() {
-        return "torneo";
+            // 1. Construir el Nombre Completo
+            String nombre = usuarioAutenticado.getIndividuo().getNombre();
+            String apellido = usuarioAutenticado.getIndividuo().getApellido();
+            String nombreCompleto = (nombre != null ? nombre : "") + " " + (apellido != null ? apellido : "");
+
+            // 2. Agregar las variables al Modelo de Thymeleaf
+            model.addAttribute("nombreCompleto", nombreCompleto.trim());
+            model.addAttribute("usuario", usuarioAutenticado); // Necesario para el rol
+
+            System.out.println("Cargando índice para: " + nombreCompleto.trim());
+
+            return "indice";
+        } else {
+            // Redirige al login si el usuario no se encuentra o está incompleto
+            return "redirect:/login?error=usuarioInvalido";
+        }
     }
 
     @GetMapping("/equipo")
@@ -103,31 +170,50 @@ public class ControladorREST {
         return "equipo";
     }
 
+
+    @GetMapping("/torneos-vista")
+    public String mostrarTorneo() {
+        return "torneo";
+    }
+
     @GetMapping("/redirigir")
     public String redirigirSegunPerfil(Authentication auth, HttpSession session) {
         String username = auth.getName();
         Usuario usuario = usuarioServicio.localizarPorNombreUsuario(username);
         session.setAttribute("usuarioActual", usuario);
-        session.setAttribute("individuoActual", usuario.getIndividuo());
-
         String rol = auth.getAuthorities().iterator().next().getAuthority();
-
-        if ("ROLE_ADMINISTRACION".equals(rol)) {
-            return "redirect:/indice";
-        } else if ("ROLE_JUGADOR".equals(rol)) {
-            return "redirect:/secretaria";
-        } else {
-            // Opcional: podrías llevar a una página de error o login si el rol no es válido
-            return "redirect:/acceso-denegado";
+        System.out.println("ROL QUE TRAIGO PARA VALIDAR: " + rol);
+        switch (rol) {
+            case "ROLE_ADMINISTRADOR":
+                return "redirect:/indice";
+            case "ROLE_JUGADOR":
+                return "redirect:/jugador22";
+            default:
+                return "redirect:/error";
         }
     }
 
+    @GetMapping("/jugadores")
+    public String verJugadores(Model model) {
+        try {
+            List<Usuario> jugadores = usuarioServicio.listarTodos()
+                    .stream()
+                    .filter(usuario -> !usuario.isEliminado() &&
+                            usuario.getIndividuo() != null &&
+                            !usuario.getIndividuo().isEliminado())
+                    .collect(Collectors.toList());
+            model.addAttribute("jugadores", jugadores);
+        } catch (Exception e) {
+            System.err.println("Error al cargar jugadores: " + e.getMessage());
+            model.addAttribute("jugadores", List.of());
+        }
+        return "jugadores";
+    }
 
     @GetMapping("/modificar")
     public String mostrarFormularioDeEdicion(Model model, Authentication auth) {
         String nombreUsuario = auth.getName();
         Usuario usuario = usuarioServicio.obtenerUsuarioActual(nombreUsuario);
-
         if (usuario != null && usuario.getIndividuo() != null) {
             model.addAttribute("usuario", usuario);
             return "formulariomodificar";
@@ -141,12 +227,10 @@ public class ControladorREST {
         if (errors.hasErrors()) {
             return "formulariomodificar";
         }
-
         Individuo individuo = usuario.getIndividuo();
         individuo.setEliminado(false);
         individuoServicio.salvar(individuo);
-
-        model.addAttribute("mensajeExito", "✅ Cambios guardados correctamente.");
+        model.addAttribute("mensajeExito", "Cambios guardados correctamente.");
         return "indice";
     }
 
@@ -154,7 +238,6 @@ public class ControladorREST {
     public String eliminarCuenta(Authentication auth, HttpSession session) {
         String nombreUsuario = auth.getName();
         Usuario usuario = usuarioServicio.localizarPorNombreUsuario(nombreUsuario);
-
         if (usuario != null) {
             Individuo individuo = usuario.getIndividuo();
             if (individuo != null) {
@@ -164,11 +247,8 @@ public class ControladorREST {
             usuarioServicio.eliminarCuentaPorId(Long.valueOf(usuario.getId_usuario()));
             session.invalidate();
         }
-
         return "redirect:/login?cuentaEliminada";
     }
-
-
 
     @GetMapping("/login")
     public String mostrarLogin() {
@@ -180,15 +260,14 @@ public class ControladorREST {
         return "jugador";
     }
 
-    @GetMapping("/secretaria")
-    public String mostrarsecretaria() {
-        return "secretaria";
+    @GetMapping("/jugador22")
+    public String mostrarvistajugador() {
+        return "jugador22";
     }
 
-
-    @GetMapping("/partido")
-    public String mostrarpartido() {
-        return "partido";
+    @GetMapping("/login?rolDesconocido")
+    public String mostrarAccesodenegado() {
+        return "login";
     }
 
     @GetMapping("/exportarExcel")
@@ -197,7 +276,6 @@ public class ControladorREST {
         response.setHeader("Content-Disposition", "attachment; filename=individuos.xlsx");
 
         List<Individuo> list = individuoServicio.listaIndividuos();
-
         Workbook workbook = new XSSFWorkbook();
         Sheet hoja = workbook.createSheet("individuos");
 
@@ -221,7 +299,4 @@ public class ControladorREST {
         workbook.write(response.getOutputStream());
         workbook.close();
     }
-
-
 }
-
