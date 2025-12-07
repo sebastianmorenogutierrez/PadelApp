@@ -71,6 +71,12 @@
 			<version>5.3.0</version>
 		</dependency>
 
+		<dependency>
+			<groupId>com.stripe</groupId>
+			<artifactId>stripe-java</artifactId>
+			<version>24.18.0</version>
+		</dependency>
+
 		<!-- Módulos de iText con versión explícita -->
 		<dependency>
 			<groupId>com.itextpdf</groupId>

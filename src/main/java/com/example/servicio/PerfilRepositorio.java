@@ -1,4 +1,4 @@
-package com.example.servicio;
+package com.example.repositorio;
 
 import com.example.domain.Perfil;
 import org.springframework.data.jpa.repository.JpaRepository;

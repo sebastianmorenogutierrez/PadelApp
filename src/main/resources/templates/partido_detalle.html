@@ -355,6 +355,13 @@
 
         </div>
 
+        <div th:if="${usuarioYaInscrito}">
+            <a th:href="@{/pagos/partido/{id}(id=${partido.id_match})}"
+               class="btn btn-success btn-lg">
+                <i class="fas fa-credit-card me-2"></i>Pagar Partido
+            </a>
+        </div>
+
         <div class="action-buttons">
             <a th:href="@{/partido}" class="btn-secondary">
                 <i class="fas fa-arrow-left"></i> Volver a Partidos

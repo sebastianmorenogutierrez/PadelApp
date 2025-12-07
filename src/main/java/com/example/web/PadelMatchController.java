@@ -4,9 +4,8 @@ import com.example.domain.PadelMatch;
 import com.example.domain.Individuo;
 import com.example.domain.usuario.Usuario;
 import com.example.servicio.PadelMatchService;
+import com.example.servicio.StripeService;
 import com.example.servicio.UsuarioServicio;
-
-// Importaciones necesarias para PDF
 import com.itextpdf.io.font.constants.StandardFonts;
 import com.itextpdf.kernel.colors.ColorConstants;
 import com.itextpdf.kernel.font.PdfFont;
@@ -22,20 +21,17 @@ import com.itextpdf.layout.properties.UnitValue;
 import com.itextpdf.layout.borders.SolidBorder;
 import com.itextpdf.kernel.geom.PageSize;
 import jakarta.servlet.http.HttpServletResponse;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
-
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.NoSuchElementException;
-import java.util.Optional;
 
 @Controller
 @RequestMapping("/partido")
@@ -119,11 +115,22 @@ public class PadelMatchController {
                     model.addAttribute("partido", match);
 
                     boolean yaInscrito = false;
+                    boolean yaPago = false;
+
                     if (nombreUsuarioLogueado != null) {
+                        // Verificar si está inscrito
                         yaInscrito = match.getJugadores().stream()
                                 .anyMatch(j -> j.getNombreUsuario().equals(nombreUsuarioLogueado));
+
+                        // Verificar si ya pagó (agregar este código)
+                        Usuario usuarioActual = usuarioServicio.localizarPorNombreUsuario(nombreUsuarioLogueado);
+                        if (usuarioActual != null) {
+                            yaPago = stripeService.usuarioYaPago(usuarioActual, match);
+                        }
                     }
+
                     model.addAttribute("usuarioYaInscrito", yaInscrito);
+                    model.addAttribute("usuarioYaPago", yaPago); // Nueva variable
 
                     return "partido_detalle";
                 })
@@ -132,6 +139,8 @@ public class PadelMatchController {
                     return "redirect:/partido";
                 });
     }
+    @Autowired
+    private StripeService stripeService;
 
     @PostMapping("/{matchId}/inscribir")
     public String inscribirJugadorPorNombre(
@@ -154,10 +163,6 @@ public class PadelMatchController {
         }
         return "redirect:/partido/" + matchId;
     }
-
-    // -------------------------------------------------------------------------
-    //  MÉTODO PARA GENERAR PDF DE PARTIDO Y MÉTODOS AUXILIARES
-    // -------------------------------------------------------------------------
 
     @GetMapping("/{id}/pdf")
     public void generarPDFPartido(@PathVariable("id") Long id, HttpServletResponse response) throws IOException {

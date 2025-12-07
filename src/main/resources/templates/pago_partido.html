@@ -1,0 +1,12 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Pagar Partido</title>
+</head>
+<body>
+<h1>Pagar Partido</h1>
+<form th:action="@{/pagos/crear-sesion/{id}(id=${pagoId})}" method="post">
+    <button type="submit">Pagar con Stripe</button>
+</form>
+</body>
+</html>
