@@ -58,10 +58,6 @@ public class StripeService {
         return Session.create(params);
     }
 
-    /**
-     * 💡 NUEVO MÉTODO: Verifica si el usuario ya realizó un pago completado para este partido.
-     * Es crucial para que el controlador pueda validar antes de crear una nueva sesión de pago.
-     */
     public boolean usuarioYaPago(Usuario usuario, PadelMatch partido) {
         // Llama al método que debe estar definido en PagoRepository
         Optional<Pago> pagoExistente = pagoRepository
