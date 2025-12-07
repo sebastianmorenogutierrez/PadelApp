@@ -18,7 +18,6 @@ public class Pago implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id_pago;
-
     @ManyToOne
     @JoinColumn(name = "match_id", referencedColumnName = "id_match")
     private PadelMatch partido;
