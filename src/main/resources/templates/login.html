@@ -16,6 +16,7 @@
             --color-text: #2d3436;
             --color-text-light: #636e72;
             --color-white: #ffffff;
+            --color-bg-soft: #F4FFF8; /* Definido, pero no aplicado al body */
 
             /* Degradados y Colores del Fondo de Bienvenida (Adaptado al Azul/Verde PadelApp) */
             --gradient-sidebar: linear-gradient(135deg, var(--color-primary-dark) 0%, var(--color-secondary) 100%);
@@ -30,13 +31,14 @@
 
         body {
             font-family: 'Inter', 'Segoe UI', -apple-system, BlinkMacSystemFont, sans-serif;
+            /* CORREGIDO: Usamos Blanco Puro (var(--color-white)) como se ve en la imagen */
             background-color: var(--color-white);
             display: flex;
             justify-content: center;
             align-items: center;
             min-height: 100vh;
             color: var(--color-text);
-            overflow: hidden; /* Ocultar el scroll del cuerpo si el contenido es más pequeño */
+            overflow: hidden;
         }
 
         /* Contenedor Principal con el diseño de 2 columnas */
@@ -129,9 +131,6 @@
                 -70px 650px 0 0 var(--cloud-color),
                 -60px 750px 0 0 var(--cloud-color),
                 -40px 850px 0 0 var(--cloud-color);
-
-            /* Ajuste fino del borde (solo necesario si el wrapper no tiene overflow:hidden) */
-            /* border-left: 2px solid var(--cloud-color); */
         }
 
         /* --- Columna del Formulario (Derecha) --- */
@@ -316,6 +315,10 @@
     </div>
 
     <div class="form-section">
+        <div th:if="${param.logout}" class="message message-success">
+            <i class="fas fa-check-circle"></i> Has cerrado sesión exitosamente.
+        </div>
+
         <div th:if="${param.cuentaEliminada}" class="message message-success">
             <i class="fas fa-check-circle"></i> Tu cuenta ha sido eliminada exitosamente.
         </div>
