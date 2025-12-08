@@ -1,6 +1,7 @@
 package com.example.servicio;
 
-import com.example.dao.UsuarioDao;
+// Importamos la interfaz correcta del repositorio (asumiendo que está en el paquete dao)
+import com.example.domain.usuario.UsuarioRepository;
 import com.example.domain.usuario.Usuario;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.User;
@@ -13,11 +14,11 @@ import org.springframework.stereotype.Service;
 public class UsuarioDetailsServices implements UserDetailsService {
 
     @Autowired
-    private UsuarioDao usuarioDao;
+    private UsuarioRepository usuarioRepository;
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        Usuario usuario = usuarioDao.findByNombreUsuario(username);
+        Usuario usuario = usuarioRepository.findByNombreUsuario(username);
 
         if (usuario == null) {
             throw new UsernameNotFoundException("Usuario NO encontrado: " + username);
