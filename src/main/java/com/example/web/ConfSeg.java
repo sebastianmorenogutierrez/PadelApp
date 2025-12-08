@@ -43,7 +43,7 @@ public class ConfSeg {
         http
                 .authenticationProvider(authenticationProvider())
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/", "/principal", "/login", "/registro", "/css/**", "/js/**", "/images/**").permitAll()
+                        .requestMatchers("/", "/principal", "/login", "/registro", "/API/registro", "/css/**", "/js/**", "/images/**").permitAll()
                         .anyRequest().authenticated()
                 )
                 .formLogin(form -> form
@@ -59,7 +59,4 @@ public class ConfSeg {
 
         return http.build();
     }
-
-
-
 }
