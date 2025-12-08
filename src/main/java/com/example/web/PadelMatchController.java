@@ -54,6 +54,7 @@ public class PadelMatchController {
     @GetMapping("/nuevo")
     public String mostrarFormularioCreacion(Model model) {
         model.addAttribute("partido", new PadelMatch());
+        // 🛠️ CORRECCIÓN 1: Devuelve la plantilla del formulario de creación (partido.html)
         return "partido";
     }
 
@@ -80,6 +81,7 @@ public class PadelMatchController {
         } catch (RuntimeException e) {
             System.err.println("Error al guardar el partido: " + e.getMessage());
             redirectAttributes.addFlashAttribute("mensajeError", "⚠️ Error al crear el partido: " + e.getMessage());
+            // Si falla el POST, redirecciona al GET /partido/nuevo
             return "redirect:/partido/nuevo";
         }
     }
@@ -87,7 +89,8 @@ public class PadelMatchController {
     @GetMapping("/gestion")
     public String listarPartidosGestionRedundante(Model model) {
         model.addAttribute("matches", padelMatchService.listarTodos());
-        return "partido_detalle";
+        // 🛠️ CORRECCIÓN 2: Este método de gestión debe devolver la lista, no la plantilla de detalle.
+        return "lista_partidos_gestion";
     }
 
     @PostMapping("/{id}/eliminar")
