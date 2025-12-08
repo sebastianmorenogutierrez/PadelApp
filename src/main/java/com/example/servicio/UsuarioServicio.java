@@ -8,7 +8,8 @@ import com.example.dao.PerfilDao;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import jakarta.transaction.Transactional;
+// 💡 CAMBIO CLAVE: Usamos la anotación transaccional de Spring
+import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
 
 @Service
@@ -75,7 +76,6 @@ public class UsuarioServicio {
             return null;
         }
     }
-
     public List<Usuario> listarTodos() {
         return usuarioDao.findAll();
     }

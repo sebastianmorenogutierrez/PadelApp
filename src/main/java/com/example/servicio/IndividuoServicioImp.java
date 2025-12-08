@@ -4,7 +4,7 @@ import com.example.dao.IndividuoDao;
 import com.example.domain.Individuo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional; // ⬅️ ¡IMPORTANTE!
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
