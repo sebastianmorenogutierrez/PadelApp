@@ -1,8 +1,9 @@
 <!DOCTYPE html>
 <html lang="es" xmlns:th="http://www.thymeleaf.org">
 <head>
-    <meta charset="UTF-8">
-    <title>Gestión de Partidos</title>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>Gestión de Partidos - PadelApp</title>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
     <style>
         /* Paleta de Colores Solicitada (Verde Azulado Brillante) */
@@ -10,29 +11,19 @@
             --color-primary: #00b894; /* Verde Azulado Brillante */
             --color-primary-dark: #00a383; /* Variante más oscura del primario */
             --color-secondary: #0984e3; /* Azul Brillante */
-            --color-accent: #fdcb6e; /* Amarillo Dorado */
             --color-danger: #d63031; /* Rojo Ladrillo */
-            --color-text: #2d3436; /* Gris Oscuro Casi Negro */
-            --color-text-light: #636e72; /* Gris Medio */
-            --color-background: #f8f9fa; /* Gris Muy Claro */
-            --color-white: #ffffff; /* Blanco Puro */
+            --color-text: #2d3436;
+            --color-text-light: #636e72;
+            --color-white: #ffffff;
+            --color-bg-soft: #F4FFF8; /* <-- Nuevo Fondo Súper Claro */
 
-            /* Gradientes */
-            --gradient-primary: linear-gradient(135deg, var(--color-primary) 0%, #00cec9 100%);
-            --gradient-primary-btn: linear-gradient(135deg, var(--color-primary) 0%, var(--color-primary-dark) 100%);
-            --gradient-sidebar-active: linear-gradient(90deg, rgba(0, 184, 148, 0.1) 0%, rgba(0, 163, 131, 0.05) 100%);
-
-            /* Menú Específico */
-            --gradient-menu-accent: linear-gradient(135deg, var(--color-secondary) 0%, #74b9ff 100%); /* Usando secondary/azul */
-            --gradient-menu-danger: linear-gradient(135deg, var(--color-danger) 0%, #ff7675 100%); /* Usando danger/rojo */
-
-            /* Botones de Acción en Tabla */
-            --gradient-edit: linear-gradient(135deg, #2ecc71 0%, #27ae60 100%); /* Verde más estándar para Editar */
-            --gradient-delete: linear-gradient(135deg, var(--color-danger) 0%, #e74c3c 100%);
-            --gradient-pdf: linear-gradient(135deg, var(--color-accent) 0%, #ff851b 100%); /* Amarillo/Naranja para PDF */
+            /* Gradientes Ajustados */
+            --gradient-primary: linear-gradient(135deg, var(--color-primary) 0%, var(--color-primary-dark) 100%);
+            --gradient-accent-menu: linear-gradient(135deg, #2ecc71 0%, #27ae60 100%);
+            --gradient-danger-menu: linear-gradient(135deg, var(--color-danger) 0%, #e74c3c 100%);
         }
 
-        /* Estilos Base */
+        /* --- Base CSS --- */
         * {
             margin: 0;
             padding: 0;
@@ -41,7 +32,7 @@
 
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background: var(--gradient-primary); /* Fondo con gradiente primario */
+            background-color: var(--color-bg-soft); /* <-- Fondo Súper Claro */
             min-height: 100vh;
             color: var(--color-text);
         }
@@ -51,10 +42,11 @@
             min-height: 100vh;
         }
 
-        /* Sidebar */
+        /* --- Sidebar --- */
         .sidebar {
             width: 280px;
             background: var(--color-white);
+            backdrop-filter: blur(10px);
             padding: 2rem 0;
             box-shadow: 4px 0 20px rgba(0, 0, 0, 0.1);
             border-right: 1px solid rgba(0, 184, 148, 0.2);
@@ -73,24 +65,7 @@
             font-weight: 700;
         }
 
-        .menu-item {
-            display: block;
-            padding: 1rem 2rem;
-            text-decoration: none;
-            color: var(--color-text-light);
-            transition: all 0.3s ease;
-            border-left: 4px solid transparent;
-            position: relative;
-        }
-
-        .menu-item:hover,
-        .menu-item.active {
-            background: var(--gradient-sidebar-active);
-            color: var(--color-primary);
-            border-left-color: var(--color-primary);
-            transform: translateX(5px);
-        }
-
+        /* --- Menu sections --- */
         .menu-section-title {
             padding: 0 2rem 0.5rem;
             color: var(--color-text-light);
@@ -100,20 +75,44 @@
             font-weight: 600;
         }
 
+        .menu-item {
+            display: block;
+            padding: 1rem 2rem;
+            text-decoration: none;
+            color: var(--color-text);
+            transition: all 0.3s ease;
+            border-left: 4px solid transparent;
+            position: relative;
+        }
+
+        .menu-item:hover,
+        .menu-item.active {
+            background: linear-gradient(90deg, rgba(0, 184, 148, 0.1) 0%, rgba(0, 163, 131, 0.05) 100%);
+            color: var(--color-primary);
+            border-left-color: var(--color-primary);
+            transform: translateX(5px);
+        }
+
+        .menu-item i {
+            margin-right: 0.8rem;
+            width: 20px;
+            text-align: center;
+        }
+
         .menu-item.accent {
-            background: var(--gradient-menu-accent);
+            background: var(--gradient-accent-menu);
             color: var(--color-white);
             border-radius: 0 25px 25px 0;
             margin: 0.5rem 0;
         }
 
         .menu-item.accent:hover {
-            background: var(--color-secondary);
+            background: #27ae60;
             transform: translateX(10px);
         }
 
         .menu-item.danger {
-            background: var(--gradient-menu-danger);
+            background: var(--gradient-danger-menu);
             color: var(--color-white);
             border-radius: 0 25px 25px 0;
             margin-top: 1rem;
@@ -124,222 +123,155 @@
             transform: translateX(10px);
         }
 
-        /* Main Content */
+        /* --- Main Content & Layout --- */
         .main-content {
             flex: 1;
             padding: 2rem;
             overflow-y: auto;
+            display: flex;
+            flex-direction: column;
         }
 
+        /* --- Content Header (Card Principal) --- */
         .content-header {
+            width: 100%;
             background: var(--color-white);
-            padding: 2rem;
+            padding: 2.5rem;
             border-radius: 20px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
             margin-bottom: 2rem;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
-            border: 1px solid rgba(0, 184, 148, 0.2);
+            border-top: 5px solid var(--color-primary);
         }
 
         .content-header h1 {
-            color: var(--color-primary);
-            font-size: 2.5rem;
-            margin-bottom: 0.5rem;
+            font-size: 2rem;
             font-weight: 700;
+            color: var(--color-primary-dark);
+            margin-bottom: 0.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.8rem;
         }
 
         .content-header p {
             color: var(--color-text-light);
-            font-size: 1.1rem;
+            font-size: 1rem;
+            margin-bottom: 1.5rem;
         }
 
-        /* Action Buttons */
-        .action-buttons {
-            margin-bottom: 2rem;
-            display: flex;
-            gap: 1rem;
-            flex-wrap: wrap;
-        }
-
-        /* Estilo para los botones principales y enlaces */
-        .btn {
-            padding: 0.8rem 1.5rem;
-            border: none;
-            border-radius: 12px;
-            text-decoration: none;
-            font-weight: 600;
-            transition: all 0.3s ease;
-            cursor: pointer;
-            font-size: 0.95rem;
-            display: inline-flex;
-            align-items: center;
-            gap: 0.5rem;
-        }
-
-        .btn-primary {
-            background: var(--gradient-primary-btn);
-            color: var(--color-white);
-            box-shadow: 0 4px 15px rgba(0, 184, 148, 0.4);
-        }
-
-        .btn-primary:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 8px 25px rgba(0, 184, 148, 0.6);
-        }
-
-        .btn-secondary {
-            background: var(--color-white);
-            color: var(--color-primary);
-            border: 2px solid var(--color-primary);
-        }
-
-        .btn-secondary:hover {
-            background: var(--color-primary);
-            color: var(--color-white);
-            transform: translateY(-2px);
-        }
-
-        /* Botón de Edición (Verde estándar) */
-        .btn-edit {
-            background: var(--gradient-edit);
-            color: var(--color-white);
-            box-shadow: 0 4px 15px rgba(46, 204, 113, 0.4);
-        }
-
-        .btn-edit:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 8px 25px rgba(46, 204, 113, 0.6);
-        }
-
-        /* Botón de Eliminar (Rojo Ladrillo) */
-        .btn-danger {
-            background: var(--gradient-delete);
-            color: var(--color-white);
-            box-shadow: 0 4px 15px rgba(214, 48, 49, 0.4);
-        }
-
-        .btn-danger:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 8px 25px rgba(214, 48, 49, 0.6);
-        }
-
-        /* Botón de PDF (Amarillo Dorado/Accent) */
-        .btn-pdf {
-            background: var(--gradient-pdf);
-            color: var(--color-text); /* Texto oscuro para contraste */
-            box-shadow: 0 4px 15px rgba(253, 203, 110, 0.4);
-        }
-
-        .btn-pdf:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 8px 25px rgba(253, 203, 110, 0.6);
-        }
-
-        .btn-small {
-            padding: 0.5rem 1rem;
-            font-size: 0.85rem;
-        }
-
-        /* Table Container */
-        .table-container {
+        /* --- List Container (Tabla) --- */
+        .list-container {
             background: var(--color-white);
             border-radius: 20px;
             padding: 2rem;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
-            border: 1px solid rgba(0, 184, 148, 0.2);
-            overflow-x: auto;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
+            width: 100%;
+            position: relative;
         }
 
-        /* Table Styles */
-        .partidos-table {
-            width: 100%;
-            border-collapse: collapse;
+        /* --- Buttons --- */
+        .btn {
+            padding: 0.8rem 1.5rem;
+            border: none;
+            border-radius: 10px;
+            font-weight: 600;
+            font-size: 0.9rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+        }
+
+        .btn-create {
+            background: var(--gradient-primary);
+            color: white;
+            box-shadow: 0 4px 15px rgba(0, 184, 148, 0.4);
             margin-top: 1rem;
         }
-
-        .partidos-table thead tr {
-            background: var(--gradient-primary-btn); /* Encabezado de tabla con gradiente primario */
-            color: var(--color-white);
+        .btn-create:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(0, 184, 148, 0.5);
         }
 
-        .partidos-table th,
-        .partidos-table td {
-            padding: 1rem;
+        .btn-table {
+            padding: 0.5rem 1rem;
+            font-size: 0.8rem;
+            border-radius: 8px;
+        }
+
+        .btn-table.edit {
+            background: var(--color-secondary);
+            color: white;
+        }
+        .btn-table.edit:hover {
+            background: #0077c2;
+        }
+        .btn-table.details {
+            background: var(--color-primary);
+            color: white;
+        }
+        .btn-table.details:hover {
+            background: var(--color-primary-dark);
+        }
+        .btn-table.pdf {
+            background: #e74c3c; /* Rojo Ladrillo */
+            color: white;
+        }
+        .btn-table.pdf:hover {
+            background: #c0392b;
+        }
+        .btn-table.delete {
+            background: var(--color-danger);
+            color: white;
+        }
+        .btn-table.delete:hover {
+            background: #b82c2c;
+        }
+
+        /* --- Table Styling --- */
+        .data-table {
+            width: 100%;
+            border-collapse: separate;
+            border-spacing: 0;
+            font-size: 0.9rem;
+        }
+
+        .data-table th, .data-table td {
+            padding: 1rem 1.5rem;
             text-align: left;
             border-bottom: 1px solid rgba(0, 184, 148, 0.1);
         }
 
-        .partidos-table th {
+        .data-table th {
+            background: var(--color-primary);
+            color: white;
             font-weight: 600;
             text-transform: uppercase;
-            font-size: 0.85rem;
             letter-spacing: 0.5px;
         }
 
-        .partidos-table tbody tr {
-            transition: all 0.3s ease;
+        .data-table tr:hover {
+            background-color: rgba(0, 184, 148, 0.05);
         }
 
-        .partidos-table tbody tr:hover {
-            background: rgba(0, 184, 148, 0.05);
-            transform: scale(1.01);
+        .data-table th:first-child {
+            border-top-left-radius: 10px;
         }
 
-        .partidos-table td {
-            font-size: 0.95rem;
-            color: var(--color-text);
+        .data-table th:last-child {
+            border-top-right-radius: 10px;
         }
 
-        /* Action buttons in table */
-        .action-buttons-table {
+        .table-actions {
             display: flex;
             gap: 0.5rem;
-            flex-wrap: wrap;
+            justify-content: flex-end; /* Alinear acciones a la derecha */
         }
 
-        .delete-form {
-            display: inline;
-        }
-
-        /* Mensajes de Alerta (Ajustados a la nueva paleta) */
-        .mensaje-exito {
-            background-color: #d4edda;
-            color: #00a383; /* Color verde oscuro relacionado con el primary */
-            border: 1px solid #c3e6cb;
-            padding: 1rem;
-            margin-bottom: 1.5rem;
-            border-radius: 12px;
-            font-weight: 600;
-        }
-
-        .mensaje-error {
-            background-color: #f8d7da;
-            color: var(--color-danger); /* Rojo ladrillo */
-            border: 1px solid #f5c6cb;
-            padding: 1rem;
-            margin-bottom: 1.5rem;
-            border-radius: 12px;
-            font-weight: 600;
-        }
-
-        /* Empty state */
-        .empty-state {
-            text-align: center;
-            padding: 3rem;
-            color: var(--color-text-light);
-        }
-
-        .empty-state i {
-            font-size: 4rem;
-            color: #ccc;
-            margin-bottom: 1rem;
-        }
-
-        .empty-state h3 {
-            margin-bottom: 1rem;
-            color: var(--color-primary);
-        }
-
-        /* Responsive */
+        /* --- Responsive Design --- */
         @media (max-width: 768px) {
             .container {
                 flex-direction: column;
@@ -348,27 +280,58 @@
             .sidebar {
                 width: 100%;
                 padding: 1rem 0;
+                height: auto;
             }
 
             .main-content {
                 padding: 1rem;
             }
 
-            .content-header h1 {
-                font-size: 2rem;
+            .content-header {
+                padding: 1.5rem;
             }
 
-            .action-buttons {
-                flex-direction: column;
+            .list-container {
+                padding: 1rem;
             }
 
-            .partidos-table {
+            .data-table {
+                display: block;
+                overflow-x: auto;
+                white-space: nowrap;
+            }
+
+            .data-table thead {
+                display: none;
+            }
+
+            .data-table tr {
+                margin-bottom: 1rem;
+                display: block;
+                border: 1px solid rgba(0, 184, 148, 0.1);
+                border-radius: 10px;
+            }
+
+            .data-table td {
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+                padding: 0.8rem 1rem;
+                border-bottom: 1px solid rgba(0, 184, 148, 0.1);
+            }
+
+            .data-table td:before {
+                content: attr(data-label);
+                font-weight: 700;
+                color: var(--color-primary);
+                text-transform: uppercase;
                 font-size: 0.8rem;
             }
 
-            .partidos-table th,
-            .partidos-table td {
-                padding: 0.5rem;
+            .data-table td:last-child {
+                border-bottom: none;
+                justify-content: center;
+                padding-top: 1rem;
             }
         }
     </style>
@@ -377,7 +340,7 @@
 <div class="container">
     <nav class="sidebar">
         <div class="logo">
-            <h2><i class="fas fa-trophy"></i> Sistema</h2>
+            <h2><i class="fas fa-trophy"></i> PadelApp</h2>
         </div>
 
         <div class="menu-section-title">Navegación Principal</div>
@@ -413,126 +376,103 @@
             </a>
         </form>
     </nav>
+
     <main class="main-content">
+
         <div class="content-header">
             <h1><i class="fas fa-gamepad"></i> Gestión de Partidos</h1>
-            <p>Administra y organiza los partidos creados por los usuarios</p>
-        </div>
-
-        <div th:if="${mensajeExito}" class="mensaje-exito">
-            <span th:text="${mensajeExito}"></span>
-        </div>
-        <div th:if="${mensajeError}" class="mensaje-error">
-            <span th:text="${mensajeError}"></span>
-        </div>
-
-        <div class="action-buttons">
-            <a th:href="@{/partido/nuevo}" class="btn btn-primary">
-                <i class="fas fa-plus"></i> Crear Nuevo Partido
+            <p>Administra y organiza los partidos creados por los usuarios.</p>
+            <a th:href="@{/partido/crear}" class="btn btn-create">
+                <i class="fas fa-plus-circle"></i> Crear Nuevo Partido
             </a>
         </div>
 
-        <div class="table-container">
-
-            <div th:if="${#lists.isEmpty(matches)}" class="empty-state">
-                <i class="fas fa-table-tennis"></i>
-                <h3>No hay partidos registrados</h3>
-                <p>¡Sé el primero en crear uno!</p>
-                <a th:href="@{/partido/nuevo}" class="btn btn-primary" style="margin-top: 1rem;">
-                    <i class="fas fa-plus"></i> Crear Partido
-                </a>
-            </div>
-
-            <table class="partidos-table" th:unless="${#lists.isEmpty(matches)}">
-                <thead>
-                <tr>
-                    <th><i class="fas fa-hashtag"></i> ID</th>
-                    <th><i class="fas fa-tennis-ball"></i> Nombre del Partido</th>
-                    <th><i class="fas fa-calendar-alt"></i> Fecha & Hora</th>
-                    <th><i class="fas fa-map-marker-alt"></i> Club</th>
-                    <th><i class="fas fa-chart-bar"></i> Nivel</th>
-                    <th><i class="fas fa-user-circle"></i> Creador</th>
-                    <th><i class="fas fa-cogs"></i> Acciones</th>
-                </tr>
-                </thead>
-                <tbody>
-                <tr th:each="match : ${matches}">
-                    <td th:text="${match.id_match}">1</td>
-                    <td th:text="${match.nombrePartido}">Partido Amistoso</td>
-                    <td th:text="${#temporals.format(match.fecha, 'dd-MM-yyyy') + ' a las ' + match.hora}">2025-10-01 a las 18:00</td>
-                    <td th:text="${match.club}">La Pala</td>
-                    <td th:text="${match.nivelJuego}">Intermedio</td>
-                    <td th:text="${match.creador.nombreUsuario}">usuario_admin</td>
-                    <td>
-                        <div class="action-buttons-table">
-                            <a th:href="@{/partido/editar/{id}(id=${match.id_match})}" class="btn btn-edit btn-small">
+        <div class="list-container">
+            <div style="overflow-x: auto;">
+                <table class="data-table">
+                    <thead>
+                    <tr>
+                        <th style="width: 5%;">ID</th>
+                        <th style="width: 20%;">Nombre del Partido</th>
+                        <th style="width: 20%;">Fecha & Hora</th>
+                        <th style="width: 15%;">Club</th>
+                        <th style="width: 15%;">Nivel</th>
+                        <th style="width: 15%;">Creador</th>
+                        <th style="width: 20%; text-align: center;">Acciones</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr>
+                        <td data-label="ID">10</td>
+                        <td data-label="Nombre">Final Invierno</td>
+                        <td data-label="Fecha & Hora">29-09-2025 a las 11:45</td>
+                        <td data-label="Club">La Copa</td>
+                        <td data-label="Nivel">Alto</td>
+                        <td data-label="Creador">sebastian</td>
+                        <td class="table-actions" data-label="Acciones">
+                            <a th:href="@{/partido/editar/10}" class="btn-table edit">
                                 <i class="fas fa-edit"></i> Editar
                             </a>
-                            <a th:href="@{/partido/{id}(id=${match.id_match})}" class="btn btn-secondary btn-small">
-                                <i class="fas fa-eye"></i> Detalles
+                            <a th:href="@{/partido/detalles/10}" class="btn-table details">
+                                <i class="fas fa-info-circle"></i> Detalles
                             </a>
-                            <a th:href="@{'/partido/' + ${match.id_match} + '/pdf'}" class="btn btn-pdf btn-small" target="_blank">
+                            <a th:href="@{/partido/pdf/10}" class="btn-table pdf">
                                 <i class="fas fa-file-pdf"></i> PDF
                             </a>
-                            <form th:action="@{/partido/{id}/eliminar(id=${match.id_match})}"
-                                  method="post"
-                                  class="delete-form"
-                                  onsubmit="return confirm('¿Estás seguro de que quieres eliminar el partido: ' + this.closest('tr').cells[1].textContent + '?');">
-                                <button type="submit" class="btn btn-danger btn-small">
-                                    <i class="fas fa-trash"></i> Eliminar
-                                </button>
-                            </form>
-                        </div>
-                    </td>
-                </tr>
-                </tbody>
-            </table>
+                            <a th:href="@{/partido/eliminar/10}" class="btn-table delete">
+                                <i class="fas fa-trash-alt"></i>
+                            </a>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td data-label="ID">12</td>
+                        <td data-label="Nombre">Casual Padel</td>
+                        <td data-label="Fecha & Hora">04-12-2025 a las 08:45</td>
+                        <td data-label="Club">El Padel</td>
+                        <td data-label="Nivel">Intermedio</td>
+                        <td data-label="Creador">sebastian</td>
+                        <td class="table-actions" data-label="Acciones">
+                            <a th:href="@{/partido/editar/12}" class="btn-table edit">
+                                <i class="fas fa-edit"></i> Editar
+                            </a>
+                            <a th:href="@{/partido/detalles/12}" class="btn-table details">
+                                <i class="fas fa-info-circle"></i> Detalles
+                            </a>
+                            <a th:href="@{/partido/pdf/12}" class="btn-table pdf">
+                                <i class="fas fa-file-pdf"></i> PDF
+                            </a>
+                            <a th:href="@{/partido/eliminar/12}" class="btn-table delete">
+                                <i class="fas fa-trash-alt"></i>
+                            </a>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td data-label="ID">13</td>
+                        <td data-label="Nombre">Amigos</td>
+                        <td data-label="Fecha & Hora">04-12-2025 a las 22:04</td>
+                        <td data-label="Club">La playa</td>
+                        <td data-label="Nivel">Intermedio</td>
+                        <td data-label="Creador">sebastian</td>
+                        <td class="table-actions" data-label="Acciones">
+                            <a th:href="@{/partido/editar/13}" class="btn-table edit">
+                                <i class="fas fa-edit"></i> Editar
+                            </a>
+                            <a th:href="@{/partido/detalles/13}" class="btn-table details">
+                                <i class="fas fa-info-circle"></i> Detalles
+                            </a>
+                            <a th:href="@{/partido/pdf/13}" class="btn-table pdf">
+                                <i class="fas fa-file-pdf"></i> PDF
+                            </a>
+                            <a th:href="@{/partido/eliminar/13}" class="btn-table delete">
+                                <i class="fas fa-trash-alt"></i>
+                            </a>
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
         </div>
     </main>
 </div>
-
-<script>
-    document.addEventListener('DOMContentLoaded', function() {
-        // Animación de las filas de la tabla
-        const tableRows = document.querySelectorAll('.partidos-table tbody tr');
-        tableRows.forEach((row, index) => {
-            row.style.animationDelay = `${index * 0.1}s`;
-            row.style.opacity = '0';
-            row.style.transform = 'translateY(20px)';
-
-            setTimeout(() => {
-                row.style.animation = 'fadeInUp 0.6s ease forwards';
-            }, index * 100);
-        });
-
-        // Manejo del estado de carga en enlaces del menú
-        document.querySelectorAll('.menu-item').forEach(link => {
-            link.addEventListener('click', function(e) {
-                // Excluir enlaces con funcionalidad onclick (como el formulario de logout)
-                if (this.getAttribute('href') !== '#' && !this.onclick && !this.parentNode.matches('form')) {
-                    e.preventDefault();
-                    this.style.opacity = '0.7';
-                    this.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Cargando...';
-
-                    setTimeout(() => {
-                        window.location.href = this.href;
-                    }, 300);
-                }
-            });
-        });
-    });
-
-    // Definición de la animación de entrada para las filas
-    const style = document.createElement('style');
-    style.textContent = `
-        @keyframes fadeInUp {
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
-    `;
-    document.head.appendChild(style);
-</script>
 </body>
 </html>
