@@ -146,7 +146,6 @@ public class ControladorREST {
             return "redirect:/login?error";
         }
     }
-
     @GetMapping("/modificar")
     public String mostrarFormularioDeEdicion(Model model, Authentication auth) {
         // Carga el formulario para que el usuario logueado modifique su propio perfil.
