@@ -54,7 +54,7 @@ public class PadelMatchController {
     @GetMapping("/nuevo")
     public String mostrarFormularioCreacion(Model model) {
         model.addAttribute("partido", new PadelMatch());
-        return "partido_detalle";
+        return "partido";
     }
 
     @PostMapping("/crear")
@@ -87,7 +87,7 @@ public class PadelMatchController {
     @GetMapping("/gestion")
     public String listarPartidosGestionRedundante(Model model) {
         model.addAttribute("matches", padelMatchService.listarTodos());
-        return "lista_partidos_gestion";
+        return "partido_detalle";
     }
 
     @PostMapping("/{id}/eliminar")
