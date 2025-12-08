@@ -4,13 +4,17 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Tu Club PadelApp | La Pasión por el Padel</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
     <style>
+        /* Variables de color adaptadas a la paleta de gestión (Lavanda/Púrpura) */
         :root {
-            --color-fondo: #f5f7fa;
-            --color-azul: #3440b4; /* Azul oscuro corporativo */
-            --color-verde: #33b633; /* Verde de acción/hover */
+            --color-primary: #667eea; /* Lavanda */
+            --color-secondary: #764ba2; /* Púrpura */
+            --color-accent: #33b633; /* Verde de acción */
             --color-texto: #212529;
-            --color-borde: #f5f7fa;
+            --color-white: #ffffff;
+            --gradient-primary: linear-gradient(135deg, var(--color-primary) 0%, var(--color-secondary) 100%);
+            --gradient-accent: linear-gradient(135deg, var(--color-accent) 0%, #2ca52c 100%);
         }
 
         * {
@@ -19,7 +23,7 @@
 
         body {
             font-family: 'Arial', sans-serif;
-            /* Se asume que /images/padel_principal.png existe en la ruta del servidor */
+            /* Fondo de imagen de pádel (se mantiene) */
             background-image: url('/images/padel_principal.png');
             background-size: cover;
             background-position: center;
@@ -34,11 +38,11 @@
         }
 
         header {
-            /* Fondo azul con ligera transparencia */
-            background-color: rgba(52, 64, 180, 0.95);
+            /* Fondo ahora basado en Lavanda/Púrpura */
+            background-color: rgba(102, 126, 234, 0.95);
             color: white;
             padding: 15px 40px;
-            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+            box-shadow: 0 4px 8px rgba(0,0,0,0.2);
             display: flex;
             justify-content: space-between;
             align-items: center;
@@ -60,17 +64,18 @@
 
         .auth-buttons a {
             padding: 10px 20px;
-            background-color: #ffffff;
-            color: var(--color-azul);
+            background-color: var(--color-white);
+            color: var(--color-primary); /* Texto del botón con el color primario */
             text-decoration: none;
             font-weight: bold;
             border-radius: 6px;
             font-size: 14px;
             transition: background-color 0.3s ease, color 0.3s ease, transform 0.2s ease;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
         }
 
         .auth-buttons a:hover {
-            background-color: var(--color-verde);
+            background: var(--gradient-accent); /* Verde de acción */
             color: white;
             transform: translateY(-2px);
         }
@@ -81,15 +86,16 @@
         }
 
         .hero-section {
-            /* Fondo azul más oscuro con transparencia */
-            background-color: rgba(52, 64, 180, 0.9);
+            /* Fondo ahora Lavanda/Púrpura con transparencia */
+            background-image: var(--gradient-primary);
             color: white;
             padding: 60px 40px;
             border-radius: 20px;
             max-width: 1200px;
             margin: 0 auto 40px;
             text-align: center;
-            box-shadow: 0 0 30px rgba(0,0,0,0.2);
+            box-shadow: 0 0 40px rgba(0,0,0,0.3);
+            border: 1px solid rgba(255, 255, 255, 0.3);
         }
 
         .hero-section h2 {
@@ -111,10 +117,9 @@
         }
 
         .video-section h2 {
-            color: var(--color-azul);
+            color: var(--color-primary); /* Títulos en Lavanda */
             font-size: 32px;
             margin-bottom: 30px;
-            /* Sombra blanca para destacar sobre el fondo */
             text-shadow: 2px 2px 4px rgba(255,255,255,0.8);
             font-weight: 600;
         }
@@ -133,7 +138,7 @@
             height: 0;
             overflow: hidden;
             border-radius: 15px;
-            box-shadow: 0 4px 20px rgba(0,0,0,0.3);
+            box-shadow: 0 8px 30px rgba(0,0,0,0.4);
             background-color: #000;
             grid-column: 2 / 3;
         }
@@ -166,7 +171,7 @@
         }
 
         .side-card h3 {
-            color: var(--color-azul);
+            color: var(--color-primary); /* Títulos de tarjeta en Lavanda */
             font-size: 22px;
             margin-bottom: 15px;
             font-weight: 600;
@@ -203,7 +208,7 @@
         }
 
         .info-card h3 {
-            color: var(--color-azul);
+            color: var(--color-primary); /* Títulos de info-card en Lavanda */
             font-size: 24px;
             margin-bottom: 15px;
             font-weight: 600;
@@ -230,7 +235,7 @@
         }
 
         .about-section h2 {
-            color: var(--color-azul);
+            color: var(--color-primary); /* Título de 'About' en Lavanda */
             font-size: 32px;
             margin-bottom: 20px;
             text-align: center;
@@ -244,8 +249,17 @@
             margin-bottom: 15px;
         }
 
+        .about-section .register-cta {
+            text-align: center;
+            margin-top: 30px;
+            font-weight: bold;
+            color: var(--color-primary); /* Texto CTA en Lavanda */
+            font-size: 18px;
+        }
+
         footer {
-            background-color: rgba(52, 64, 180, 0.95);
+            /* Fondo del footer en Lavanda/Púrpura */
+            background-color: rgba(102, 126, 234, 0.95);
             color: white;
             text-align: center;
             padding: 20px;
@@ -364,7 +378,7 @@
         <h2>¿Por qué elegir Tu Club PadelApp?</h2>
         <p>Somos más que un club de pádel, somos una comunidad apasionada por este deporte. Ofrecemos las mejores instalaciones, un ambiente familiar y profesional, y una plataforma digital que facilita la gestión de tus actividades deportivas.</p>
         <p>Ya seas principiante o jugador experimentado, aquí encontrarás el espacio ideal para disfrutar del pádel. Únete a nosotros y descubre por qué somos el club preferido de miles de jugadores.</p>
-        <p style="text-align: center; margin-top: 30px; font-weight: bold; color: var(--color-azul); font-size: 18px;">
+        <p class="register-cta">
             ¡Regístrate ahora y comienza tu aventura en el mundo del pádel!
         </p>
     </section>

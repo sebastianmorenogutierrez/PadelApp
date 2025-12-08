@@ -3,179 +3,223 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Iniciar Sesión</title>
+    <title>Iniciar Sesión - PadelApp</title>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
     <style>
-        /* Definición de colores principales */
+        /* Variables y estilos base de la Plantilla PadelApp */
         :root {
-            --color-principal: #667eea; /* Azul violeta */
-            --color-secundario: #764ba2; /* Morado */
-            --color-fondo-limpio: #f5f7fa; /* Gris muy claro */
-            --color-texto: #333;
-            --color-error: #721c24;
-            --color-error-bg: #f8d7da;
-            --color-exito: #155724;
-            --color-exito-bg: #d4edda;
+            --color-primary: #00b894;
+            --color-primary-dark: #00a383;
+            --color-secondary: #0984e3;
+            --color-accent: #fdcb6e;
+            --color-danger: #d63031;
+            --color-text: #2d3436;
+            --color-text-light: #636e72;
+            --color-background: #f8f9fa;
+            --color-white: #ffffff;
+            --gradient-primary: linear-gradient(135deg, #00b894 0%, #00cec9 100%);
+            --gradient-secondary: linear-gradient(135deg, #0984e3 0%, #74b9ff 100%);
+            --gradient-danger: linear-gradient(135deg, #d63031 0%, #ff7675 100%);
+            --shadow-soft: 0 2px 20px rgba(0, 184, 148, 0.08);
+            --shadow-medium: 0 8px 30px rgba(0, 184, 148, 0.12);
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
         }
 
         body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            /* CAMBIO: Fondo limpio y sólido con degradado suave */
-            background: linear-gradient(135deg, var(--color-fondo-limpio) 0%, #e0e6f7 100%);
+            font-family: 'Inter', 'Segoe UI', -apple-system, BlinkMacSystemFont, sans-serif;
+            /* Fondo similar al principal */
+            background: linear-gradient(135deg, #e8f5e9 0%, #e0f7fa 50%, #f1f8e9 100%);
             display: flex;
             justify-content: center;
             align-items: center;
-            height: 100vh;
-            margin: 0;
+            min-height: 100vh;
+            color: var(--color-text);
         }
 
-        .login-form {
+        /* Estilos del Formulario de Login */
+        .login-form-container {
             width: 100%;
-            max-width: 420px;
+            max-width: 450px;
             padding: 40px;
-            /* Fondo blanco con ligera transparencia */
-            background-color: rgba(255, 255, 255, 0.95);
-            border-radius: 12px;
-            /* Sombra suave y moderna */
-            box-shadow: 0 15px 45px rgba(0, 0, 0, 0.15);
-            backdrop-filter: blur(5px);
-            border: 1px solid rgba(255, 255, 255, 0.5);
+            background-color: var(--color-white);
+            border-radius: 20px;
+            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.15); /* Sombra más intensa para destacar */
+            border: 1px solid rgba(0, 184, 148, 0.15);
+            animation: fadeIn 0.8s ease-out;
         }
 
-        .login-form h2 {
+        .login-form-container h2 {
             text-align: center;
             margin-bottom: 30px;
-            color: var(--color-principal);
-            font-size: 2rem;
-            font-weight: 700;
+            font-size: 2.2rem;
+            font-weight: 800;
+            background: var(--gradient-primary);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
         }
 
-        .login-form div {
+        .login-form-container div {
             margin-bottom: 20px;
         }
 
-        .login-form label {
+        .login-form-container label {
             display: block;
             margin-bottom: 8px;
-            color: var(--color-texto);
+            color: var(--color-text);
             font-weight: 600;
             font-size: 0.95rem;
         }
 
-        .login-form input {
+        .login-form-container input {
             width: 100%;
-            padding: 12px 15px;
+            padding: 14px 18px;
             border: 2px solid #e0e0e0;
-            border-radius: 8px;
+            border-radius: 12px;
             font-size: 16px;
             transition: border-color 0.3s, box-shadow 0.3s;
         }
 
-        .login-form input:focus {
-            border-color: var(--color-principal);
+        .login-form-container input:focus {
+            border-color: var(--color-primary);
             outline: none;
-            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.2);
+            box-shadow: 0 0 0 4px rgba(0, 184, 148, 0.2);
         }
 
-        /* Estilo general para todos los botones */
-        .login-form .btn {
+        /* Estilos de Botones */
+        .btn {
             display: block;
             width: 100%;
-            padding: 12px;
+            padding: 14px;
             border: none;
-            border-radius: 8px;
+            border-radius: 12px;
             font-size: 16px;
             font-weight: 700;
             cursor: pointer;
             text-align: center;
             text-decoration: none;
-            transition: background-color 0.3s, transform 0.3s, box-shadow 0.3s;
+            transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+            letter-spacing: 0.5px;
         }
 
         /* Botón de Ingreso (Primario) */
-        .login-form button[type="submit"] {
-            background: linear-gradient(135deg, var(--color-principal) 0%, var(--color-secundario) 100%);
+        .btn-primary {
+            background: var(--gradient-primary);
             color: white;
             margin-top: 10px;
-            box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);
+            box-shadow: 0 6px 20px rgba(0, 184, 148, 0.4);
         }
 
-        .login-form button[type="submit"]:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 8px 20px rgba(102, 126, 234, 0.5);
+        .btn-primary:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 30px rgba(0, 184, 148, 0.55);
         }
 
         /* Contenedor y estilos para botones de navegación */
         .nav-buttons {
             display: flex;
-            gap: 10px;
+            gap: 15px;
             margin-top: 25px;
         }
 
-        /* Botones de Navegación (Secundarios) */
-        .btn-secondary {
-            background-color: #ffffff;
-            color: var(--color-principal);
-            border: 2px solid var(--color-principal);
+        /* Botones de Navegación (Secundarios/Outline) */
+        .btn-secondary-outline {
+            background-color: transparent;
+            color: var(--color-primary);
+            border: 2px solid var(--color-primary);
             flex-grow: 1;
-        }
-
-        .btn-secondary:hover {
-            background-color: var(--color-principal);
-            color: white;
-            transform: translateY(-1px);
-        }
-
-        .message-success {
-            background-color: var(--color-exito-bg);
-            color: var(--color-exito);
-            border: 1px solid #c3e6cb;
             padding: 12px;
-            border-radius: 8px;
+            box-shadow: none;
+        }
+
+        .btn-secondary-outline:hover {
+            background-color: var(--color-primary);
+            color: var(--color-white);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 15px rgba(0, 184, 148, 0.2);
+        }
+
+        /* Mensajes de Estado (Éxito y Error) */
+        .message {
+            padding: 12px 18px;
+            border-radius: 10px;
             font-weight: 600;
             text-align: center;
             margin-bottom: 20px;
+            font-size: 0.95rem;
+            border: 1px solid;
         }
-        /* Ajuste para el mensaje de error */
+
+        .message-success {
+            background-color: rgba(0, 184, 148, 0.1);
+            color: var(--color-primary-dark);
+            border-color: rgba(0, 184, 148, 0.3);
+        }
+
         .message-error {
-            background-color: var(--color-error-bg);
-            color: var(--color-error);
-            border-color: #f5c6cb;
+            background-color: rgba(214, 48, 49, 0.1);
+            color: var(--color-danger);
+            border-color: rgba(214, 48, 49, 0.3);
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        @media (max-width: 600px) {
+            .login-form-container {
+                margin: 20px;
+                padding: 30px 20px;
+            }
+            .login-form-container h2 {
+                font-size: 1.8rem;
+            }
+            .nav-buttons {
+                flex-direction: column;
+                gap: 10px;
+            }
         }
     </style>
 </head>
 <body>
-<div class="login-form">
-    <div th:if="${param.cuentaEliminada}" class="message-success">
+<div class="login-form-container">
+    <div th:if="${param.cuentaEliminada}" class="message message-success">
         <i class="fas fa-check-circle"></i> Tu cuenta ha sido eliminada exitosamente.
     </div>
-    <div th:if="${param.error}" class="message-success message-error">
+    <div th:if="${param.error}" class="message message-error">
         <i class="fas fa-exclamation-triangle"></i> Usuario o contraseña inválidos.
     </div>
 
-    <h2><i class="fas fa-lock"></i> Acceder al Sistema</h2>
+    <h2><i class="fas fa-sign-in-alt"></i> Acceder a PadelApp</h2>
+
     <form th:action="@{/login}" method="post">
         <div>
-            <label for="username"><i class="fas fa-user"></i> Usuario:</label>
+            <label for="username"><i class="fas fa-user-circle"></i> Usuario:</label>
             <input type="text" id="username" name="username" placeholder="Ingresa tu nombre de usuario" required>
         </div>
         <div>
-            <label for="password"><i class="fas fa-key"></i> Contraseña:</label>
+            <label for="password"><i class="fas fa-lock"></i> Contraseña:</label>
             <input type="password" id="password" name="password" placeholder="Ingresa tu contraseña" required>
         </div>
         <div>
-            <button type="submit">
+            <button type="submit" class="btn btn-primary">
                 <i class="fas fa-sign-in-alt"></i> Ingresar
             </button>
         </div>
     </form>
 
     <div class="nav-buttons">
-        <a th:href="@{/principal}" class="btn btn-secondary">
-            <i class="fas fa-home"></i> Principal
+        <a th:href="@{/principal}" class="btn btn-secondary-outline">
+            <i class="fas fa-home"></i> Inicio
         </a>
 
-        <a th:href="@{/APi/registro}" class="btn btn-secondary">
+        <a th:href="@{/APi/registro}" class="btn btn-secondary-outline">
             <i class="fas fa-user-plus"></i> Registrarse
         </a>
     </div>
