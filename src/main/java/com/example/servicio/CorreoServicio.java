@@ -1,59 +1,50 @@
 package com.example.servicio;
 
-import com.example.domain.PadelMatch; // Clase asumida necesaria por los comentarios
+import com.example.domain.PadelMatch; // Necesitas importar la clase PadelMatch
 import com.example.domain.usuario.Usuario;
-import com.example.domain.torneo.Torneo; // Clase asumida necesaria
+import com.example.domain.torneo.Torneo;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
-import org.springframework.scheduling.annotation.Async; // Importación necesaria para @Async
 import org.springframework.stereotype.Service;
 import org.thymeleaf.TemplateEngine;
 import org.thymeleaf.context.Context;
 
 import jakarta.mail.MessagingException;
 import jakarta.mail.internet.MimeMessage;
+// import java.text.NumberFormat; // ❌ Eliminada importación de formato de número (solo para pagos)
 import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter; // Importación necesaria, aunque no usada directamente en los métodos
+import java.time.format.DateTimeFormatter; // Importación necesaria
+// import java.util.Locale; // ❌ Eliminada importación de Locale (solo para pagos)
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.atomic.AtomicInteger;
 
-/**
- * Servicio encargado de la gestión y envío de correos electrónicos.
- * Utiliza JavaMailSender para la conexión SMTP y Thymeleaf para la generación de plantillas HTML.
- */
 @Service
 public class CorreoServicio {
 
     @Autowired
-    private JavaMailSender mailSender; // Componente de Spring para interactuar con el servidor de correo.
+    private JavaMailSender mailSender;
 
     @Autowired
-    private TemplateEngine templateEngine; // Motor para procesar plantillas Thymeleaf a HTML.
+    private TemplateEngine templateEngine;
 
-    // Estadísticas atómicas para medir el rendimiento de los envíos (seguro para hilos).
+    // Estadísticas de envío
     private final AtomicInteger correosEnviados = new AtomicInteger(0);
     private final AtomicInteger correosError = new AtomicInteger(0);
     private LocalDateTime ultimoEnvio = LocalDateTime.now();
 
-    // ----------------------------------------------------------------------------------
-    // Métodos de Envío Básico
-    // ----------------------------------------------------------------------------------
-
-    /**
-     * Envía un correo de texto plano simple.
-     */
     public void enviarCorreoSimple(String para, String asunto, String mensaje) {
         try {
             SimpleMailMessage correo = new SimpleMailMessage();
             correo.setTo(para);
             correo.setSubject(asunto);
             correo.setText(mensaje);
-            correo.setFrom("tu-email@empresa.com"); // Reemplazar por el correo de la app
+            correo.setFrom("tu-email@empresa.com");
 
             mailSender.send(correo);
             correosEnviados.incrementAndGet();
@@ -64,34 +55,30 @@ public class CorreoServicio {
         }
     }
 
-    /**
-     * Envía un correo utilizando una plantilla HTML de Thymeleaf.
-     */
     public void enviarCorreoHTML(String para, String asunto, String nombreTemplate, Context context)
             throws MessagingException {
         MimeMessage mensaje = mailSender.createMimeMessage();
         MimeMessageHelper helper = new MimeMessageHelper(mensaje, true, "UTF-8");
 
-        // Procesa la plantilla Thymeleaf con los datos del contexto para obtener el HTML.
         String contenidoHTML = templateEngine.process(nombreTemplate, context);
 
         helper.setTo(para);
         helper.setSubject(asunto);
-        helper.setText(contenidoHTML, true); // El 'true' indica que el contenido es HTML.
+        helper.setText(contenidoHTML, true);
         helper.setFrom("tu-email@empresa.com");
 
         mailSender.send(mensaje);
-        correosEnviados.incrementAndGet(); // Se incrementa al salir exitosamente.
     }
 
-    // ----------------------------------------------------------------------------------
-    // Métodos de Envío Masivo y Asíncrono
-    // ----------------------------------------------------------------------------------
 
-    /**
-     * Inicia el envío de correos masivos a una lista de jugadores de forma asíncrona.
-     * La anotación @Async no es necesaria en este caso porque usamos CompletableFuture.runAsync().
-     */
+    // ❌ ELIMINADO: Método enviarConfirmacionPago que dependía de la clase Pago y Stripe
+    /*
+    public void enviarConfirmacionPago(Pago pago) {
+        // ... Lógica eliminada ...
+    }
+    */
+
+
     public CompletableFuture<Void> enviarCorreoMasivo(List<Usuario> jugadores, String asunto,
                                                       String mensaje, String tipoEvento) {
         return CompletableFuture.runAsync(() -> {
@@ -100,7 +87,6 @@ public class CorreoServicio {
             int fallos = 0;
 
             for (Usuario jugador : jugadores) {
-                // Validación para asegurar que el jugador tiene un correo válido y no está eliminado.
                 if (jugador.getIndividuo() != null &&
                         jugador.getIndividuo().getCorreo() != null &&
                         !jugador.getIndividuo().isEliminado()) {
@@ -112,17 +98,17 @@ public class CorreoServicio {
                         context.setVariable("mensaje", mensaje);
                         context.setVariable("tipoEvento", tipoEvento);
 
-                        // Usa el método de envío HTML.
-                        enviarCorreoHTML(jugador.getIndividuo().getCorreo(), asunto, "email/notificacion", context);
+                        enviarCorreoHTML(jugador.getIndividuo().getCorreo(), asunto,
+                                "email/notificacion", context);
 
                         exitosos++;
-                        // La métrica 'correosEnviados' ya se incrementa dentro de enviarCorreoHTML.
-                        Thread.sleep(100); // Pequeña pausa para gestionar la tasa de envío (anti-spam).
+                        correosEnviados.incrementAndGet();
+                        Thread.sleep(100); // Evitar spam
 
                     } catch (Exception e) {
                         fallos++;
                         correosError.incrementAndGet();
-                        System.err.println("Error enviando correo masivo a: " +
+                        System.err.println("Error enviando correo a: " +
                                 jugador.getIndividuo().getCorreo() + " - " + e.getMessage());
                     }
                 }
@@ -132,41 +118,7 @@ public class CorreoServicio {
         });
     }
 
-    /**
-     * Envía una notificación de nuevo torneo a todos los jugadores.
-     */
-    public CompletableFuture<Void> notificarNuevoTorneo(List<Usuario> jugadores, Torneo torneo) {
-        return CompletableFuture.runAsync(() -> {
-            String asunto = "Nuevo Torneo: " + torneo.getNombre();
-
-            for (Usuario jugador : jugadores) {
-                if (jugador.getIndividuo() != null &&
-                        jugador.getIndividuo().getCorreo() != null &&
-                        !jugador.getIndividuo().isEliminado()) {
-
-                    try {
-                        Context context = new Context();
-                        context.setVariable("nombreJugador",
-                                jugador.getIndividuo().getNombre() + " " + jugador.getIndividuo().getApellido());
-                        context.setVariable("torneo", torneo);
-
-                        // Plantilla específica para notificaciones de torneo.
-                        enviarCorreoHTML(jugador.getIndividuo().getCorreo(), asunto,
-                                "email/nuevo-torneo", context);
-
-                        Thread.sleep(150);
-                    } catch (Exception e) {
-                        System.err.println("Error enviando notificación de torneo a: " +
-                                jugador.getIndividuo().getCorreo() + " - " + e.getMessage());
-                    }
-                }
-            }
-        });
-    }
-
-    /**
-     * Envía un correo individual de forma asíncrona.
-     */
+    // NUEVO: Método para envío individual (compatible con el controlador)
     public CompletableFuture<Boolean> enviarCorreoIndividual(Usuario jugador, String asunto, String mensaje) {
         return CompletableFuture.supplyAsync(() -> {
             try {
@@ -183,6 +135,7 @@ public class CorreoServicio {
                     enviarCorreoHTML(jugador.getIndividuo().getCorreo(), asunto,
                             "email/notificacion", context);
 
+                    correosEnviados.incrementAndGet();
                     return true;
                 }
             } catch (Exception e) {
@@ -193,13 +146,35 @@ public class CorreoServicio {
         });
     }
 
-    // ----------------------------------------------------------------------------------
-    // Métodos de Utilidad y Estadísticas
-    // ----------------------------------------------------------------------------------
+    public CompletableFuture<Void> notificarNuevoTorneo(List<Usuario> jugadores, Torneo torneo) {
+        return CompletableFuture.runAsync(() -> {
+            String asunto = "Nuevo Torneo: " + torneo.getNombre();
 
-    /**
-     * Verifica una conexión básica con el servidor de correo al intentar crear un MimeMessage.
-     */
+            for (Usuario jugador : jugadores) {
+                if (jugador.getIndividuo() != null &&
+                        jugador.getIndividuo().getCorreo() != null &&
+                        !jugador.getIndividuo().isEliminado()) {
+
+                    try {
+                        Context context = new Context();
+                        context.setVariable("nombreJugador",
+                                jugador.getIndividuo().getNombre() + " " + jugador.getIndividuo().getApellido());
+                        context.setVariable("torneo", torneo);
+
+                        enviarCorreoHTML(jugador.getIndividuo().getCorreo(), asunto,
+                                "email/nuevo-torneo", context);
+
+                        Thread.sleep(150);
+                    } catch (Exception e) {
+                        System.err.println("Error enviando notificación de torneo a: " +
+                                jugador.getIndividuo().getCorreo() + " - " + e.getMessage());
+                    }
+                }
+            }
+        });
+    }
+
+    // NUEVOS: Métodos adicionales para el controlador
     public boolean verificarConexion() {
         try {
             mailSender.createMimeMessage();
@@ -210,9 +185,6 @@ public class CorreoServicio {
         }
     }
 
-    /**
-     * Retorna las estadísticas de envío de correos desde que se inició la aplicación.
-     */
     public Map<String, Object> obtenerEstadisticasEnvio() {
         Map<String, Object> stats = new HashMap<>();
         stats.put("correosEnviados", correosEnviados.get());
@@ -222,9 +194,6 @@ public class CorreoServicio {
         return stats;
     }
 
-    /**
-     * Genera una previsualización de los parámetros de un correo masivo (sin enviarlo).
-     */
     public Map<String, Object> generarPrevisualizacion(String asunto, String mensaje, String tipoEvento) {
         Map<String, Object> preview = new HashMap<>();
         preview.put("asunto", "[" + tipoEvento + "] " + asunto);
@@ -234,11 +203,8 @@ public class CorreoServicio {
         return preview;
     }
 
-    /**
-     * Simula la cancelación de envíos de correos pendientes.
-     */
     public boolean cancelarEnviosPendientes() {
-        // En una implementación más avanzada, aquí cancelarías tareas pendientes.
+        // En una implementación más avanzada, aquí cancelarías tareas pendientes
         System.out.println("Solicitud de cancelación de envíos pendientes recibida");
         return true;
     }
