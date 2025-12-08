@@ -56,7 +56,9 @@ public class ControladorREST {
 
     @PostMapping("/API/registro")
     public String procesarRegistro(@Valid Usuario usuario, Errors errors, RedirectAttributes redirectAttributes) {
+        // Maneja la creación de una nueva cuenta de usuario y su individuo asociado.
 
+        // 1. Manejar errores de validación
         if (errors.hasErrors()) {
             System.out.println("Errores de validación en el registro: " + errors.getAllErrors());
             redirectAttributes.addFlashAttribute("mensajeError", "Error en el formulario. Por favor, revisa los campos.");
@@ -66,7 +68,7 @@ public class ControladorREST {
         try {
             usuario.getIndividuo().setEliminado(false);
             individuoServicio.salvar(usuario.getIndividuo());
-            usuarioServicio.salvar(usuario);
+            usuarioServicio.registrarNuevoUsuario(usuario);
 
             redirectAttributes.addFlashAttribute("mensajeExito", "¡Registro exitoso! Ya puedes iniciar sesión.");
             return "redirect:/login";
