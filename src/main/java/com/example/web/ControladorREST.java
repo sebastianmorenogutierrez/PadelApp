@@ -26,11 +26,7 @@ import java.util.stream.Collectors;
 import java.util.concurrent.CompletableFuture;
 
 @Controller
-public class ControladorREST { // Renombrar a MvcController si lo deseas
-
-    // ---- DEPENDENCIAS ----
-    // 💡 Se añadió PerfilServicio
-
+public class ControladorREST {
     @Autowired
     private IndividuoServicio individuoServicio;
 
@@ -79,23 +75,18 @@ public class ControladorREST { // Renombrar a MvcController si lo deseas
         }
 
         try {
-            // Asignación de Perfil (Aquí podría fallar si 'perfilServicio' es nulo o el ID no existe)
             usuario.setPerfil(perfilServicio.buscarPorId(2));
 
-            // Inicialización de la bandera de Individuo
             usuario.getIndividuo().setEliminado(false);
 
-            // 💡 LLAMADA AL SERVICIO
             usuarioServicio.registrarNuevoUsuario(usuario);
 
             redirectAttributes.addFlashAttribute("mensajeExito", "¡Registro exitoso! Ya puedes iniciar sesión.");
             return "redirect:/login";
 
         } catch (Exception e) {
-
-            // 🛑 LÍNEA CLAVE: Mostrar la pila de errores completa si falla el guardado
             System.err.println("Error al guardar el nuevo usuario: " + e.getMessage());
-            e.printStackTrace(); // <-- AGREGAR ESTO
+            e.printStackTrace();
 
             redirectAttributes.addFlashAttribute("mensajeError", "Hubo un error al crear la cuenta: " + e.getMessage());
             return "redirect:/registro";
@@ -104,26 +95,25 @@ public class ControladorREST { // Renombrar a MvcController si lo deseas
 
     @GetMapping("/redirigir")
     public String redirigirSegunPerfil(Authentication auth, HttpSession session) {
-        // Redirige al usuario a su dashboard correspondiente después del login, basado en su rol.
+
         String username = auth.getName();
         Usuario usuario = usuarioServicio.localizarPorNombreUsuario(username);
-        session.setAttribute("usuarioActual", usuario); // Guarda el usuario en sesión.
+        session.setAttribute("usuarioActual", usuario);
         String rol = auth.getAuthorities().iterator().next().getAuthority();
-        System.out.println("ROL QUE TRAIGO PARA VALIDAR: " + rol);
-
         switch (rol) {
             case "ROLE_ADMINISTRADOR":
                 return "redirect:/indice"; // Dashboard Admin
             case "ROLE_JUGADOR":
-                return "redirect:/jugador22"; // Dashboard Jugador
+                return "redirect:/indicejugador"; // Dashboard Jugador
             default:
                 return "redirect:/error";
         }
     }
 
-    // --------------------------------------------------
-
-    //  MÉTODOS DE PERFIL DE USUARIO AUTENTICADO
+    @GetMapping("/indicejugador") // ¡La ruta que faltaba!
+    public String mostrarDashboardJugador(Model model, Authentication authentication) {
+        return "indicejugador";
+    }
 
     @GetMapping("/indice")
     public String mostrarIndice(Model model, Authentication authentication) {
