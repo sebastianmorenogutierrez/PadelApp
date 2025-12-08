@@ -54,7 +54,6 @@ public class PadelMatchController {
     @GetMapping("/nuevo")
     public String mostrarFormularioCreacion(Model model) {
         model.addAttribute("partido", new PadelMatch());
-        // 🛠️ CORRECCIÓN 1: Devuelve la plantilla del formulario de creación (partido.html)
         return "partido";
     }
 
