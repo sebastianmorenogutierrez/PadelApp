@@ -16,7 +16,7 @@
             --color-text: #2d3436;
             --color-text-light: #636e72;
             --color-white: #ffffff;
-            --color-bg-soft: #F4FFF8;
+            --color-bg-soft: #F4FFF8; /* Definido, pero no aplicado al body */
 
             /* Degradados y Colores del Fondo de Bienvenida (Adaptado al Azul/Verde PadelApp) */
             --gradient-sidebar: linear-gradient(135deg, var(--color-primary-dark) 0%, var(--color-secondary) 100%);
@@ -31,23 +31,22 @@
 
         body {
             font-family: 'Inter', 'Segoe UI', -apple-system, BlinkMacSystemFont, sans-serif;
+            /* CORREGIDO: Usamos Blanco Puro (var(--color-white)) como se ve en la imagen */
             background-color: var(--color-white);
             display: flex;
             justify-content: center;
             align-items: center;
             min-height: 100vh;
             color: var(--color-text);
-            /* MODIFICACIÓN 3: Cambiado de 'hidden' a 'auto' para permitir scroll si es necesario */
-            overflow: auto;
+            overflow: hidden;
         }
 
         /* Contenedor Principal con el diseño de 2 columnas */
         .main-wrapper {
             width: 100%;
-            /* MODIFICACIÓN 1: Cambiado de 'height: 100vh;' a 'min-height' para permitir que crezca */
-            min-height: 90vh;
+            height: 100vh;
             display: grid;
-            grid-template-columns: 1fr 1.2fr;
+            grid-template-columns: 1fr 1.2fr; /* Columna izquierda más estrecha */
             max-width: 1400px;
             max-height: 900px;
             border-radius: 20px;
@@ -114,7 +113,7 @@
         .cloud-divider {
             position: absolute;
             top: 0;
-            right: -120px;
+            right: -120px; /* Desplazado para cubrir bien el borde */
             width: 150px;
             height: 100%;
             background-color: var(--cloud-color);
@@ -122,7 +121,7 @@
 
             /* Creación de formas de nube con box-shadows circulares */
             box-shadow:
-                -20px 0 0 0 var(--cloud-color),
+                -20px 0 0 0 var(--cloud-color), /* Base */
                 -60px 50px 0 0 var(--cloud-color),
                 -80px 150px 0 0 var(--cloud-color),
                 -70px 250px 0 0 var(--cloud-color),
@@ -138,10 +137,9 @@
         .form-section {
             background-color: var(--color-white);
             padding: 50px 80px;
-            /* MODIFICACIÓN 2: Cambiado de 'display: flex' a 'display: block' para forzar flujo normal */
-            display: block;
+            display: flex;
             flex-direction: column;
-            /* Se ha eliminado 'justify-content: center;' previamente */
+            justify-content: center;
             position: relative;
             z-index: 20;
         }
@@ -222,7 +220,7 @@
         .btn {
             padding: 14px 30px;
             border: none;
-            border-radius: 30px;
+            border-radius: 30px; /* Botones más redondeados */
             font-size: 16px;
             font-weight: 700;
             cursor: pointer;
@@ -282,7 +280,7 @@
             }
 
             .welcome-sidebar {
-                display: none;
+                display: none; /* Ocultar la sidebar en móviles para priorizar el formulario */
             }
 
             .form-section {
@@ -339,10 +337,6 @@
             <div class="form-group">
                 <label for="password">Contraseña</label>
                 <input type="password" id="password" name="password" placeholder="Ingresa tu contraseña" required>
-            </div>
-
-            <div class="forgot-password">
-                <a th:href="@{/forgot-password}">¿Olvidaste tu contraseña?</a>
             </div>
 
             <div class="action-buttons">
