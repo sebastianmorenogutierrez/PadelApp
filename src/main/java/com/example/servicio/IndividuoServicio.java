@@ -14,5 +14,5 @@ public interface IndividuoServicio {
     // ✅ CORRECCIÓN: Ahora espera un Long (el ID) en lugar de un objeto Individuo
     Individuo localizarIndividuo(Long idIndividuo);
 
-    Individuo localizarPorNombreUsuario(String nombreUsuario); // método agregado
+    Individuo localizarPorNombreUsuario(String nombreUsuario);
 }

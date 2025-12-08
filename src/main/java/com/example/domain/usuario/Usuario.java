@@ -22,8 +22,8 @@ public class Usuario implements Serializable {
     @ManyToOne
     @JoinColumn(name = "id_perfil", referencedColumnName = "id_perfil")
     private Perfil perfil;
-    //Relacion muchos a uno con individuo
-    @ManyToOne
+
+    @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "id_individuo", referencedColumnName = "id_individuo")
     private Individuo individuo;
 
