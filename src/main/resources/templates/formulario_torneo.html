@@ -6,6 +6,7 @@
     <title>Gestión de Torneos - Sistema de Gestión</title>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
     <style>
+        /* --- CSS Compilado para el Formulario (Mismo Estilo Lavanda/Púrpura) --- */
         * {
             margin: 0;
             padding: 0;
@@ -321,7 +322,7 @@
         /* Success animation */
         @keyframes successPulse {
             0% { transform: scale(1); }
-            50% { transform: scale(1.05); }
+            50% { transform: scale(1.02); } /* Pulso más sutil */
             100% { transform: scale(1); }
         }
 
@@ -515,7 +516,8 @@
                     Cancelar
                 </a>
             </div>
-        </form> </main>
+        </form>
+    </main>
 </div>
 
 <script>
@@ -525,9 +527,38 @@
         const nombreInput = document.getElementById('nombre');
         const fechaInicioInput = document.getElementById('fechaInicio');
         const fechaFinInput = document.getElementById('fechaFin');
-        const ubicacionInput = document.getElementById('ubicacion');
 
-        // Form validation
+        // --- Funciones de Utilidad ---
+        function showError(elementId) {
+            const errorElement = document.getElementById(elementId);
+            errorElement.classList.add('show');
+        }
+
+        function hideError(elementId) {
+            const errorElement = document.getElementById(elementId);
+            errorElement.classList.remove('show');
+        }
+
+        function validateDates() {
+             // Ocultar error de fecha fin si ya hay fecha de inicio, para que el mensaje sea solo sobre la lógica.
+             if (fechaInicioInput.value) {
+                fechaFinInput.min = fechaInicioInput.value;
+             }
+
+             if (fechaInicioInput.value && fechaFinInput.value) {
+                if (fechaFinInput.value <= fechaInicioInput.value) {
+                    showError('fechaFin-error');
+                    document.querySelector('#fechaFin-error span').textContent = 'La fecha de fin debe ser posterior a la fecha de inicio';
+                } else {
+                    hideError('fechaFin-error');
+                }
+            } else if (!fechaFinInput.value) {
+                 // Si no hay fecha de fin, mostramos que es requerida.
+                showError('fechaFin-error');
+                document.querySelector('#fechaFin-error span').textContent = 'La fecha de finalización es requerida';
+            }
+        }
+
         function validateForm() {
             let isValid = true;
 
@@ -547,12 +578,9 @@
                 hideError('fechaInicio-error');
             }
 
-            // Validate fecha fin
-            if (!fechaFinInput.value) {
-                showError('fechaFin-error');
-                isValid = false;
-            } else if (fechaInicioInput.value && fechaFinInput.value <= fechaInicioInput.value) {
-                showError('fechaFin-error');
+            // Validate fecha fin (y lógica de fechas)
+            if (!fechaFinInput.value || fechaFinInput.value <= fechaInicioInput.value) {
+                validateDates(); // Llama a la validación detallada
                 isValid = false;
             } else {
                 hideError('fechaFin-error');
@@ -561,17 +589,8 @@
             return isValid;
         }
 
-        function showError(elementId) {
-            const errorElement = document.getElementById(elementId);
-            errorElement.classList.add('show');
-        }
 
-        function hideError(elementId) {
-            const errorElement = document.getElementById(elementId);
-            errorElement.classList.remove('show');
-        }
-
-        // Real-time validation
+        // --- Event Listeners para Validación en Tiempo Real ---
         nombreInput.addEventListener('blur', function() {
             if (this.value.trim()) {
                 hideError('nombre-error');
@@ -583,60 +602,50 @@
         fechaInicioInput.addEventListener('change', function() {
             if (this.value) {
                 hideError('fechaInicio-error');
-                // Set min date for fechaFin
-                fechaFinInput.min = this.value;
             } else {
                 showError('fechaInicio-error');
             }
-            validateDates();
+            validateDates(); // Revalida la fecha de fin al cambiar la de inicio
         });
 
         fechaFinInput.addEventListener('change', function() {
             validateDates();
         });
 
-        function validateDates() {
-             if (fechaInicioInput.value && fechaFinInput.value) {
-                if (fechaFinInput.value <= fechaInicioInput.value) {
-                    showError('fechaFin-error');
-                } else {
-                    hideError('fechaFin-error');
-                }
-            } else if (!fechaFinInput.value) {
-                showError('fechaFin-error');
-            }
-        }
 
-        // Form submission
+        // --- Lógica de Envío del Formulario ---
         form.addEventListener('submit', function(e) {
             e.preventDefault();
 
             if (!validateForm()) {
+                // Si la validación falla, se detiene y se muestran los errores
                 return;
             }
 
-            // Add loading state
+            // Si es válido:
+            // 1. Añadir estado de carga
             submitBtn.classList.add('loading');
-            submitBtn.innerHTML = '<i class="fas fa-spinner"></i> Guardando...';
+            submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Guardando...';
             submitBtn.disabled = true;
 
-            // Add success animation to form
+            // 2. Añadir animación de éxito al formulario
             setTimeout(() => {
                 document.querySelector('.form-container').classList.add('success-animation');
-            }, 500);
+            }, 100);
 
-            // Submit form after animation
+            // 3. Enviar el formulario después de la animación (simulando un proceso asíncrono)
             setTimeout(() => {
-                this.submit();
-            }, 1000);
+                this.submit(); // Envía el formulario Thymeleaf/Spring
+            }, 800);
         });
 
-        // Auto-focus on first input
+        // --- Inicialización ---
+        // Auto-focus en el primer input
         setTimeout(() => {
             nombreInput.focus();
-        }, 500);
+        }, 300);
 
-        // Set today as minimum date for both date inputs
+        // Establecer la fecha de hoy como mínimo para fechaInicio (no se puede iniciar en el pasado)
         const today = new Date().toISOString().split('T')[0];
         fechaInicioInput.min = today;
     });

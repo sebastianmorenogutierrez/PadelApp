@@ -6,6 +6,26 @@
     <title>Jugadores Registrados - Sistema de Gestión</title>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
     <style>
+        /* CSS se mantiene sin cambios importantes, ya que está optimizado y contiene el estilo del modal */
+
+        /* Variables de color para consistencia */
+        :root {
+            --color-primary: #667eea;
+            --color-secondary: #764ba2;
+            --color-accent: #33b633;
+            --color-danger: #ff4d4d;
+            --color-text: #333;
+            --color-text-light: #666;
+            --color-background: #f8fafc;
+            --color-white: #ffffff;
+            --gradient-primary: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            --gradient-accent: linear-gradient(135deg, #33b633 0%, #2ca52c 100%);
+            --gradient-danger: linear-gradient(135deg, #ff4d4d 0%, #e03c3c 100%);
+            --shadow-light: 0 4px 15px rgba(102, 126, 234, 0.1);
+            --shadow-medium: 0 8px 25px rgba(102, 126, 234, 0.15);
+            --shadow-heavy: 0 15px 35px rgba(102, 126, 234, 0.2);
+        }
+
         * {
             margin: 0;
             padding: 0;
@@ -14,9 +34,9 @@
 
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            background: var(--gradient-primary);
             min-height: 100vh;
-            color: #333;
+            color: var(--color-text);
         }
 
         .container {
@@ -42,7 +62,7 @@
         }
 
         .logo h2 {
-            color: #667eea;
+            color: var(--color-primary);
             font-size: 1.5rem;
             font-weight: 700;
         }
@@ -50,7 +70,7 @@
         /* Menu sections */
         .menu-section-title {
             padding: 0 2rem 0.5rem;
-            color: #888;
+            color: var(--color-text-light);
             font-size: 0.75rem;
             text-transform: uppercase;
             letter-spacing: 1px;
@@ -61,7 +81,7 @@
             display: block;
             padding: 1rem 2rem;
             text-decoration: none;
-            color: #555;
+            color: var(--color-text);
             transition: all 0.3s ease;
             border-left: 4px solid transparent;
             position: relative;
@@ -70,8 +90,8 @@
         .menu-item:hover,
         .menu-item.active {
             background: linear-gradient(90deg, rgba(102, 126, 234, 0.1) 0%, rgba(118, 75, 162, 0.05) 100%);
-            color: #667eea;
-            border-left-color: #667eea;
+            color: var(--color-primary);
+            border-left-color: var(--color-primary);
             transform: translateX(5px);
         }
 
@@ -82,7 +102,7 @@
         }
 
         .menu-item.accent {
-            background: linear-gradient(135deg, #33b633 0%, #2ca52c 100%);
+            background: var(--gradient-accent);
             color: white;
             border-radius: 0 25px 25px 0;
             margin: 0.5rem 0;
@@ -94,7 +114,7 @@
         }
 
         .menu-item.danger {
-            background: linear-gradient(135deg, #ff4d4d 0%, #e03c3c 100%);
+            background: var(--gradient-danger);
             color: white;
             border-radius: 0 25px 25px 0;
             margin-top: 1rem;
@@ -123,7 +143,7 @@
         }
 
         .content-header h1 {
-            color: #667eea;
+            color: var(--color-primary);
             font-size: 2.5rem;
             margin-bottom: 0.5rem;
             font-weight: 700;
@@ -133,7 +153,7 @@
         }
 
         .content-header p {
-            color: #666;
+            color: var(--color-text-light);
             font-size: 1.1rem;
         }
 
@@ -154,7 +174,7 @@
         }
 
         .btn-email {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            background: var(--gradient-primary);
             color: white;
             padding: 0.8rem 1.5rem;
             border: none;
@@ -200,12 +220,12 @@
         .stat-number {
             font-size: 2.5rem;
             font-weight: 800;
-            color: #667eea;
+            color: var(--color-primary);
             display: block;
         }
 
         .stat-label {
-            color: #666;
+            color: var(--color-text-light);
             font-size: 0.9rem;
             text-transform: uppercase;
             letter-spacing: 0.5px;
@@ -235,7 +255,7 @@
         .table-title {
             font-size: 1.5rem;
             font-weight: 600;
-            color: #667eea;
+            color: var(--color-primary);
             display: flex;
             align-items: center;
             gap: 0.8rem;
@@ -259,7 +279,7 @@
 
         .search-input:focus {
             outline: none;
-            border-color: #667eea;
+            border-color: var(--color-primary);
             background: white;
             box-shadow: 0 0 15px rgba(102, 126, 234, 0.2);
         }
@@ -269,7 +289,7 @@
             left: 1rem;
             top: 50%;
             transform: translateY(-50%);
-            color: #667eea;
+            color: var(--color-primary);
             font-size: 1rem;
         }
 
@@ -281,7 +301,7 @@
         }
 
         .jugadores-table thead tr {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            background: var(--gradient-primary);
             color: white;
         }
 
@@ -313,7 +333,7 @@
         }
 
         .jugadores-table td {
-            color: #555;
+            color: var(--color-text);
         }
 
         /* User Avatar */
@@ -327,7 +347,7 @@
             width: 40px;
             height: 40px;
             border-radius: 50%;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            background: var(--gradient-primary);
             display: flex;
             align-items: center;
             justify-content: center;
@@ -343,21 +363,15 @@
 
         .user-name {
             font-weight: 600;
-            color: #333;
+            color: var(--color-text);
         }
 
         .username {
             font-size: 0.8rem;
-            color: #666;
+            color: var(--color-text-light);
         }
 
         /* Action Buttons */
-        .action-buttons {
-            display: flex;
-            gap: 0.5rem;
-            flex-wrap: wrap;
-        }
-
         .btn {
             padding: 0.6rem 1rem;
             border: none;
@@ -373,7 +387,7 @@
         }
 
         .btn-edit {
-            background: linear-gradient(135deg, #33b633 0%, #2ca52c 100%);
+            background: var(--gradient-accent);
             color: white;
             box-shadow: 0 2px 8px rgba(51, 182, 51, 0.3);
         }
@@ -384,7 +398,7 @@
         }
 
         .btn-delete {
-            background: linear-gradient(135deg, #ff4d4d 0%, #e03c3c 100%);
+            background: var(--gradient-danger);
             color: white;
             box-shadow: 0 2px 8px rgba(255, 77, 77, 0.3);
         }
@@ -403,14 +417,14 @@
         }
 
         .contact-info i {
-            color: #667eea;
+            color: var(--color-primary);
             width: 16px;
         }
 
         /* Age Badge */
         .age-badge {
             background: rgba(102, 126, 234, 0.1);
-            color: #667eea;
+            color: var(--color-primary);
             padding: 0.3rem 0.8rem;
             border-radius: 15px;
             font-weight: 600;
@@ -422,7 +436,7 @@
         .empty-state {
             text-align: center;
             padding: 3rem;
-            color: #666;
+            color: var(--color-text-light);
         }
 
         .empty-state i {
@@ -433,7 +447,7 @@
 
         .empty-state h3 {
             margin-bottom: 1rem;
-            color: #667eea;
+            color: var(--color-primary);
         }
 
         /* Email Modal Styles (NEW) */
@@ -476,7 +490,7 @@
         }
 
         .modal-title {
-            color: #667eea;
+            color: var(--color-primary);
             font-size: 1.8rem;
             display: flex;
             align-items: center;
@@ -493,7 +507,7 @@
 
         .close:hover,
         .close:focus {
-            color: #667eea;
+            color: var(--color-primary);
             text-decoration: none;
         }
 
@@ -519,7 +533,7 @@
         }
 
         .form-input:focus {
-            border-color: #667eea;
+            border-color: var(--color-primary);
             outline: none;
             box-shadow: 0 0 5px rgba(102, 126, 234, 0.5);
         }
@@ -531,12 +545,9 @@
 
         /* Loading animation for row interactions */
         .row-loading {
-            opacity: 0.7;
+            opacity: 0.5;
             pointer-events: none;
-        }
-
-        .row-loading td {
-            position: relative;
+            background: rgba(102, 126, 234, 0.1);
         }
 
         /* Responsive Design */
@@ -588,9 +599,9 @@
             }
 
             .user-info {
-                flex-direction: column;
+                align-items: flex-start;
                 gap: 0.5rem;
-                text-align: center;
+                text-align: left;
             }
         }
 
@@ -623,7 +634,7 @@
 <div class="container">
     <nav class="sidebar">
         <div class="logo">
-            <h2><i class="fas fa-trophy"></i> Sistema</h2>
+            <h2><i class="fas fa-table-tennis"></i> PadelApp</h2>
         </div>
 
         <div class="menu-section-title">Navegación Principal</div>
@@ -656,7 +667,7 @@
             <i class="fas fa-file-excel"></i> Exportar Excel
         </a>
 
-        <form th:action="@{/login}" method="post" style="margin: 2rem 0 0 0;">
+        <form th:action="@{/logout}" method="post" style="margin: 2rem 0 0 0;">
             <a href="#" onclick="this.parentNode.submit()" class="menu-item danger">
                 <i class="fas fa-sign-out-alt"></i> Cerrar Sesión
             </a>
@@ -665,17 +676,17 @@
 
     <main class="main-content">
         <div class="content-header">
-            <h1><i class="fas fa-user-friends"></i> Jugadores Registrados</h1>
-            <p>Gestiona y administra todos los jugadores del sistema</p>
+            <h1><i class="fas fa-user-friends"></i> Gestión de Jugadores</h1>
+            <p>Administra, busca y comunica a todos los jugadores registrados en la plataforma.</p>
         </div>
 
         <div class="action-bar">
             <h3 class="table-title">
-                <i class="fas fa-paper-plane"></i>
-                Herramienta de Comunicación Masiva
+                <i class="fas fa-envelope-open-text"></i>
+                Herramienta de Comunicación
             </h3>
             <button class="btn-email" onclick="openEmailModal()">
-                <i class="fas fa-envelope"></i>
+                <i class="fas fa-paper-plane"></i>
                 Enviar Correo Masivo
             </button>
         </div>
@@ -706,7 +717,7 @@
                 </h3>
                 <div class="search-box">
                     <i class="fas fa-search search-icon"></i>
-                    <input type="text" class="search-input" id="searchInput" placeholder="Buscar jugadores...">
+                    <input type="text" class="search-input" id="searchInput" placeholder="Buscar jugadores por nombre, cédula o correo...">
                 </div>
             </div>
 
@@ -733,7 +744,7 @@
                     <td>
                         <div class="user-info">
                             <div class="user-avatar"
-                                 th:text="${#strings.substring(#strings.defaultString(jugador.individuo.nombre, 'X'), 0, 1)}">A</div>
+                                 th:text="${#strings.substring(#strings.defaultString(jugador.individuo.nombre, 'X'), 0, 1) + #strings.substring(#strings.defaultString(jugador.individuo.apellido, 'X'), 0, 1)}">NA</div>
                             <div class="user-details">
                                             <span class="user-name"
                                                   th:text="${#strings.defaultString(jugador.individuo.nombre, 'Sin Nombre') + ' ' + #strings.defaultString(jugador.individuo.apellido, '')}">
@@ -763,12 +774,12 @@
                     <td>
                         <div class="action-buttons">
                             <button class="btn btn-edit"
-                                    th:data-id="${jugador.individuo.id_individuo}"
+                                    th:data-id="${jugador.id_usuario}"
                                     onclick="editPlayer(this)">
                                 <i class="fas fa-edit"></i> Editar
                             </button>
                             <button class="btn btn-delete"
-                                    th:data-id="${jugador.individuo.id_individuo}"
+                                    th:data-id="${jugador.id_usuario}"
                                     th:data-name="${#strings.defaultString(jugador.individuo.nombre, 'Jugador')}"
                                     onclick="deletePlayer(this)">
                                 <i class="fas fa-trash"></i> Eliminar
@@ -817,9 +828,12 @@
         </form>
     </div>
 </div>
+
 <script>
     document.addEventListener('DOMContentLoaded', function() {
-        // Search functionality
+        // ====================================================================
+        // BÚSQUEDA Y FILTRADO
+        // ====================================================================
         const searchInput = document.getElementById('searchInput');
         const tableBody = document.getElementById('playersTableBody');
         const rows = tableBody ? tableBody.querySelectorAll('.player-row') : [];
@@ -829,8 +843,13 @@
                 const searchTerm = this.value.toLowerCase();
 
                 rows.forEach(row => {
-                    const text = row.textContent.toLowerCase();
-                    if (text.includes(searchTerm)) {
+                    // Texto a buscar: Nombre, Cédula, Correo
+                    const name = row.querySelector('.user-name').textContent.toLowerCase();
+                    const id = row.querySelector('.user-id').textContent.toLowerCase();
+                    const email = row.querySelector('.contact-info span:nth-child(2)').textContent.toLowerCase();
+                    const cedula = row.cells[2].textContent.toLowerCase();
+
+                    if (name.includes(searchTerm) || id.includes(searchTerm) || email.includes(searchTerm) || cedula.includes(searchTerm)) {
                         row.style.display = '';
                     } else {
                         row.style.display = 'none';
@@ -839,51 +858,58 @@
             });
         }
 
-        // Animate stats logic (kept as in original)
-        // Note: The original had an IntersectionObserver which is cleaner,
-        // but for simplicity, the current one is maintained if it's the intended implementation.
-        const observerOptions = {
-            threshold: 0.5,
-            rootMargin: '0px'
-        };
-
-        const statsObserver = new IntersectionObserver(function(entries) {
+        // ====================================================================
+        // ANIMACIÓN DE ESTADÍSTICAS (CONTADOR)
+        // ====================================================================
+        const statsObserver = new IntersectionObserver(function(entries, observer) {
             entries.forEach(entry => {
                 if (entry.isIntersecting) {
                     const statNumbers = entry.target.querySelectorAll('.stat-number');
                     statNumbers.forEach(stat => {
-                        const finalNumber = stat.textContent;
-                        const isPercentage = finalNumber.includes('%');
-                        const number = parseInt(finalNumber);
+                        const finalNumberText = stat.textContent.replace('%', '');
+                        const isPercentage = stat.textContent.includes('%');
+                        const number = parseInt(finalNumberText);
 
-                        if (!isNaN(number)) {
+                        if (!stat.hasAttribute('data-animated') && !isNaN(number)) {
+                            stat.setAttribute('data-animated', 'true');
                             let current = 0;
-                            const increment = number / 30;
+                            const duration = 1200;
+                            const steps = 40;
+                            const increment = number / steps;
+                            let stepCount = 0;
 
                             const timer = setInterval(() => {
                                 current += increment;
-                                if (current >= number) {
+                                stepCount++;
+
+                                if (stepCount >= steps) {
                                     current = number;
                                     clearInterval(timer);
                                 }
+
                                 stat.textContent = Math.floor(current) + (isPercentage ? '%' : '');
-                            }, 50);
+                            }, duration / steps);
                         }
                     });
                 }
             });
-        }, observerOptions);
+        }, {
+            threshold: 0.5,
+            rootMargin: '0px 0px -50px 0px'
+        });
 
-        // Observe stats cards
         const statsCards = document.querySelectorAll('.stat-card');
         statsCards.forEach(card => statsObserver.observe(card));
 
-        // Animate table rows (kept as in original)
+        // ====================================================================
+        // ANIMACIÓN DE FILAS DE TABLA
+        // ====================================================================
         const rowObserver = new IntersectionObserver(function(entries) {
             entries.forEach(entry => {
                 if (entry.isIntersecting) {
                     entry.target.style.opacity = '1';
                     entry.target.style.transform = 'translateX(0)';
+                    rowObserver.unobserve(entry.target); // Detener observación después de la animación
                 }
             });
         }, { threshold: 0.1 });
@@ -895,34 +921,38 @@
             rowObserver.observe(row);
         });
 
-        // Email Form Submission Handling (NEW)
+        // ====================================================================
+        // MANEJO DEL FORMULARIO DE CORREO MASIVO
+        // ====================================================================
         document.getElementById('emailForm').addEventListener('submit', function(e) {
             const sendBtn = document.getElementById('sendEmailBtn');
+            // Muestra estado de carga en el botón
             sendBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Enviando...';
             sendBtn.disabled = true;
-            // Note: The form action is set to @{/enviar-correo-masivo} for your Spring/Thymeleaf backend
+            // La navegación real la maneja el action de Thymeleaf.
         });
-
     });
 
-    // Email Modal Functions (NEW)
+    // ====================================================================
+    // FUNCIONES DEL MODAL
+    // ====================================================================
     function openEmailModal() {
         document.getElementById('emailModal').style.display = 'block';
-        document.body.style.overflow = 'hidden'; // Evitar scroll de fondo
+        document.body.style.overflow = 'hidden';
     }
 
     function closeEmailModal() {
         document.getElementById('emailModal').style.display = 'none';
-        document.body.style.overflow = 'auto'; // Restaurar scroll
-        document.getElementById('emailForm').reset(); // Opcional: limpiar el formulario al cerrar
+        document.body.style.overflow = 'auto';
+        document.getElementById('emailForm').reset();
 
-        // Reset button state just in case
+        // Restablecer el botón de envío
         const sendBtn = document.getElementById('sendEmailBtn');
         sendBtn.innerHTML = '<i class="fas fa-paper-plane"></i> Enviar Correo';
         sendBtn.disabled = false;
     }
 
-    // Close modal when clicking outside (NEW)
+    // Cerrar modal al hacer click fuera
     window.onclick = function(event) {
         const modal = document.getElementById('emailModal');
         if (event.target == modal) {
@@ -930,29 +960,31 @@
         }
     }
 
-    // ✅ CORRECCIÓN DE JAVASCRIPT: La función ahora acepta 'this' (el elemento botón)
+    // ====================================================================
+    // ACCIONES DE TABLA: EDITAR
+    // ====================================================================
     function editPlayer(buttonElement) {
-        // Lee el ID directamente del atributo data-id del botón
         const playerId = buttonElement.getAttribute('data-id');
-
         const row = buttonElement.closest('tr');
-        row.classList.add('row-loading');
 
+        row.classList.add('row-loading');
         buttonElement.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Cargando...';
         buttonElement.disabled = true;
 
+        // Simula la navegación al endpoint de edición
         setTimeout(() => {
-            window.location.href = `/cambiar/${playerId}`;
+            window.location.href = `/jugadores/editar/${playerId}`;
         }, 500);
     }
 
-    // ✅ CORRECCIÓN DE JAVASCRIPT: La función ahora acepta 'this' (el elemento botón)
+    // ====================================================================
+    // ACCIONES DE TABLA: ELIMINAR
+    // ====================================================================
     function deletePlayer(buttonElement) {
-        // Lee el ID y el nombre de los atributos data-* del botón
         const playerId = buttonElement.getAttribute('data-id');
         const playerName = buttonElement.getAttribute('data-name');
 
-        const confirmed = confirm(`¿Estás seguro que deseas eliminar al jugador "${playerName}"?\n\nEsta acción no se puede deshacer.`);
+        const confirmed = confirm(`¿Estás seguro que deseas eliminar al jugador "${playerName}" (ID: ${playerId})?\n\nEsta acción no se puede deshacer.`);
 
         if (confirmed) {
             const row = buttonElement.closest('tr');
@@ -961,25 +993,29 @@
             buttonElement.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Eliminando...';
             buttonElement.disabled = true;
 
+            // Simula la navegación al endpoint de borrado
             setTimeout(() => {
-                window.location.href = `/borrar/${playerId}`;
+                window.location.href = `/jugadores/borrar/${playerId}`;
             }, 800);
         }
     }
 
-    // Add loading states to navigation links
+    // ====================================================================
+    // ESTADO DE CARGA EN ENLACES DEL MENÚ
+    // ====================================================================
     document.querySelectorAll('.menu-item').forEach(link => {
         link.addEventListener('click', function(e) {
-            if (this.getAttribute('href') !== '#' && !this.onclick) { // Excluir enlaces con onclick (como el de Correo Masivo)
+            // Excluir enlaces con funcionalidad onclick (como Correo Masivo y Logout)
+            if (this.getAttribute('href') !== '#' && !this.onclick && !this.parentNode.matches('form')) {
+                e.preventDefault();
                 this.style.opacity = '0.7';
                 const originalHTML = this.innerHTML;
                 this.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Cargando...';
 
-                // Restore original content if navigation doesn't happen (for some reason)
+                // Redirecciona después de un breve retraso
                 setTimeout(() => {
-                    this.innerHTML = originalHTML;
-                    this.style.opacity = '1';
-                }, 5000);
+                    window.location.href = this.href;
+                }, 300);
             }
         });
     });

@@ -182,6 +182,7 @@
             box-shadow: 0 0 20px rgba(102, 126, 234, 0.2);
         }
 
+        /* Botón de Acción Principal (Inscripción) */
         .btn-primary {
             width: 100%;
             padding: 1rem;
@@ -201,11 +202,32 @@
             box-shadow: 0 8px 25px rgba(102, 126, 234, 0.6);
         }
 
-        /* Botones de Acción */
+        /* Botón de Desinscripción */
+        .btn-danger {
+            background: linear-gradient(135deg, #ff4d4d 0%, #e03c3c 100%);
+            color: white;
+            width: 100%;
+            padding: 1rem;
+            border: none;
+            border-radius: 12px;
+            font-weight: 600;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(255, 77, 77, 0.4);
+        }
+
+        .btn-danger:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(255, 77, 77, 0.6);
+        }
+
+        /* Botones de Acción Global (parte inferior) */
         .action-buttons {
             display: flex;
             gap: 1rem;
             margin-top: 2rem;
+            flex-wrap: wrap; /* Permite que los botones se envuelvan en pantallas pequeñas */
         }
 
         .btn-secondary {
@@ -226,6 +248,22 @@
             background-color: #667eea;
             color: white;
             transform: translateY(-2px);
+        }
+
+        /* Botones de Administrador */
+        .btn-admin-edit {
+            background: linear-gradient(135deg, #33b633 0%, #2ca52c 100%);
+            color: white;
+        }
+        .btn-admin-edit:hover {
+            background: linear-gradient(135deg, #2ca52c 0%, #228b22 100%);
+        }
+        .btn-admin-delete {
+            background: linear-gradient(135deg, #ff4d4d 0%, #e03c3c 100%);
+            color: white;
+        }
+        .btn-admin-delete:hover {
+            background: linear-gradient(135deg, #e03c3c 0%, #cc2929 100%);
         }
 
         /* Estilos para Mensajes */
@@ -254,10 +292,11 @@
 </head>
 <body>
 <main class="main-content">
-    <div th:if="${partido}"> <h1 class="partido-header">
-        <i class="fas fa-gamepad"></i>
-        <span th:text="${partido.nombrePartido}">Detalle del Partido</span>
-    </h1>
+    <div th:if="${partido}">
+        <h1 class="partido-header">
+            <i class="fas fa-gamepad"></i>
+            <span th:text="${partido.nombrePartido}">Detalle del Partido</span>
+        </h1>
 
         <div class="info-card-grid">
             <div class="info-card">
@@ -298,7 +337,7 @@
                     <li class="player-item" th:each="jugador : ${partido.jugadores}">
                         <div class="player-avatar" th:text="${#strings.substring(jugador.nombreUsuario, 0, 1).toUpperCase()}">J</div>
                         <span class="player-info" th:text="${jugador.nombreUsuario}">Jugador X</span>
-                        <span th:if="${jugador.id_usuario == partido.creador.id_usuario}" style="font-size: 0.8em; color: green; font-weight: bold;">(Creador)</span>
+                        <span th:if="${jugador.id_usuario == partido.creador.id_usuario}" style="font-size: 0.8em; color: #33b633; font-weight: bold;">(Creador)</span>
                     </li>
                 </ul>
 
@@ -309,34 +348,39 @@
             </div>
 
             <div class="registration-section">
-
                 <div th:if="${mensajeExito}" class="alert alert-success">
                     <i class="fas fa-check-circle"></i> <span th:text="${mensajeExito}"></span>
                 </div>
                 <div th:if="${mensajeAdvertencia}" class="alert alert-warning">
                     <i class="fas fa-exclamation-triangle"></i> <span th:text="${mensajeAdvertencia}"></span>
                 </div>
+                <div th:if="${mensajeError}" class="alert alert-danger" style="background-color: #f8d7da; color: #721c24;">
+                    <i class="fas fa-times-circle"></i> <span th:text="${mensajeError}"></span>
+                </div>
 
                 <div class="section-header">
                     <h3><i class="fas fa-sign-in-alt"></i> Inscripción</h3>
+                </div>
+
+                <div th:if="${usuarioYaInscrito}">
+                    <div class="alert alert-info">
+                        <i class="fas fa-check-circle"></i> Ya estás inscrito en este partido.
+                    </div>
+                    <form th:action="@{'/partido/' + ${partido.id_match} + '/desinscribir'}" method="post">
+                        <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
+                        <button type="submit" class="btn-danger"
+                                onclick="return confirm('¿Estás seguro de que quieres desinscribirte de este partido?');">
+                            <i class="fas fa-user-times"></i> Desinscribirse
+                        </button>
+                    </form>
                 </div>
 
                 <div th:if="${#lists.size(partido.jugadores) < 4 and !usuarioYaInscrito}">
                     <form th:action="@{'/partido/' + ${partido.id_match} + '/inscribir'}" method="post">
                         <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
 
-                        <label class="form-label" for="nombreJugador" style="display: block; color: #764ba2; font-weight: 600; margin-bottom: 0.5rem;">
-                            <i class="fas fa-user"></i> Nombre de Usuario
-                        </label>
-                        <input type="text"
-                               id="nombreJugador"
-                               name="nombreJugador"
-                               class="form-input"
-                               placeholder="Nombre del jugador a inscribir"
-                               required />
-
                         <button type="submit" class="btn-primary">
-                            <i class="fas fa-plus-circle"></i> Inscribirse al Partido
+                            <i class="fas fa-plus-circle"></i> Inscribirme al Partido
                         </button>
                     </form>
                     <p style="margin-top: 10px; font-size: 0.9em; color: #888; text-align: center;">
@@ -344,28 +388,32 @@
                     </p>
                 </div>
 
-                <div th:if="${#lists.size(partido.jugadores) >= 4}" style="padding: 1rem; border-radius: 12px; background-color: #ff4d4d; color: white; text-align: center;">
+                <div th:if="${#lists.size(partido.jugadores) >= 4 and !usuarioYaInscrito}" style="padding: 1rem; border-radius: 12px; background-color: #ff4d4d; color: white; text-align: center;">
                     <i class="fas fa-exclamation-triangle"></i> ¡Partido Lleno! Máximo de 4 jugadores alcanzado.
-                </div>
-
-                <div th:if="${usuarioYaInscrito}" class="alert alert-info">
-                    <i class="fas fa-check-circle"></i> Ya estás inscrito en este partido.
                 </div>
             </div>
 
-        </div>
-
-        <div th:if="${usuarioYaInscrito}">
-            <a th:href="@{/pagos/partido/{id}(id=${partido.id_match})}"
-               class="btn btn-success btn-lg">
-                <i class="fas fa-credit-card me-2"></i>Pagar Partido
-            </a>
         </div>
 
         <div class="action-buttons">
             <a th:href="@{/partido}" class="btn-secondary">
                 <i class="fas fa-arrow-left"></i> Volver a Partidos
             </a>
+
+            <th:block th:if="${partido.creador.id_usuario == usuarioActual.id_usuario}">
+                <a th:href="@{/partido/editar/{id}(id=${partido.id_match})}"
+                   class="btn-secondary btn-admin-edit">
+                    <i class="fas fa-edit"></i> Editar Partido
+                </a>
+
+                <form th:action="@{/partido/eliminar/{id}(id=${partido.id_match})}" method="post"
+                      onsubmit="return confirm('¿Estás seguro de que deseas eliminar este partido permanentemente?');">
+                    <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
+                    <button type="submit" class="btn-secondary btn-admin-delete">
+                        <i class="fas fa-trash-alt"></i> Eliminar Partido
+                    </button>
+                </form>
+            </th:block>
         </div>
 
     </div>

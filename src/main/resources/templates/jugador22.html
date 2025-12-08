@@ -102,6 +102,7 @@
             align-items: center;
             gap: 12px;
             min-width: 200px;
+            text-decoration: none; /* Asegura que el enlace se vea limpio */
         }
 
         .user-profile:hover {
@@ -303,10 +304,21 @@
             padding: 6rem 3rem 3rem;
             transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
             position: relative;
+            /* Asegura que el contenido principal siempre tenga espacio a la izquierda para desktop */
+            margin-left: 0;
+        }
+
+        /* Ajuste para que el main-content no se mueva en desktop si el sidebar no está visible permanentemente */
+        @media (min-width: 1025px) {
+             .main-content {
+                margin-left: 0;
+             }
         }
 
         .sidebar.active ~ .main-content {
-            margin-left: 320px;
+            /* Solo aplica un margen si la sidebar se abre (en móvil) o si la sidebar fuera fija */
+            /* Se comenta la línea original para mejorar el flujo de escritorio/móvil:
+            margin-left: 320px; */
         }
 
         /* Hero Section */
@@ -457,6 +469,7 @@
             font-weight: 800;
             color: var(--color-primary);
             display: block;
+            min-height: 38px; /* Evita el salto durante la animación de conteo */
         }
 
         .stat-label {
@@ -526,12 +539,8 @@
 
         @media (max-width: 768px) {
             .sidebar {
-                width: 100%;
-                left: -100%;
-            }
-
-            .sidebar.active ~ .main-content {
-                margin-left: 0;
+                width: 80%; /* Ocupa más espacio en móvil */
+                left: -80%;
             }
 
             .main-content {
@@ -553,7 +562,8 @@
             /* Mobile adjustments for user profile */
             .user-profile {
                 padding: 8px 12px;
-                min-width: 150px;
+                min-width: unset;
+                max-width: 180px;
             }
 
             .user-avatar {
@@ -567,7 +577,19 @@
             }
 
             .user-role {
-                font-size: 11px;
+                display: none; /* Oculta el rol para ahorrar espacio */
+            }
+
+            /* Mueve el user profile a la derecha para no chocar con el hamburguer */
+            .user-profile {
+                right: 20px;
+                left: unset;
+            }
+
+            /* El hamburguer button siempre a la izquierda */
+            .hamburger {
+                left: 20px;
+                right: unset;
             }
         }
 
@@ -663,6 +685,12 @@
         </div>
 
         <div class="menu-section">
+            <div class="menu-section-title">Navegación Principal</div>
+            <a th:href="@{/indice}" class="menu-item active"> <i class="fas fa-home"></i> Inicio
+            </a>
+        </div>
+
+        <div class="menu-section">
             <div class="menu-section-title">Gestión Principal</div>
             <a th:href="@{/partido}" class="menu-item">
                 <i class="fas fa-gamepad"></i> Partidos
@@ -673,12 +701,18 @@
             <a th:href="@{/torneo}" class="menu-item">
                 <i class="fas fa-trophy"></i> Torneos
             </a>
+            <a th:href="@{/jugadores}" class="menu-item">
+                <i class="fas fa-user-friends"></i> Jugadores
+            </a>
         </div>
 
         <div class="menu-section">
             <div class="menu-section-title">Usuario & Datos</div>
             <a th:href="@{/datos}" class="menu-item">
                 <i class="fas fa-user-cog"></i> Mi Perfil
+            </a>
+            <a th:href="@{/exportarExcel}" class="menu-item accent">
+                <i class="fas fa-file-excel"></i> Exportar Excel
             </a>
         </div>
 
@@ -755,19 +789,18 @@
                 </h3>
                 <div class="stats-grid">
                     <div class="stat-item">
-                        <span class="stat-number">24</span>
-                        <span class="stat-label">Partidos Jugados</span>
+                        <span class="stat-number" data-target="24">0</span> <span class="stat-label">Partidos Jugados</span>
                     </div>
                     <div class="stat-item">
-                        <span class="stat-number">68%</span>
+                        <span class="stat-number" data-target="68">0%</span>
                         <span class="stat-label">Tasa de Victoria</span>
                     </div>
                     <div class="stat-item">
-                        <span class="stat-number">12</span>
+                        <span class="stat-number" data-target="12">0</span>
                         <span class="stat-label">Torneos</span>
                     </div>
                     <div class="stat-item">
-                        <span class="stat-number">156</span>
+                        <span class="stat-number" data-target="156">0</span>
                         <span class="stat-label">Puntos Ganados</span>
                     </div>
                 </div>
@@ -821,9 +854,15 @@
     // Add loading animation to navigation links
     document.querySelectorAll('.menu-item').forEach(link => {
         link.addEventListener('click', function(e) {
-            if (this.getAttribute('href') !== '#') {
+            // Previene la animación si es un enlace de logout o un ancla vacía
+            if (this.getAttribute('href') !== '#' && !this.parentNode.matches('form')) {
+                e.preventDefault();
                 this.style.opacity = '0.7';
                 this.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Cargando...';
+                // Navega después de un breve retraso
+                setTimeout(() => {
+                    window.location.href = this.href;
+                }, 300);
             }
         });
     });
@@ -834,46 +873,57 @@
         this.querySelector('.user-info').innerHTML = '<div class="user-name">Cargando...</div><div class="user-role"><i class="fas fa-spinner fa-spin"></i></div>';
     });
 
-    // Animate stats on scroll
-    const observerOptions = {
-        threshold: 0.5,
-        rootMargin: '0px'
-    };
 
-    const statsObserver = new IntersectionObserver(function(entries) {
+    // ====================================================================
+    // LÓGICA DE ANIMACIÓN DE ESTADÍSTICAS
+    // ====================================================================
+
+    const statsObserver = new IntersectionObserver(function(entries, observer) {
         entries.forEach(entry => {
             if (entry.isIntersecting) {
                 const statNumbers = entry.target.querySelectorAll('.stat-number');
                 statNumbers.forEach(stat => {
-                    const finalNumber = stat.textContent;
-                    const isPercentage = finalNumber.includes('%');
-                    const number = parseInt(finalNumber);
+                    const finalNumber = parseInt(stat.getAttribute('data-target'));
+                    const isPercentage = stat.textContent.includes('%');
 
-                    let current = 0;
-                    const increment = number / 30;
+                    // Solo animar si el valor actual es 0 (o la etiqueta inicial '0%')
+                    if (parseInt(stat.textContent) === 0) {
+                        let current = 0;
+                        const duration = 1500; // 1.5 segundos
+                        const steps = 60;
+                        const increment = finalNumber / steps;
+                        let stepCount = 0;
 
-                    const timer = setInterval(() => {
-                        current += increment;
-                        if (current >= number) {
-                            current = number;
-                            clearInterval(timer);
-                        }
-                        stat.textContent = Math.floor(current) + (isPercentage ? '%' : '');
-                    }, 50);
+                        const timer = setInterval(() => {
+                            current += increment;
+                            stepCount++;
+
+                            if (stepCount >= steps) {
+                                current = finalNumber;
+                                clearInterval(timer);
+                            }
+
+                            stat.textContent = Math.floor(current) + (isPercentage ? '%' : '');
+                        }, duration / steps);
+                    }
                 });
+                // Una vez animado, deja de observar para que no se reinicie
+                observer.unobserve(entry.target);
             }
         });
-    }, observerOptions);
+    }, {
+        threshold: 0.5,
+        rootMargin: '0px 0px -50px 0px'
+    });
 
-    // Observe stats card
+    // Observar la tarjeta de estadísticas
     const statsCard = document.querySelector('.stats-card');
     if (statsCard) {
         statsObserver.observe(statsCard);
     }
 
     // ====================================================================
-    // 💡 BLOQUE DE INICIALES CORREGIDO
-    // Resuelve el conflicto con Thymeleaf y permite iniciales dobles (Ej: JP)
+    // LÓGICA DE INICIALES CORREGIDA
     // ====================================================================
 
     /**
@@ -882,7 +932,7 @@
      * @returns {string} Las iniciales en mayúsculas.
      */
     function generateInitials(fullName) {
-        if (!fullName || fullName.trim() === 'Usuario') return 'U';
+        if (!fullName || fullName.trim() === 'Usuario' || fullName.trim().length === 0) return 'U';
 
         // Separa el nombre por espacios y filtra cadenas vacías
         const names = fullName.trim().split(/\s+/).filter(Boolean);
@@ -900,17 +950,18 @@
         return 'U';
     }
 
-    // Actualiza el avatar con las iniciales dobles (si están disponibles) al cargar la página
+    // Sobreescribe la inicial simple de Thymeleaf con la versión de iniciales dobles del JS
     window.addEventListener('DOMContentLoaded', function() {
         const userNameElement = document.querySelector('.user-name');
         const avatar = document.querySelector('.user-avatar span');
 
-        // Lee el nombre completo ya renderizado por Thymeleaf
-        const userName = userNameElement ? userNameElement.textContent.trim() : null;
+        if (userNameElement && avatar) {
+             // Lee el nombre completo ya renderizado por Thymeleaf
+            const userName = userNameElement.textContent.trim();
 
-        // Sobreescribe la inicial simple de Thymeleaf con la versión de iniciales dobles del JS
-        if (userName && userName !== 'Usuario' && userName.length > 0) {
-            avatar.textContent = generateInitials(userName);
+            if (userName && userName !== 'Usuario' && userName.length > 0) {
+                avatar.textContent = generateInitials(userName);
+            }
         }
     });
 </script>

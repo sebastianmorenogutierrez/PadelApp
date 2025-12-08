@@ -1,8 +1,9 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <title>Detalle del Torneo - Sistema de Gestión</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Detalle del Torneo - PadelApp</title>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
     <style>
         * {
@@ -31,6 +32,8 @@
             padding: 2rem 0;
             box-shadow: 4px 0 20px rgba(0, 0, 0, 0.1);
             border-right: 1px solid rgba(255, 255, 255, 0.2);
+            position: sticky;
+            top: 0;
         }
 
         .logo {
@@ -365,6 +368,44 @@
             flex-wrap: wrap;
         }
 
+        /* Admin Action Buttons */
+        .btn-admin-edit {
+            background: linear-gradient(135deg, #33b633 0%, #2ca52c 100%);
+            color: white;
+            box-shadow: 0 4px 15px rgba(51, 182, 51, 0.4);
+        }
+        .btn-admin-edit:hover {
+            background: linear-gradient(135deg, #2ca52c 0%, #228b22 100%);
+        }
+
+        .btn-admin-delete {
+            background: linear-gradient(135deg, #ff4d4d 0%, #e03c3c 100%);
+            color: white;
+            box-shadow: 0 4px 15px rgba(255, 77, 77, 0.4);
+        }
+        .btn-admin-delete:hover {
+            background: linear-gradient(135deg, #e03c3c 0%, #cc2929 100%);
+        }
+
+        /* Alert Messages */
+        .alert {
+            padding: 1rem;
+            margin-bottom: 1.5rem;
+            border-radius: 10px;
+            font-weight: 600;
+            text-align: center;
+        }
+        .alert-success {
+            background-color: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+        .alert-error {
+            background-color: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
+
         /* Responsive Design */
         @media (max-width: 1024px) {
             .content-grid {
@@ -380,6 +421,7 @@
             .sidebar {
                 width: 100%;
                 padding: 1rem 0;
+                position: relative; /* Elimina sticky en móvil si estorba */
             }
 
             .main-content {
@@ -433,7 +475,6 @@
 </head>
 <body>
 <div class="container">
-    <!-- Sidebar -->
     <nav class="sidebar">
         <div class="logo">
             <h2><i class="fas fa-trophy"></i> Sistema</h2>
@@ -466,21 +507,26 @@
             <i class="fas fa-file-excel"></i> Exportar Excel
         </a>
 
-        <form th:action="@{/login}" method="post" style="margin: 2rem 0 0 0;">
-            <a href="#" onclick="this.parentNode.submit()" class="menu-item danger">
-                <i class="fas fa-sign-out-alt"></i> Cerrar Sesión
-            </a>
+        <form th:action="@{/logout}" method="post" style="margin: 2rem 0 0 0;">
+            <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
+            <button type="submit" style="all: unset; cursor: pointer; display: block; width: 100%;">
+                <span class="menu-item danger">
+                    <i class="fas fa-sign-out-alt"></i> Cerrar Sesión
+                </span>
+            </button>
         </form>
     </nav>
 
-    <!-- Main Content -->
     <main class="main-content">
-        <!-- Tournament Header -->
         <div class="tournament-header">
             <h2 class="tournament-title">
                 <i class="fas fa-trophy"></i>
                 <span th:text="${torneo.nombre}">Torneo de Ejemplo</span>
             </h2>
+
+            <p style="font-size: 0.9em; color: #764ba2; margin-top: -10px; margin-bottom: 10px;">
+                Creado por: <span th:text="${torneo.creador.nombreUsuario}">AdminUser</span>
+            </p>
 
             <div class="tournament-info">
                 <div class="info-card">
@@ -495,27 +541,34 @@
                     <h4><i class="fas fa-calendar-check"></i> Fecha de Fin</h4>
                     <p th:text="${fechaFinFormateada}">31 de Enero, 2024</p>
                 </div>
+                <div class="info-card">
+                    <h4><i class="fas fa-star"></i> Nivel Requerido</h4>
+                    <p th:text="${torneo.nivel}">Intermedio/Avanzado</p>
+                </div>
             </div>
         </div>
 
-        <!-- Content Grid -->
+        <div th:if="${mensajeExito}" class="alert alert-success">
+            <i class="fas fa-check-circle"></i> <span th:text="${mensajeExito}"></span>
+        </div>
+        <div th:if="${mensajeError}" class="alert alert-error">
+            <i class="fas fa-exclamation-triangle"></i> <span th:text="${mensajeError}"></span>
+        </div>
+
         <div class="content-grid">
-            <!-- Participants Section -->
             <div class="participants-section">
                 <div class="section-header">
                     <h3><i class="fas fa-users"></i> Participantes</h3>
                     <span class="participants-count" th:text="${#lists.size(torneo.participantes)} + ' inscritos'">0 inscritos</span>
                 </div>
 
-                <!-- Participants List -->
                 <ul class="participants-list" th:unless="${#lists.isEmpty(torneo.participantes)}">
                     <li class="participant-item" th:each="persona, iterStat : ${torneo.participantes}">
-                        <div class="participant-avatar" th:text="${#strings.substring(persona.nombre, 0, 1)}">A</div>
+                        <div class="participant-avatar" th:text="${#strings.substring(persona.nombre, 0, 1).toUpperCase()}">A</div>
                         <span class="participant-name" th:text="${persona.nombre}">Nombre del Participante</span>
                     </li>
                 </ul>
 
-                <!-- Empty State -->
                 <div class="empty-participants" th:if="${#lists.isEmpty(torneo.participantes)}">
                     <i class="fas fa-user-plus"></i>
                     <h4>No hay participantes aún</h4>
@@ -523,24 +576,13 @@
                 </div>
             </div>
 
-            <!-- Registration Section -->
             <div class="registration-section">
                 <div class="section-header">
                     <h3><i class="fas fa-user-plus"></i> Inscripción</h3>
                 </div>
 
                 <form class="registration-form" th:action="@{'/torneo/' + ${torneo.id} + '/inscribir'}" method="post">
-                    <div class="form-group">
-                        <label class="form-label" for="nombre">
-                            <i class="fas fa-user"></i> Nombre Completo
-                        </label>
-                        <input type="text"
-                               id="nombre"
-                               name="nombre"
-                               class="form-input"
-                               placeholder="Ingresa tu nombre completo"
-                               required />
-                    </div>
+                    <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
 
                     <button type="submit" class="btn btn-primary">
                         <i class="fas fa-sign-in-alt"></i>
@@ -550,32 +592,37 @@
             </div>
         </div>
 
-        <!-- Action Buttons -->
         <div class="action-buttons">
             <a th:href="@{/torneo}" class="btn btn-secondary">
                 <i class="fas fa-arrow-left"></i> Volver a Torneos
             </a>
-            <a href="#" class="btn btn-secondary">
-                <i class="fas fa-edit"></i> Editar Torneo
-            </a>
+
+            <th:block th:if="${torneo.creador.id_usuario == usuarioActual.id_usuario or esAdministrador}">
+                <a th:href="@{/torneo/editar/{id}(id=${torneo.id})}" class="btn btn-admin-edit">
+                    <i class="fas fa-edit"></i> Editar Torneo
+                </a>
+            </th:block>
+
             <a href="#" class="btn btn-secondary">
                 <i class="fas fa-share"></i> Compartir
             </a>
+
+            <th:block th:if="${torneo.creador.id_usuario == usuarioActual.id_usuario or esAdministrador}">
+                <form th:action="@{/torneo/eliminar/{id}(id=${torneo.id})}" method="post"
+                      onsubmit="return confirm('¿Estás seguro de que deseas eliminar este torneo? Esta acción es irreversible.');"
+                      style="margin: 0;">
+                    <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
+                    <button type="submit" class="btn btn-admin-delete">
+                        <i class="fas fa-trash-alt"></i> Eliminar Torneo
+                    </button>
+                </form>
+            </th:block>
         </div>
     </main>
 </div>
 
 <script>
-    // Add dynamic interactions
     document.addEventListener('DOMContentLoaded', function() {
-        // Auto-focus on name input
-        const nameInput = document.getElementById('nombre');
-        if (nameInput) {
-            nameInput.addEventListener('input', function() {
-                this.style.borderColor = this.value.length > 2 ? '#28a745' : '#667eea';
-            });
-        }
-
         // Add loading state to form submission
         const form = document.querySelector('.registration-form');
         if (form) {

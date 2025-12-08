@@ -3,47 +3,136 @@
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-    <title>Editar Perfil</title>
+    <title>Editar Perfil - Sistema de Gestión</title>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
     <style>
-        /* Restablecimiento y Fuente */
+        /* --- Base CSS (Igual que en las plantillas anteriores) --- */
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
         }
 
-        /* Estilo del Body: Fondo degradado y centrado del contenido principal */
         body {
-          font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-          /* Fondo de base: #667eea a #764ba2 */
-          background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-          color: #333; /* Color de texto principal más oscuro */
-          display: flex;
-          flex-direction: column;
-          align-items: center;
-          justify-content: center;
-          min-height: 100vh;
-          padding: 20px;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            color: #333;
+        }
+
+        .container {
+            display: flex;
+            min-height: 100vh;
+            width: 100%; /* Asegura que ocupe todo el ancho */
+        }
+
+        /* --- Sidebar --- */
+        .sidebar {
+            width: 280px;
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            padding: 2rem 0;
+            box-shadow: 4px 0 20px rgba(0, 0, 0, 0.1);
+            border-right: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .logo {
+            text-align: center;
+            padding: 0 2rem 2rem;
+            border-bottom: 1px solid rgba(102, 126, 234, 0.2);
+            margin-bottom: 2rem;
+        }
+
+        .logo h2 {
+            color: #667eea;
+            font-size: 1.5rem;
+            font-weight: 700;
+        }
+
+        .menu-section-title {
+            padding: 0 2rem 0.5rem;
+            color: #888;
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            font-weight: 600;
+        }
+
+        .menu-item {
+            display: block;
+            padding: 1rem 2rem;
+            text-decoration: none;
+            color: #555;
+            transition: all 0.3s ease;
+            border-left: 4px solid transparent;
+            position: relative;
+        }
+
+        .menu-item:hover,
+        .menu-item.active {
+            background: linear-gradient(90deg, rgba(102, 126, 234, 0.1) 0%, rgba(118, 75, 162, 0.05) 100%);
+            color: #667eea;
+            border-left-color: #667eea;
+            transform: translateX(5px);
+        }
+
+        .menu-item i {
+            margin-right: 0.8rem;
+            width: 20px;
+            text-align: center;
+        }
+
+        .menu-item.accent {
+            background: linear-gradient(135deg, #33b633 0%, #2ca52c 100%);
+            color: white;
+            border-radius: 0 25px 25px 0;
+            margin: 0.5rem 0;
+        }
+
+        .menu-item.accent:hover {
+            background: linear-gradient(135deg, #2ca52c 0%, #228b22 100%);
+            transform: translateX(10px);
+        }
+
+        .menu-item.danger {
+            background: linear-gradient(135deg, #ff4d4d 0%, #e03c3c 100%);
+            color: white;
+            border-radius: 0 25px 25px 0;
+            margin-top: 1rem;
+        }
+
+        .menu-item.danger:hover {
+            background: linear-gradient(135deg, #e03c3c 0%, #cc2929 100%);
+            transform: translateX(10px);
+        }
+
+        /* --- Main Content & Form Styling --- */
+        .main-content {
+            flex: 1;
+            padding: 2rem;
+            overflow-y: auto;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-direction: column;
         }
 
         /* Contenedor del Formulario */
         .form-container {
-          /* Fondo semitransparente con desenfoque (como en el formulario de base) */
-          background: rgba(255, 255, 255, 0.95);
-          backdrop-filter: blur(20px);
-          padding: 30px 40px; /* Un poco más de padding */
-          border-radius: 25px; /* Bordes redondeados grandes */
-          box-shadow: 0 15px 35px rgba(0, 0, 0, 0.1);
-          border: 1px solid rgba(255, 255, 255, 0.2);
-          width: 100%;
-          max-width: 450px; /* Ancho máximo adaptado para un formulario de perfil */
-          position: relative;
-          overflow: hidden;
-          animation: fadeInUp 0.8s ease; /* Animación de entrada */
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(20px);
+            padding: 3rem;
+            border-radius: 25px;
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            width: 100%;
+            max-width: 500px; /* Un poco más ancho que tu max-width anterior */
+            position: relative;
+            overflow: hidden;
+            animation: fadeInUp 0.8s ease 0.1s both;
+            margin-top: 1rem;
         }
 
-        /* Barra de color superior (decoración) */
         .form-container::before {
             content: '';
             position: absolute;
@@ -55,15 +144,14 @@
         }
 
         /* Título */
-        h1 {
-            /* Estilo de título degradado de la base */
+        .form-header h1 {
             font-size: 2.5rem;
             font-weight: 700;
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
             background-clip: text;
-            margin-bottom: 25px;
+            margin-bottom: 0.5rem;
             text-align: center;
             display: flex;
             align-items: center;
@@ -71,64 +159,155 @@
             gap: 0.7rem;
         }
 
+        .form-header p {
+            color: #666;
+            font-size: 1.1rem;
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+
         /* Etiquetas */
         label {
             display: block;
             margin-bottom: 0.8rem;
             font-weight: 600;
-            color: #667eea; /* Color principal de la base */
+            color: #667eea;
             font-size: 1rem;
             text-transform: uppercase;
             letter-spacing: 0.5px;
-            margin-top: 15px; /* Separación superior */
+            margin-top: 15px;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
         }
 
-        /* Campos de Entrada */
+        /* Grupo de Input con Icono */
+        .input-group {
+            position: relative;
+            margin-bottom: 1.5rem;
+        }
+
         input {
             width: 100%;
-            padding: 1rem 1.2rem; /* Aumento de padding */
+            padding: 1.2rem 1.5rem; /* Ajustado para el icono */
+            padding-right: 3.5rem; /* Espacio para el icono */
             border: 2px solid rgba(102, 126, 234, 0.2);
-            border-radius: 15px; /* Bordes redondeados grandes */
+            border-radius: 15px;
             font-size: 1rem;
             transition: all 0.3s ease;
             background: rgba(255, 255, 255, 0.8);
             color: #333;
-            margin-bottom: 5px; /* Menor margen inferior para que se vea mejor */
         }
 
         input:focus {
             outline: none;
-            border-color: #667eea; /* Color de foco */
+            border-color: #667eea;
             background: white;
             box-shadow: 0 0 10px rgba(102, 126, 234, 0.2);
             transform: translateY(-2px);
         }
 
-        /* Botón de Enviar */
-        button {
-            width: 100%; /* Botón de ancho completo */
+        .input-icon {
+            position: absolute;
+            right: 1.5rem;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #aaa; /* Color por defecto */
+            font-size: 1.1rem;
+            pointer-events: none;
+            transition: all 0.3s ease;
+        }
+
+        input:focus + .input-icon {
+            color: #764ba2;
+            transform: translateY(-50%) scale(1.1);
+        }
+
+        /* Estilo de los Botones de Acción */
+        .form-actions {
+            display: flex;
+            gap: 1rem;
             margin-top: 30px;
-            padding: 1rem 2.5rem;
+            justify-content: space-between;
+        }
+
+        .btn {
+            padding: 1rem 2rem;
             border: none;
             border-radius: 15px;
             font-weight: 600;
             font-size: 1rem;
             cursor: pointer;
             transition: all 0.3s ease;
-            /* Estilo de botón primario de la base */
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: white;
-            box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);
-            display: flex;
+            text-decoration: none;
+            display: inline-flex;
             align-items: center;
             justify-content: center;
             gap: 0.8rem;
+            flex-grow: 1; /* Para que ocupen el espacio disponible */
         }
 
-        button:hover {
+        .btn-primary {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);
+        }
+
+        .btn-primary:hover {
             transform: translateY(-3px);
             box-shadow: 0 8px 25px rgba(102, 126, 234, 0.6);
-            /* No se necesita color de fondo hover ya que es un degradado */
+        }
+
+        .btn-secondary {
+            background: #fff;
+            color: #667eea;
+            border: 2px solid #667eea;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
+        }
+
+        .btn-secondary:hover {
+            background: #667eea;
+            color: white;
+            transform: translateY(-3px);
+            box-shadow: 0 8px 25px rgba(102, 126, 234, 0.3);
+        }
+
+        /* Estado de carga */
+        .btn.loading {
+            pointer-events: none;
+            opacity: 0.8;
+        }
+
+        .btn.loading i {
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        /* Mensajes */
+        .message {
+            text-align: center;
+            padding: 1rem;
+            border-radius: 10px;
+            margin-top: 1.5rem;
+            font-weight: 600;
+            display: none;
+            animation: fadeInUp 0.5s ease;
+        }
+
+        .message.success {
+            background-color: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+
+        .message.error {
+            background-color: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
         }
 
         /* Animación de entrada */
@@ -142,35 +321,189 @@
                 transform: translateY(0);
             }
         }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .container {
+                flex-direction: column;
+            }
+            .sidebar {
+                width: 100%;
+                padding: 1rem 0;
+                height: auto;
+            }
+            .main-content {
+                padding: 1rem;
+                align-items: flex-start;
+                padding-top: 2rem;
+            }
+            .form-container {
+                padding: 2rem;
+                margin-top: 1rem;
+            }
+            .form-header h1 {
+                font-size: 2rem;
+            }
+            .form-actions {
+                flex-direction: column;
+            }
+            .btn {
+                width: 100%;
+            }
+        }
     </style>
 </head>
 <body>
-<h1><i class="fas fa-user-cog"></i> Editar Perfil</h1>
+<div class="container">
+    <nav class="sidebar">
+        <div class="logo">
+            <h2><i class="fas fa-trophy"></i> Sistema</h2>
+        </div>
 
-<form th:action="@{/modificar}" method="post" class="form-container" th:object="${usuario}">
+        <div class="menu-section-title">Navegación Principal</div>
+        <a th:href="@{/indice}" class="menu-item">
+            <i class="fas fa-home"></i> Inicio
+        </a>
 
-    <input type="hidden" th:field="*{individuo.id_individuo}" />
+        <div class="menu-section-title" style="margin-top: 2rem;">Gestión Principal</div>
+        <a th:href="@{/partido}" class="menu-item">
+            <i class="fas fa-gamepad"></i> Partidos
+        </a>
+        <a th:href="@{/equipo}" class="menu-item">
+            <i class="fas fa-users"></i> Equipos
+        </a>
+        <a th:href="@{/torneo}" class="menu-item">
+            <i class="fas fa-trophy"></i> Torneos
+        </a>
+        <a th:href="@{/jugadores}" class="menu-item">
+            <i class="fas fa-user-friends"></i> Jugadores
+        </a>
 
-    <label>Nombre:</label>
-    <input th:field="*{individuo.nombre}" type="text" required />
+        <div class="menu-section-title" style="margin-top: 2rem;">Usuario & Datos</div>
+        <a th:href="@{/datos}" class="menu-item active">
+            <i class="fas fa-user-cog"></i> Mi Perfil
+        </a>
+        <a th:href="@{/exportarExcel}" class="menu-item accent">
+            <i class="fas fa-file-excel"></i> Exportar Excel
+        </a>
 
-    <label>Apellido:</label>
-    <input th:field="*{individuo.apellido}" type="text" required />
+        <form th:action="@{/login}" method="post" style="margin: 2rem 0 0 0;">
+            <a href="#" onclick="this.parentNode.submit()" class="menu-item danger">
+                <i class="fas fa-sign-out-alt"></i> Cerrar Sesión
+            </a>
+        </form>
+    </nav>
 
-    <label>Correo:</label>
-    <input th:field="*{individuo.correo}" type="email" required />
+    <main class="main-content">
+        <div class="form-header">
+            <h1><i class="fas fa-user-cog"></i> Editar Perfil</h1>
+            <p>Actualiza tu información personal y de contacto.</p>
+        </div>
 
-    <label>Teléfono:</label>
-    <input th:field="*{individuo.telefono}" type="text" />
+        <form id="profileForm" th:action="@{/modificar}" method="post" class="form-container" th:object="${usuario}">
 
-    <label>Edad:</label>
-    <input th:field="*{individuo.edad}" type="number" min="0" pattern="\d*" title="Solo números" />
+            <input type="hidden" th:field="*{individuo.id_individuo}" />
 
-    <label>Cédula:</label>
-    <input th:field="*{individuo.cedula}" type="text" pattern="[0-9]*" title="Solo números, sin guiones ni puntos" />
+            <label for="nombre"><i class="fas fa-user"></i> Nombre:</label>
+            <div class="input-group">
+                <input id="nombre" th:field="*{individuo.nombre}" type="text" required />
+                <i class="fas fa-user input-icon"></i>
+            </div>
 
-    <button type="submit"><i class="fas fa-save"></i> Guardar Cambios</button>
+            <label for="apellido"><i class="fas fa-user-tag"></i> Apellido:</label>
+            <div class="input-group">
+                <input id="apellido" th:field="*{individuo.apellido}" type="text" required />
+                <i class="fas fa-user-tag input-icon"></i>
+            </div>
 
-</form>
+            <label for="correo"><i class="fas fa-envelope"></i> Correo:</label>
+            <div class="input-group">
+                <input id="correo" th:field="*{individuo.correo}" type="email" required />
+                <i class="fas fa-at input-icon"></i>
+            </div>
+
+            <label for="telefono"><i class="fas fa-phone"></i> Teléfono:</label>
+            <div class="input-group">
+                <input id="telefono" th:field="*{individuo.telefono}" type="text" />
+                <i class="fas fa-mobile-alt input-icon"></i>
+            </div>
+
+            <label for="edad"><i class="fas fa-birthday-cake"></i> Edad:</label>
+            <div class="input-group">
+                <input id="edad" th:field="*{individuo.edad}" type="number" min="0" pattern="\d*" title="Solo números" />
+                <i class="fas fa-sort-numeric-up-alt input-icon"></i>
+            </div>
+
+            <label for="cedula"><i class="fas fa-id-card"></i> Cédula:</label>
+            <div class="input-group">
+                <input id="cedula" th:field="*{individuo.cedula}" type="text" pattern="[0-9]*" title="Solo números, sin guiones ni puntos" />
+                <i class="fas fa-fingerprint input-icon"></i>
+            </div>
+
+            <div class="form-actions">
+                <button type="submit" class="btn btn-primary" id="submitBtn">
+                    <i class="fas fa-save"></i> Guardar Cambios
+                </button>
+                <a th:href="@{/indice}" class="btn btn-secondary">
+                    <i class="fas fa-times-circle"></i> Cancelar
+                </a>
+            </div>
+
+            <div id="resultMessage" class="message"></div>
+        </form>
+    </main>
+</div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const form = document.getElementById('profileForm');
+        const submitBtn = document.getElementById('submitBtn');
+        const resultMessage = document.getElementById('resultMessage');
+
+        form.addEventListener('submit', function(e) {
+            e.preventDefault();
+
+            // Simulación de validación simple
+            const nombre = document.getElementById('nombre').value.trim();
+            const correo = document.getElementById('correo').value.trim();
+
+            if (nombre === "" || correo === "") {
+                resultMessage.className = 'message error';
+                resultMessage.innerHTML = '<i class="fas fa-exclamation-triangle"></i> Por favor, completa los campos Nombre y Correo.';
+                resultMessage.style.display = 'block';
+                return;
+            }
+
+            // Iniciar estado de carga
+            submitBtn.classList.add('loading');
+            submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Guardando...';
+            submitBtn.disabled = true;
+
+            // Simular el envío de datos al servidor (reemplazar con lógica real de envío)
+            setTimeout(() => {
+                // Aquí deberías recibir la respuesta del servidor (éxito o error)
+
+                // Simulación de éxito
+                resultMessage.className = 'message success';
+                resultMessage.innerHTML = '<i class="fas fa-check-circle"></i> ¡Tu perfil ha sido actualizado con éxito!';
+                resultMessage.style.display = 'block';
+
+                // Restaurar botón (o redirigir, si el proceso es exitoso y completo)
+                submitBtn.classList.remove('loading');
+                submitBtn.innerHTML = '<i class="fas fa-save"></i> Guardar Cambios';
+                submitBtn.disabled = false;
+
+                // Si quieres redirigir después de un tiempo:
+                /* setTimeout(() => {
+                    window.location.href = '/indice'; // Redirige al índice
+                }, 1500); */
+
+            }, 1500); // 1.5 segundos de simulación de carga
+        });
+
+        // Enfocar el primer campo
+        document.getElementById('nombre').focus();
+    });
+</script>
 </body>
 </html>

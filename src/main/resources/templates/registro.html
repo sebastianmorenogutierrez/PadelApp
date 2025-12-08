@@ -2,55 +2,76 @@
 <html lang="es" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Registro - PadelApp</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
     <style>
         :root {
-            --color-fondo: ##f5f7fa;
-            --color-azul: #3440b4;
-            --color-verde: #33b633;
-            --color-texto: #212529;
-            --color-borde: #ced4da;
+            /* Definición de colores */
+            --color-fondo: #f5f7fa; /* Fondo general */
+            --color-azul: #3440b4; /* Color primario (Botón, Título) */
+            --color-verde: #33b633; /* Color de hover/éxito */
+            --color-texto: #212529; /* Color de texto oscuro */
+            --color-borde: #ced4da; /* Color de borde de input */
+            --color-secundario: #495057; /* Texto secundario/label */
         }
 
         body {
-            font-family: Arial, sans-serif;
+            font-family: 'Arial', sans-serif;
+            /* Se asume que /images/cancha_padel.jpg existe */
             background-image: url('/images/cancha_padel.jpg');
             background-size: cover;
             background-position: center;
             background-repeat: no-repeat;
+            background-attachment: fixed; /* Mantiene la imagen fija al hacer scroll */
             margin: 0;
             padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh; /* Asegura que el body ocupe al menos toda la altura de la vista */
         }
 
         .container {
             max-width: 500px;
-            margin: 60px auto;
+            /* Eliminado el margen superior fijo para centrar en la pantalla */
             padding: 40px;
-            background-color: #739EF5;
+            /* CAMBIADO EL FONDO A BLANCO PARA MEJOR LEGIBILIDAD */
+            background-color: rgba(255, 255, 255, 0.95);
             border-radius: 20px;
-            box-shadow: 0 0 30px rgba(0,0,0,0.2);
-            color: var(--color-texto);
+            box-shadow: 0 10px 40px rgba(0,0,0,0.3); /* Sombra más pronunciada */
+            color: var(--color-secundario);
+            backdrop-filter: blur(2px); /* Pequeño desenfoque si se deja el fondo transparente */
         }
 
         h2 {
             text-align: center;
             margin-bottom: 30px;
             color: var(--color-azul);
+            font-size: 28px;
         }
 
         label {
-            font-weight: bold;
+            font-weight: 600; /* Más peso para mejor visibilidad */
             display: block;
             margin-top: 15px;
             margin-bottom: 5px;
+            color: var(--color-texto);
         }
 
         input, select {
             width: 100%;
-            padding: 10px;
-            border-radius: 6px;
+            padding: 12px; /* Ligeramente más padding */
+            border-radius: 8px; /* Bordes más suaves */
             border: 1px solid var(--color-borde);
-            font-size: 15px;
+            font-size: 16px;
+            transition: border-color 0.3s ease;
+        }
+
+        input:focus, select:focus {
+            outline: none;
+            border-color: var(--color-azul); /* Resalta el borde al enfocar */
+            box-shadow: 0 0 5px rgba(52, 64, 180, 0.3);
         }
 
         select {
@@ -64,70 +85,90 @@
             background-color: var(--color-azul);
             border: none;
             color: white;
-            font-size: 16px;
+            font-size: 18px; /* Texto más grande en el botón */
             font-weight: bold;
-            border-radius: 6px;
+            border-radius: 8px;
             cursor: pointer;
-            transition: background-color 0.3s ease;
+            transition: background-color 0.3s ease, transform 0.2s ease;
+            box-shadow: 0 4px 10px rgba(52, 64, 180, 0.3);
         }
 
         button:hover {
             background-color: var(--color-verde);
+            transform: translateY(-1px); /* Efecto 3D sutil */
         }
 
         hr {
             margin: 25px 0;
             border: none;
-            border-top: 1px solid var(--color-borde);
+            border-top: 2px solid rgba(52, 64, 180, 0.1); /* Línea más visible y estilizada */
+        }
+
+        .input-group {
+            position: relative;
+        }
+
+        .input-group i {
+            position: absolute;
+            right: 15px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--color-borde);
         }
 
         @media (max-width: 768px) {
             .container {
                 margin: 30px 15px;
                 padding: 30px 20px;
+                width: calc(100% - 30px);
             }
         }
     </style>
 </head>
 <body>
 <div class="container">
-    <h2>Formulario de Registro</h2>
+    <h2><i class="fas fa-user-plus"></i> Formulario de Registro</h2>
     <form th:action="@{/API/registro}" th:object="${usuario}" method="post">
-    <label for="nombreUsuario">Nombre de Usuario</label>
-        <input type="text" id="nombreUsuario" th:field="*{nombreUsuario}" required>
 
-        <label for="pass_usuario">Contraseña</label>
-        <input type="password" id="pass_usuario" th:field="*{pass_usuario}" required>
+        <label for="nombreUsuario"><i class="fas fa-user"></i> Nombre de Usuario</label>
+        <input type="text" id="nombreUsuario" th:field="*{nombreUsuario}" placeholder="Elige un nombre de usuario único" required>
+
+        <label for="pass_usuario"><i class="fas fa-lock"></i> Contraseña</label>
+        <input type="password" id="pass_usuario" th:field="*{pass_usuario}" placeholder="Mínimo 6 caracteres" required>
 
         <hr>
 
-        <label for="nombreIndividuo">Nombre</label>
+        <label for="nombreIndividuo"><i class="fas fa-signature"></i> Nombre</label>
         <input type="text" id="nombreIndividuo" th:field="*{individuo.nombre}" required>
 
-        <label for="apellidoIndividuo">Apellido</label>
+        <label for="apellidoIndividuo"><i class="fas fa-signature"></i> Apellido</label>
         <input type="text" id="apellidoIndividuo" th:field="*{individuo.apellido}" required>
 
-        <label for="cedulaIndividuo">Cédula</label>
+        <label for="cedulaIndividuo"><i class="fas fa-id-card"></i> Cédula</label>
         <input type="text" id="cedulaIndividuo" th:field="*{individuo.cedula}" required
+               placeholder="Solo números (máx. 15 dígitos)"
                pattern="\d+" inputmode="numeric" maxlength="15"
                title="Solo números permitidos">
 
-        <label for="correoIndividuo">Correo Electrónico</label>
+        <label for="correoIndividuo"><i class="fas fa-envelope"></i> Correo Electrónico</label>
         <input type="email" id="correoIndividuo" th:field="*{individuo.correo}" required>
 
-        <label for="telefonoIndividuo">Teléfono</label>
+        <label for="telefonoIndividuo"><i class="fas fa-phone"></i> Teléfono</label>
         <input type="text" id="telefonoIndividuo" th:field="*{individuo.telefono}" required
-               pattern="\d{10}" inputmode="numeric" maxlength="10"
+               placeholder="10 dígitos"
+               pattern="\d{10}" inputmode="tel" maxlength="10"
                title="Debe contener exactamente 10 dígitos numéricos">
 
-        <label for="edadIndividuo">Edad</label>
+        <label for="edadIndividuo"><i class="fas fa-calendar-alt"></i> Edad</label>
         <input type="number" id="edadIndividuo" th:field="*{individuo.edad}" required
                min="1" max="120"
                title="Edad válida entre 1 y 120 años">
 
         <hr>
 
-        <button type="submit">Registrarse</button>
+        <button type="submit">
+            <i class="fas fa-check-circle"></i> Crear Cuenta
+        </button>
     </form>
 </div>
 </body>

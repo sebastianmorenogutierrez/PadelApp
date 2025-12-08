@@ -5,7 +5,7 @@
     <title>Gestión de Partidos</title>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
     <style>
-        /* Estilos de Referencia del Torneo */
+        /* Estilos Base */
         * {
             margin: 0;
             padding: 0;
@@ -14,7 +14,6 @@
 
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            /* Fondo degradado */
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             min-height: 100vh;
             color: #333;
@@ -172,6 +171,18 @@
             background: #667eea;
             color: white;
             transform: translateY(-2px);
+        }
+
+        /* Nuevo: Botón de Edición (verde) */
+        .btn-edit {
+            background: linear-gradient(135deg, #33b633 0%, #2ca52c 100%);
+            color: white;
+            box-shadow: 0 4px 15px rgba(51, 182, 51, 0.4);
+        }
+
+        .btn-edit:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(51, 182, 51, 0.6);
         }
 
         .btn-danger {
@@ -371,7 +382,7 @@
             <i class="fas fa-file-excel"></i> Exportar Excel
         </a>
 
-        <form th:action="@{/login}" method="post" style="margin: 2rem 0 0 0;">
+        <form th:action="@{/logout}" method="post" style="margin: 2rem 0 0 0;">
             <a href="#" onclick="this.parentNode.submit()" class="menu-item danger">
                 <i class="fas fa-sign-out-alt"></i> Cerrar Sesión
             </a>
@@ -429,8 +440,11 @@
                     <td th:text="${match.creador.nombreUsuario}">usuario_admin</td>
                     <td>
                         <div class="action-buttons-table">
+                            <a th:href="@{/partido/editar/{id}(id=${match.id_match})}" class="btn btn-edit btn-small">
+                                <i class="fas fa-edit"></i> Editar
+                            </a>
                             <a th:href="@{/partido/{id}(id=${match.id_match})}" class="btn btn-secondary btn-small">
-                                <i class="fas fa-eye"></i> Ver Detalles
+                                <i class="fas fa-eye"></i> Detalles
                             </a>
                             <a th:href="@{'/partido/' + ${match.id_match} + '/pdf'}" class="btn btn-pdf btn-small" target="_blank">
                                 <i class="fas fa-file-pdf"></i> PDF
@@ -438,7 +452,7 @@
                             <form th:action="@{/partido/{id}/eliminar(id=${match.id_match})}"
                                   method="post"
                                   class="delete-form"
-                                  onsubmit="return confirm('¿Estás seguro de que quieres eliminar este partido?');">
+                                  onsubmit="return confirm('¿Estás seguro de que quieres eliminar el partido: ' + this.closest('tr').cells[1].textContent + '?');">
                                 <button type="submit" class="btn btn-danger btn-small">
                                     <i class="fas fa-trash"></i> Eliminar
                                 </button>
@@ -454,6 +468,7 @@
 
 <script>
     document.addEventListener('DOMContentLoaded', function() {
+        // Animación de las filas de la tabla
         const tableRows = document.querySelectorAll('.partidos-table tbody tr');
         tableRows.forEach((row, index) => {
             row.style.animationDelay = `${index * 0.1}s`;
@@ -464,8 +479,25 @@
                 row.style.animation = 'fadeInUp 0.6s ease forwards';
             }, index * 100);
         });
+
+        // Manejo del estado de carga en enlaces del menú
+        document.querySelectorAll('.menu-item').forEach(link => {
+            link.addEventListener('click', function(e) {
+                // Excluir enlaces con funcionalidad onclick (como el formulario de logout)
+                if (this.getAttribute('href') !== '#' && !this.onclick && !this.parentNode.matches('form')) {
+                    e.preventDefault();
+                    this.style.opacity = '0.7';
+                    this.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Cargando...';
+
+                    setTimeout(() => {
+                        window.location.href = this.href;
+                    }, 300);
+                }
+            });
+        });
     });
 
+    // Definición de la animación de entrada para las filas
     const style = document.createElement('style');
     style.textContent = `
         @keyframes fadeInUp {

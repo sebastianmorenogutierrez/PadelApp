@@ -5,6 +5,7 @@
     <title>Torneos - Sistema de Gestión</title>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
     <style>
+        /* Estilos Base */
         * {
             margin: 0;
             padding: 0;
@@ -170,6 +171,18 @@
             background: #667eea;
             color: white;
             transform: translateY(-2px);
+        }
+
+        /* Nuevo: Botón de Edición (verde) */
+        .btn-edit {
+            background: linear-gradient(135deg, #33b633 0%, #2ca52c 100%);
+            color: white;
+            box-shadow: 0 4px 15px rgba(51, 182, 51, 0.4);
+        }
+
+        .btn-edit:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(51, 182, 51, 0.6);
         }
 
         .btn-danger {
@@ -427,6 +440,9 @@
                     </td>
                     <td>
                         <div class="action-buttons-table">
+                            <a th:href="@{/torneo/editar/{id}(id=${torneo.id})}" class="btn btn-edit btn-small">
+                                <i class="fas fa-edit"></i> Editar
+                            </a>
                             <a th:href="@{'/torneo/' + ${torneo.id}}" class="btn btn-secondary btn-small">
                                 <i class="fas fa-eye"></i> Ver
                             </a>
@@ -436,7 +452,7 @@
                             <form th:action="@{'/torneo/' + ${torneo.id} + '/eliminar'}"
                                   method="post"
                                   class="delete-form"
-                                  onsubmit="return confirm('¿Estás seguro de eliminar este torneo?')">
+                                  onsubmit="return confirm('¿Estás seguro de eliminar el torneo: ' + this.closest('tr').cells[1].textContent + '?')">
                                 <button type="submit" class="btn btn-danger btn-small">
                                     <i class="fas fa-trash"></i> Eliminar
                                 </button>
@@ -463,6 +479,21 @@
             setTimeout(() => {
                 row.style.animation = 'fadeInUp 0.6s ease forwards';
             }, index * 100);
+        });
+
+        // Manejo del estado de carga en enlaces del menú (similar al archivo de Partidos)
+        document.querySelectorAll('.menu-item').forEach(link => {
+            link.addEventListener('click', function(e) {
+                if (this.getAttribute('href') !== '#' && !this.onclick && !this.parentNode.matches('form')) {
+                    e.preventDefault();
+                    this.style.opacity = '0.7';
+                    this.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Cargando...';
+
+                    setTimeout(() => {
+                        window.location.href = this.href;
+                    }, 300);
+                }
+            });
         });
     });
 

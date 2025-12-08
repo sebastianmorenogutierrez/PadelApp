@@ -18,7 +18,8 @@
         }
 
         body {
-            font-family: Arial, sans-serif;
+            font-family: 'Arial', sans-serif;
+            /* Se asume que /images/padel_principal.png existe en la ruta del servidor */
             background-image: url('/images/padel_principal.png');
             background-size: cover;
             background-position: center;
@@ -48,6 +49,7 @@
         header h1 {
             font-size: 28px;
             margin: 0;
+            font-weight: 700;
         }
 
         .auth-buttons {
@@ -63,12 +65,13 @@
             font-weight: bold;
             border-radius: 6px;
             font-size: 14px;
-            transition: background-color 0.3s ease, color 0.3s ease;
+            transition: background-color 0.3s ease, color 0.3s ease, transform 0.2s ease;
         }
 
         .auth-buttons a:hover {
             background-color: var(--color-verde);
             color: white;
+            transform: translateY(-2px);
         }
 
         main {
@@ -90,11 +93,13 @@
         .hero-section h2 {
             font-size: 42px;
             margin-bottom: 20px;
+            font-weight: 700;
         }
 
         .hero-section p {
             font-size: 20px;
             margin-bottom: 0;
+            font-weight: 300;
         }
 
         .video-section {
@@ -109,13 +114,14 @@
             margin-bottom: 30px;
             text-align: center;
             text-shadow: 2px 2px 4px rgba(255,255,255,0.8);
+            font-weight: 600;
         }
 
         .video-with-cards {
             display: grid;
             grid-template-columns: 1fr 2fr 1fr;
             gap: 20px;
-            align-items: center;
+            align-items: stretch; /* Asegura que las tarjetas tengan la misma altura que el video */
         }
 
         .video-container {
@@ -127,6 +133,7 @@
             border-radius: 15px;
             box-shadow: 0 4px 20px rgba(0,0,0,0.3);
             background-color: #000;
+            grid-column: 2 / 3; /* Asegura que el video esté centrado en su espacio 2fr */
         }
 
         .video-container iframe {
@@ -135,7 +142,7 @@
             left: 0;
             width: 100%;
             height: 100%;
-            border-radius: 15px;
+            border: none; /* Mejor práctica para iframes */
         }
 
         .side-card {
@@ -148,6 +155,7 @@
             display: flex;
             flex-direction: column;
             justify-content: center;
+            /* Ajuste para que las tarjetas ocupen el espacio 1fr */
         }
 
         .side-card:hover {
@@ -159,6 +167,7 @@
             color: var(--color-azul);
             font-size: 22px;
             margin-bottom: 15px;
+            font-weight: 600;
         }
 
         .side-card p {
@@ -174,6 +183,7 @@
             grid-template-columns: repeat(3, 1fr);
             gap: 30px;
             padding: 0 20px;
+            align-items: start; /* Asegura que todas las tarjetas empiecen en el mismo punto vertical */
         }
 
         .info-card {
@@ -182,6 +192,7 @@
             border-radius: 15px;
             box-shadow: 0 4px 15px rgba(0,0,0,0.1);
             transition: transform 0.3s ease, box-shadow 0.3s ease;
+            height: 100%; /* Importante para grids */
         }
 
         .info-card:hover {
@@ -193,6 +204,7 @@
             color: var(--color-azul);
             font-size: 24px;
             margin-bottom: 15px;
+            font-weight: 600;
         }
 
         .info-card p {
@@ -201,8 +213,10 @@
             color: var(--color-texto);
         }
 
+        /* La cuarta tarjeta ocupa la columna central de la segunda fila */
         .info-card.centered {
             grid-column: 2 / 3;
+            text-align: center;
         }
 
         .about-section {
@@ -219,6 +233,7 @@
             font-size: 32px;
             margin-bottom: 20px;
             text-align: center;
+            font-weight: 600;
         }
 
         .about-section p {
@@ -236,6 +251,26 @@
             font-size: 0.95em;
         }
 
+        @media (max-width: 992px) {
+            .video-with-cards {
+                grid-template-columns: 1fr;
+                gap: 30px;
+            }
+            .video-container {
+                grid-column: 1 / -1; /* Ocupa todo el ancho */
+            }
+            .side-card {
+                /* Vuelven a ocupar todo el ancho */
+            }
+            .content-section {
+                grid-template-columns: repeat(2, 1fr); /* Cambia a 2 columnas */
+            }
+            .info-card.centered {
+                grid-column: 1 / -1; /* Ocupa el ancho completo de 2 columnas */
+            }
+        }
+
+
         @media (max-width: 768px) {
             header {
                 flex-direction: column;
@@ -251,12 +286,8 @@
                 font-size: 16px;
             }
 
-            .video-with-cards {
-                grid-template-columns: 1fr;
-            }
-
             .content-section {
-                grid-template-columns: 1fr;
+                grid-template-columns: 1fr; /* Una columna en móvil */
             }
 
             .info-card.centered {
@@ -271,7 +302,9 @@
 </head>
 <body>
 <header>
-    <h1>Tu Club PadelApp</h1>
+    <a th:href="@{/}" style="text-decoration: none; color: white;">
+        <h1>Tu Club PadelApp</h1>
+    </a>
     <div class="auth-buttons">
         <a th:href="@{/Api/login}">Iniciar Sesión</a>
         <a th:href="@{/APi/registro}">Registrarse</a>
@@ -279,39 +312,35 @@
 </header>
 
 <main>
-    <div class="hero-section">
+    <section class="hero-section">
         <h2>Bienvenido a Tu Club PadelApp</h2>
         <p>Donde la pasión por el pádel cobra vida. Únete a nuestra comunidad deportiva.</p>
-    </div>
+    </section>
 
-    <!-- SECCIÓN DE VIDEO CON TARJETAS LATERALES -->
-    <div class="video-section">
+    <section class="video-section">
         <h2>Descubre todo del Pádel por 3 pequeños desarrolladores 😎 </h2>
         <div class="video-with-cards">
-            <!-- Tarjeta izquierda: Beneficios del Pádel -->
-            <div class="side-card">
+            <div class="side-card" style="grid-column: 1 / 2;">
                 <h3>🏆 Beneficios del Pádel</h3>
                 <p>Mejora tu condición física, coordinación y reflejos. Es ideal para socializar, hacer nuevos amigos y mantener un estilo de vida activo y saludable. Además, es perfecto para liberar el estrés.</p>
             </div>
 
-            <!-- Video en el centro -->
             <div class="video-container">
                 <iframe src="https://www.youtube.com/embed/KGwIxW1JbOw?si=C4Juv9K5buAr4qyo"
-                        frameborder="0"
+                        title="YouTube video player: ¿Qué es el Padel?"
                         allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
                         allowfullscreen>
                 </iframe>
             </div>
 
-            <!-- Tarjeta derecha: ¿Qué es el Pádel? -->
-            <div class="side-card">
+            <div class="side-card" style="grid-column: 3 / 4;">
                 <h3>🎾 ¿Qué es el Pádel?</h3>
                 <p>El pádel es un deporte de raqueta que se juega en parejas. Combina elementos del tenis y el squash, jugándose en una pista cerrada con paredes que forman parte del juego. Es dinámico, divertido y accesible para todas las edades.</p>
             </div>
         </div>
-    </div>
+    </section>
 
-    <div class="content-section">
+    <section class="content-section">
         <div class="info-card">
             <h3>👥 Nuestra Comunidad</h3>
             <p>Forma parte de una comunidad vibrante de jugadores apasionados. Organiza partidos, participa en torneos, mejora tu técnica y disfruta de eventos exclusivos para miembros.</p>
@@ -331,16 +360,16 @@
             <h3>🌟 Instalaciones Premium</h3>
             <p>Canchas de última generación, vestuarios modernos, tienda especializada y zona de descanso. Todo lo que necesitas para vivir la mejor experiencia de pádel.</p>
         </div>
-    </div>
+    </section>
 
-    <div class="about-section">
+    <section class="about-section">
         <h2>¿Por qué elegir Tu Club PadelApp?</h2>
         <p>Somos más que un club de pádel, somos una comunidad apasionada por este deporte. Ofrecemos las mejores instalaciones, un ambiente familiar y profesional, y una plataforma digital que facilita la gestión de tus actividades deportivas.</p>
         <p>Ya seas principiante o jugador experimentado, aquí encontrarás el espacio ideal para disfrutar del pádel. Únete a nosotros y descubre por qué somos el club preferido de miles de jugadores.</p>
         <p style="text-align: center; margin-top: 30px; font-weight: bold; color: var(--color-azul); font-size: 18px;">
             ¡Regístrate ahora y comienza tu aventura en el mundo del pádel!
         </p>
-    </div>
+    </section>
 </main>
 
 <footer>

@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Crear Partido de Pádel - Sistema de Gestión</title>
+    <title th:text="${partido.id_match} ? 'Editar Partido de Pádel' : 'Crear Partido de Pádel'"></title>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
     <style>
         /* MANTENEMOS EL MISMO CSS */
@@ -218,7 +218,7 @@
 
         .form-input:valid,
         .form-select:valid {
-            border-color: #33b633;
+            /* Mantener el feedback visual solo en campos llenados */
         }
 
         .form-select {
@@ -241,7 +241,7 @@
             position: relative;
         }
 
-        /* Level badges */
+        /* Level badges - No usados directamente en input, pero útiles en options */
         .level-option {
             display: flex;
             align-items: center;
@@ -535,9 +535,13 @@
             <div class="form-header">
                 <h1 class="form-title">
                     <i class="fas fa-table-tennis"></i>
-                    Crear Partido de Pádel
+                    <span th:text="${partido.id_match} ? 'Editar Partido' : 'Crear Partido de Pádel'">Crear Partido de Pádel</span>
                 </h1>
-                <p class="form-subtitle">Configure los detalles de su nuevo partido</p>
+                <p class="form-subtitle" th:text="${partido.id_match} ?
+                                                      'Modifique los detalles del partido ' + ${partido.nombrePartido} :
+                                                      'Configure los detalles de su nuevo partido'">
+                    Configure los detalles de su nuevo partido
+                </p>
             </div>
 
             <div class="info-cards">
@@ -558,7 +562,13 @@
                 </div>
             </div>
 
-            <form id="partidoForm" th:action="@{/partido/crear}" method="post" th:object="${partido}">
+            <form id="partidoForm"
+                  th:action="${partido.id_match} ? @{/partido/editar/{id}(id=${partido.id_match})} : @{/partido/crear}"
+                  method="post"
+                  th:object="${partido}">
+
+                <input type="hidden" th:if="${partido.id_match}" th:field="*{id_match}" />
+
                 <div class="form-grid">
                     <div class="form-group full-width">
                         <label class="form-label" for="nombrePartido">
@@ -667,11 +677,11 @@
                 <div class="form-actions">
                     <button type="submit" class="btn btn-primary" id="submitBtn">
                         <i class="fas fa-save"></i>
-                        Crear Partido
+                        <span th:text="${partido.id_match} ? 'Guardar Cambios' : 'Crear Partido'">Crear Partido</span>
                     </button>
                     <a th:href="@{/partido}" class="btn btn-secondary">
                         <i class="fas fa-arrow-left"></i>
-                        Ver Partidos
+                        Cancelar y Volver
                     </a>
                 </div>
             </form>
@@ -686,10 +696,15 @@
         const fechaInput = document.getElementById('fecha');
         const horaInput = document.getElementById('hora');
 
-        // Set minimum date to today
-        const today = new Date();
-        const todayString = today.toISOString().split('T')[0];
-        fechaInput.min = todayString;
+        // Set minimum date to today (or allow past dates if editing an old match)
+        const isEditing = [[${partido.id_match}]] !== null;
+
+        if (!isEditing) {
+            const today = new Date();
+            const todayString = today.toISOString().split('T')[0];
+            fechaInput.min = todayString;
+        }
+
 
         // Form validation
         function validateForm() {
@@ -708,41 +723,43 @@
                 }
             });
 
-            // Additional date validation
-            if (fechaInput.value) {
-                const selectedDate = new Date(fechaInput.value);
-                const today = new Date();
-                today.setHours(0, 0, 0, 0);
+            // Additional date and time validation (only for future matches or when creating)
+            if (!isEditing) {
+                if (fechaInput.value) {
+                    const selectedDate = new Date(fechaInput.value);
+                    const today = new Date();
+                    today.setHours(0, 0, 0, 0);
 
-                if (selectedDate < today) {
-                    showError(document.getElementById('fecha-error'));
-                    document.getElementById('fecha-error').querySelector('span').textContent =
-                        'La fecha no puede ser anterior a hoy';
-                    isValid = false;
-                }
-            }
-
-            // Additional time validation for today's matches
-            if (fechaInput.value && horaInput.value) {
-                const selectedDate = new Date(fechaInput.value);
-                const today = new Date();
-
-                if (selectedDate.toDateString() === today.toDateString()) {
-                    const selectedTime = horaInput.value.split(':');
-                    const selectedHour = parseInt(selectedTime[0]);
-                    const selectedMinute = parseInt(selectedTime[1]);
-                    const currentHour = today.getHours();
-                    const currentMinute = today.getMinutes();
-
-                    if (selectedHour < currentHour ||
-                        (selectedHour === currentHour && selectedMinute <= currentMinute)) {
-                        showError(document.getElementById('hora-error'));
-                        document.getElementById('hora-error').querySelector('span').textContent =
-                            'La hora debe ser posterior a la hora actual';
+                    if (selectedDate < today) {
+                        showError(document.getElementById('fecha-error'));
+                        document.getElementById('fecha-error').querySelector('span').textContent =
+                            'La fecha no puede ser anterior a hoy';
                         isValid = false;
                     }
                 }
+
+                if (fechaInput.value && horaInput.value) {
+                    const selectedDate = new Date(fechaInput.value);
+                    const today = new Date();
+
+                    if (selectedDate.toDateString() === today.toDateString()) {
+                        const selectedTime = horaInput.value.split(':');
+                        const selectedHour = parseInt(selectedTime[0]);
+                        const selectedMinute = parseInt(selectedTime[1]);
+                        const currentHour = today.getHours();
+                        const currentMinute = today.getMinutes();
+
+                        if (selectedHour < currentHour ||
+                            (selectedHour === currentHour && selectedMinute <= currentMinute + 5)) { // 5 min de buffer
+                            showError(document.getElementById('hora-error'));
+                            document.getElementById('hora-error').querySelector('span').textContent =
+                                'La hora debe ser posterior a la actual (+5min)';
+                            isValid = false;
+                        }
+                    }
+                }
             }
+
 
             return isValid;
         }
@@ -759,7 +776,6 @@
         const formInputs = document.querySelectorAll('.form-input, .form-select');
         formInputs.forEach(input => {
             input.addEventListener('blur', function() {
-                // Usar el atributo 'id' para encontrar el mensaje de error
                 const errorElement = document.getElementById(this.id + '-error');
                 if (errorElement) {
                     if (this.value.trim()) {
@@ -768,12 +784,20 @@
                         showError(errorElement);
                     }
                 }
+                // Re-validar fecha/hora al cambiar foco
+                if (this.id === 'fecha' || this.id === 'hora') {
+                    validateForm();
+                }
             });
 
             input.addEventListener('change', function() {
                 const errorElement = document.getElementById(this.id + '-error');
                 if (errorElement && this.value.trim()) {
                     hideError(errorElement);
+                }
+                // Re-validar fecha/hora al cambiar valor
+                if (this.id === 'fecha' || this.id === 'hora') {
+                    validateForm();
                 }
             });
         });
@@ -783,29 +807,42 @@
             e.preventDefault();
 
             if (!validateForm()) {
+                // Scroll to the first error if validation fails
+                const firstError = document.querySelector('.validation-message.show');
+                if (firstError) {
+                    firstError.closest('.form-group').scrollIntoView({ behavior: 'smooth', block: 'center' });
+                }
                 return;
             }
 
             // Add loading state
             submitBtn.classList.add('loading');
-            submitBtn.innerHTML = '<i class="fas fa-spinner"></i> Creando Partido...';
+            const submitText = isEditing ? 'Guardando...' : 'Creando Partido...';
+            submitBtn.innerHTML = `<i class="fas fa-spinner"></i> ${submitText}`;
             submitBtn.disabled = true;
 
-            // En lugar de un setTimeout simulado, simplemente enviamos el formulario después de la validación
-            // Puedes dejar el setTimeout si estás seguro de que el servidor es rápido y quieres un efecto visual
             setTimeout(() => {
                 this.submit();
-            }, 500); // 500ms para el efecto visual de carga
+            }, 500);
         });
 
-        // Club selection enhancement
+        // Club selection enhancement (ensuring cancha is enabled/disabled correctly)
         const clubSelect = document.getElementById('club');
         const canchaSelect = document.getElementById('cancha');
-        canchaSelect.disabled = true; // Deshabilitar por defecto hasta seleccionar club
+
+        // Initial state for canchaSelect (if no club is selected on load and not editing)
+        if (!isEditing && !clubSelect.value) {
+            canchaSelect.disabled = true;
+        } else if (isEditing) {
+             // If editing, assume cancha is valid, but still enable it for change
+             canchaSelect.disabled = false;
+        }
 
         clubSelect.addEventListener('change', function() {
-            // Reset cancha selection when club changes
-            canchaSelect.selectedIndex = 0;
+            // Reset cancha selection when club changes if not editing
+            if (!isEditing) {
+                canchaSelect.selectedIndex = 0;
+            }
 
             if (this.value) {
                 canchaSelect.disabled = false;
