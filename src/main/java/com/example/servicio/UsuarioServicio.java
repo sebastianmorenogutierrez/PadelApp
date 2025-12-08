@@ -29,40 +29,26 @@ public class UsuarioServicio {
     private IndividuoDao individuoDao;
 
     @Autowired
-    private PerfilDao perfilDao;
+    private PerfilDao perfilDao; // Se mantiene por si es necesario para roles/perfiles
 
     @Autowired
     private PasswordEncoder passwordEncoder;
 
-    /**
-     * Guarda un nuevo usuario en el sistema, asegurando que el Individuo asociado se guarde primero
-     * y que la contraseña del Usuario se cífre.
-     */
     @Transactional
     public void salvar(Usuario usuario) {
-        // 1. Guardar Individuo si existe (para generar el ID de clave foránea)
         if (usuario.getIndividuo() != null) {
             Individuo individuo = usuario.getIndividuo();
             individuoDao.save(individuo);
         }
 
-        // 2. Cifrar la contraseña y guardar el Usuario.
-        guardarUsuario(usuario);
-    }
+        if (usuario.getPass_usuario() != null) {
+            String passEncriptada = passwordEncoder.encode(usuario.getPass_usuario());
+            usuario.setPass_usuario(passEncriptada);
+        }
 
-    /**
-     * Método auxiliar privado para cifrar la contraseña y guardar el objeto Usuario.
-     */
-    private void guardarUsuario(Usuario usuario) {
-        String passEncriptada = passwordEncoder.encode(usuario.getPass_usuario());
-        usuario.setPass_usuario(passEncriptada);
-        usuario.setEliminado(false); // Asegura que el usuario esté activo al crearse.
+        usuario.setEliminado(false);
         usuarioDao.save(usuario);
     }
-
-    /**
-     * Realiza la eliminación lógica (marcando como eliminado y ofuscando credenciales) de un usuario.
-     */
     @Transactional
     public void eliminarCuentaPorId(Long idUsuario) {
         if (idUsuario == null) {
@@ -70,7 +56,6 @@ public class UsuarioServicio {
             return;
         }
 
-        // Conversión a Integer si el DAO lo requiere (se asume que la clave es Integer/Long)
         Integer idInt = idUsuario.intValue();
         Usuario usuario = usuarioDao.findById(idInt).orElse(null);
 
@@ -105,15 +90,16 @@ public class UsuarioServicio {
 
     public List<Usuario> listarTodos() {
         return usuarioDao.findAll();
+
         @Service
         class CorreoServicio {
-            // Usamos 'class CorreoServicio' en lugar de public, ya que Java no permite dos public classes en un archivo.
+            // Usamos 'class CorreoServicio' en lugar de public, ya que Java no permite dos public
+            // classes en un archivo. Además, debe estar fuera de cualquier método.
 
             /**
              * Envía correos masivos de forma asíncrona usando CompletableFuture.
-             * La lógica real de envío (JavaMailSender) debe implementarse aquí.
              */
-            @Async // Indica que este método puede ser ejecutado en un hilo separado.
+            @Async
             public CompletableFuture<Void> enviarCorreoMasivo(List<Usuario> usuarios,
                                                               String asunto,
                                                               String mensaje,
@@ -123,7 +109,7 @@ public class UsuarioServicio {
 
                 // Aquí iría la implementación real que itera sobre 'usuarios' y usa JavaMailSender.
 
-                return CompletableFuture.completedFuture(null); // Retorna inmediatamente un futuro completado.
+                return CompletableFuture.completedFuture(null);
             }
         }
     }
