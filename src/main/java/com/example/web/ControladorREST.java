@@ -5,6 +5,7 @@ import com.example.servicio.UsuarioServicio;
 import com.example.domain.usuario.Usuario;
 import com.example.servicio.IndividuoServicio;
 import com.example.servicio.CorreoServicio;
+import com.example.servicio.PerfilServicio; // 💡 ¡NUEVA DEPENDENCIA!
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 import jakarta.validation.Valid;
@@ -26,9 +27,10 @@ import java.util.stream.Collectors;
 import java.util.concurrent.CompletableFuture;
 
 @Controller
-public class ControladorREST {
+public class ControladorREST { // Renombrar a MvcController si lo deseas
 
-    // ----DEPENDENCIAS ---
+    // ---- DEPENDENCIAS ----
+    // 💡 Se añadió PerfilServicio
 
     @Autowired
     private IndividuoServicio individuoServicio;
@@ -39,33 +41,50 @@ public class ControladorREST {
     @Autowired
     private CorreoServicio correoServicio;
 
+    @Autowired
+    private PerfilServicio perfilServicio;
+
 
     // 🔑 MÉTODOS DE AUTENTICACIÓN Y REGISTRO
 
     @GetMapping("/login")
     public String mostrarLogin() {
-        // Muestra la vista del formulario de inicio de sesión.
         return "login";
     }
 
     @GetMapping("/login?rolDesconocido")
     public String mostrarAccesodenegado() {
-        // Redirección para manejar acceso denegado o rol desconocido.
         return "login";
     }
 
+    // 1. Muestra el formulario de registro (Movido de UsuarioController)
+    @GetMapping("/registro")
+    public String mostrarFormularioRegistro(Model model) {
+        Usuario usuario = new Usuario();
+        usuario.setIndividuo(new Individuo());
+        model.addAttribute("usuario", usuario);
+        // Necesario para que el formulario pueda elegir el perfil si lo deseas
+        model.addAttribute("perfiles", perfilServicio.listarTodos());
+        return "registro";
+    }
+
+    // 2. Procesa el registro (Lógica robusta unificada)
     @PostMapping("/API/registro")
     public String procesarRegistro(@Valid Usuario usuario, Errors errors, RedirectAttributes redirectAttributes) {
-        // Maneja la creación de una nueva cuenta de usuario y su individuo asociado.
 
-        // 1. Manejar errores de validación
         if (errors.hasErrors()) {
             System.out.println("Errores de validación en el registro: " + errors.getAllErrors());
+            // Mantener datos y errores en el redireccionamiento para repoblar el formulario
+            redirectAttributes.addFlashAttribute("org.springframework.validation.BindingResult.usuario", errors);
+            redirectAttributes.addFlashAttribute("usuario", usuario);
             redirectAttributes.addFlashAttribute("mensajeError", "Error en el formulario. Por favor, revisa los campos.");
             return "redirect:/registro";
         }
 
         try {
+            // Establece el perfil por defecto (si lo desea, el ID 2 es generalmente 'Jugador')
+            usuario.setPerfil(perfilServicio.buscarPorId(2));
+
             usuario.getIndividuo().setEliminado(false);
             individuoServicio.salvar(usuario.getIndividuo());
             usuarioServicio.registrarNuevoUsuario(usuario);
@@ -74,7 +93,6 @@ public class ControladorREST {
             return "redirect:/login";
 
         } catch (Exception e) {
-            // 4. Manejo de excepciones (ej. nombre de usuario o cédula duplicada)
             System.err.println("Error al guardar el nuevo usuario: " + e.getMessage());
             redirectAttributes.addFlashAttribute("mensajeError", "Hubo un error al crear la cuenta: " + e.getMessage());
             return "redirect:/registro";
@@ -99,6 +117,8 @@ public class ControladorREST {
                 return "redirect:/error";
         }
     }
+
+    // --------------------------------------------------
 
     //  MÉTODOS DE PERFIL DE USUARIO AUTENTICADO
 
@@ -176,6 +196,9 @@ public class ControladorREST {
         }
         return "redirect:/login?cuentaEliminada";
     }
+
+    // --------------------------------------------------
+
     // 👥 MÉTODOS DE ADMINISTRACIÓN DE JUGADORES (CRUD)
 
     @GetMapping("/")
@@ -199,6 +222,13 @@ public class ControladorREST {
             System.err.println("Error al cargar jugadores: " + e.getMessage());
             model.addAttribute("jugadores", List.of());
         }
+        return "jugadores";
+    }
+
+    // 💡 Nuevo método para listar todos los jugadores (desde UsuarioController)
+    @GetMapping("/jugadores-registrados")
+    public String mostrarJugadoresRegistrados(Model model) {
+        model.addAttribute("jugadores", usuarioServicio.listarTodos());
         return "jugadores";
     }
 
@@ -254,6 +284,8 @@ public class ControladorREST {
         return "redirect:/jugadores";
     }
 
+    // --------------------------------------------------
+
     // 📧 MÉTODOS DE COMUNICACIÓN Y VISTAS ESTÁTICAS
 
     @PostMapping("/enviar-correo-masivo")
@@ -297,6 +329,8 @@ public class ControladorREST {
     public String mostrarTorneo() {
         return "torneo";
     }
+
+    // --------------------------------------------------
 
     // 📊 EXPORTACIÓN DE DATOS
 
