@@ -3,9 +3,26 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Gestión de Torneos - Sistema de Gestión</title>
+  <title>Gestión de Torneos - PadelApp</title>
   <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
   <style>
+    /* Paleta de Colores Solicitada (Verde Azulado Brillante) */
+    :root {
+        --color-primary: #00b894; /* Verde Azulado Brillante */
+        --color-primary-dark: #00a383; /* Variante más oscura del primario */
+        --color-secondary: #0984e3; /* Azul Brillante */
+        --color-accent: #fdcb6e; /* Amarillo Dorado */
+        --color-danger: #d63031; /* Rojo Ladrillo */
+        --color-text: #2d3436; /* Gris Oscuro Casi Negro */
+        --color-text-light: #636e72; /* Gris Medio */
+        --color-white: #ffffff;
+
+        /* Gradientes Ajustados */
+        --gradient-primary: linear-gradient(135deg, var(--color-primary) 0%, var(--color-primary-dark) 100%);
+        --gradient-accent-menu: linear-gradient(135deg, #2ecc71 0%, #27ae60 100%);
+        --gradient-danger-menu: linear-gradient(135deg, var(--color-danger) 0%, #e74c3c 100%);
+    }
+
     /* --- Base CSS --- */
     * {
         margin: 0;
@@ -15,9 +32,9 @@
 
     body {
         font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        background: var(--gradient-primary); /* Aplicado el nuevo gradiente */
         min-height: 100vh;
-        color: #333;
+        color: var(--color-text);
     }
 
     .container {
@@ -28,22 +45,22 @@
     /* --- Sidebar --- */
     .sidebar {
         width: 280px;
-        background: rgba(255, 255, 255, 0.95);
+        background: var(--color-white);
         backdrop-filter: blur(10px);
         padding: 2rem 0;
         box-shadow: 4px 0 20px rgba(0, 0, 0, 0.1);
-        border-right: 1px solid rgba(255, 255, 255, 0.2);
+        border-right: 1px solid rgba(0, 184, 148, 0.2);
     }
 
     .logo {
         text-align: center;
         padding: 0 2rem 2rem;
-        border-bottom: 1px solid rgba(102, 126, 234, 0.2);
+        border-bottom: 1px solid rgba(0, 184, 148, 0.2);
         margin-bottom: 2rem;
     }
 
     .logo h2 {
-        color: #667eea;
+        color: var(--color-primary);
         font-size: 1.5rem;
         font-weight: 700;
     }
@@ -51,7 +68,7 @@
     /* --- Menu sections --- */
     .menu-section-title {
         padding: 0 2rem 0.5rem;
-        color: #888;
+        color: var(--color-text-light);
         font-size: 0.75rem;
         text-transform: uppercase;
         letter-spacing: 1px;
@@ -62,7 +79,7 @@
         display: block;
         padding: 1rem 2rem;
         text-decoration: none;
-        color: #555;
+        color: var(--color-text);
         transition: all 0.3s ease;
         border-left: 4px solid transparent;
         position: relative;
@@ -70,9 +87,9 @@
 
     .menu-item:hover,
     .menu-item.active {
-        background: linear-gradient(90deg, rgba(102, 126, 234, 0.1) 0%, rgba(118, 75, 162, 0.05) 100%);
-        color: #667eea;
-        border-left-color: #667eea;
+        background: linear-gradient(90deg, rgba(0, 184, 148, 0.1) 0%, rgba(0, 163, 131, 0.05) 100%);
+        color: var(--color-primary);
+        border-left-color: var(--color-primary);
         transform: translateX(5px);
     }
 
@@ -83,26 +100,26 @@
     }
 
     .menu-item.accent {
-        background: linear-gradient(135deg, #33b633 0%, #2ca52c 100%);
-        color: white;
+        background: var(--gradient-accent-menu);
+        color: var(--color-white);
         border-radius: 0 25px 25px 0;
         margin: 0.5rem 0;
     }
 
     .menu-item.accent:hover {
-        background: linear-gradient(135deg, #2ca52c 0%, #228b22 100%);
+        background: #27ae60;
         transform: translateX(10px);
     }
 
     .menu-item.danger {
-        background: linear-gradient(135deg, #ff4d4d 0%, #e03c3c 100%);
-        color: white;
+        background: var(--gradient-danger-menu);
+        color: var(--color-white);
         border-radius: 0 25px 25px 0;
         margin-top: 1rem;
     }
 
     .menu-item.danger:hover {
-        background: linear-gradient(135deg, #e03c3c 0%, #cc2929 100%);
+        background: var(--color-danger);
         transform: translateX(10px);
     }
 
@@ -118,12 +135,12 @@
     }
 
     .list-container {
-        background: rgba(255, 255, 255, 0.95);
+        background: var(--color-white);
         backdrop-filter: blur(20px);
         border-radius: 25px;
         padding: 3rem;
         box-shadow: 0 15px 35px rgba(0, 0, 0, 0.1);
-        border: 1px solid rgba(255, 255, 255, 0.2);
+        border: 1px solid rgba(0, 184, 148, 0.2);
         width: 100%;
         max-width: 1000px;
         position: relative;
@@ -139,7 +156,7 @@
         left: 0;
         right: 0;
         height: 5px;
-        background: linear-gradient(90deg, #667eea 0%, #764ba2 100%);
+        background: var(--gradient-primary);
     }
 
     /* --- Content Header --- */
@@ -154,7 +171,7 @@
     .content-header h1 {
         font-size: 2.5rem;
         font-weight: 700;
-        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        background: var(--gradient-primary);
         -webkit-background-clip: text;
         -webkit-text-fill-color: transparent;
         background-clip: text;
@@ -166,7 +183,7 @@
     }
 
     .content-header p {
-        color: #666;
+        color: var(--color-text-light);
         font-size: 1.1rem;
         margin-bottom: 1.5rem;
     }
@@ -189,13 +206,14 @@
     }
 
     .btn-create {
-        background: linear-gradient(135deg, #09d4b3 0%, #07b599 100%); /* Nuevo color de acento para crear */
-        color: white;
-        box-shadow: 0 4px 15px rgba(9, 212, 179, 0.4);
+        /* Usando el color primario como color principal para crear */
+        background: var(--gradient-primary);
+        color: var(--color-white);
+        box-shadow: 0 4px 15px rgba(0, 184, 148, 0.4);
     }
     .btn-create:hover {
         transform: translateY(-3px);
-        box-shadow: 0 8px 25px rgba(9, 212, 179, 0.6);
+        box-shadow: 0 8px 25px rgba(0, 184, 148, 0.6);
     }
 
     .btn-table {
@@ -209,27 +227,27 @@
     }
 
     .btn-table.edit {
-        background: #09d4b3;
-        color: white;
+        background: var(--color-secondary); /* Azul para Editar */
+        color: var(--color-white);
     }
     .btn-table.edit:hover {
-        background: #07b599;
+        background: #0077c2;
         transform: translateY(-1px);
     }
     .btn-table.delete {
-        background: #e03c3c;
-        color: white;
+        background: var(--color-danger); /* Rojo para Eliminar */
+        color: var(--color-white);
     }
     .btn-table.delete:hover {
-        background: #cc2929;
+        background: #b82c2c;
         transform: translateY(-1px);
     }
     .btn-table.view {
-        background: #667eea;
-        color: white;
+        background: var(--color-primary); /* Verde Azulado para Ver/Resultados */
+        color: var(--color-white);
     }
     .btn-table.view:hover {
-        background: #556ee0;
+        background: var(--color-primary-dark);
         transform: translateY(-1px);
     }
 
@@ -237,9 +255,9 @@
     .table-title {
         font-size: 1.8rem;
         font-weight: 700;
-        color: #333;
+        color: var(--color-text);
         margin-bottom: 2rem;
-        border-bottom: 2px solid rgba(102, 126, 234, 0.2);
+        border-bottom: 2px solid rgba(0, 184, 148, 0.2);
         padding-bottom: 1rem;
         display: flex;
         align-items: center;
@@ -247,7 +265,7 @@
     }
 
     .table-title i {
-        color: #667eea;
+        color: var(--color-primary);
     }
 
     .data-table {
@@ -262,12 +280,12 @@
     .data-table th, .data-table td {
         padding: 1.2rem 1.5rem;
         text-align: left;
-        border-bottom: 1px solid rgba(102, 126, 234, 0.1);
+        border-bottom: 1px solid rgba(0, 184, 148, 0.1);
         transition: all 0.3s ease;
     }
 
     .data-table th {
-        background: linear-gradient(90deg, #667eea 0%, #764ba2 100%);
+        background: var(--gradient-primary); /* Encabezado de la tabla con gradiente */
         color: white;
         font-weight: 700;
         text-transform: uppercase;
@@ -277,13 +295,13 @@
     }
 
     .data-table tr:nth-child(even) {
-        background-color: rgba(102, 126, 234, 0.03);
+        background-color: rgba(0, 184, 148, 0.03);
     }
 
     .data-table tr:hover {
-        background-color: rgba(102, 126, 234, 0.1);
+        background-color: rgba(0, 184, 148, 0.1);
         transform: translateY(-2px);
-        box-shadow: 0 5px 15px rgba(102, 126, 234, 0.1);
+        box-shadow: 0 5px 15px rgba(0, 184, 148, 0.1);
     }
 
     /* Bordes redondeados para la cabecera */
@@ -346,14 +364,14 @@
         }
 
         .data-table thead {
-            display: none; /* Ocultar encabezado en móvil para formato de tarjeta */
+            display: none;
         }
 
         .data-table tr {
             margin-bottom: 1rem;
             border-radius: 15px;
             box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-            border: 1px solid rgba(102, 126, 234, 0.1);
+            border: 1px solid rgba(0, 184, 148, 0.1);
         }
 
         .data-table td {
@@ -361,13 +379,13 @@
             justify-content: space-between;
             align-items: center;
             padding: 1rem;
-            border-bottom: 1px solid rgba(102, 126, 234, 0.1);
+            border-bottom: 1px solid rgba(0, 184, 148, 0.1);
         }
 
         .data-table td:before {
             content: attr(data-label);
             font-weight: 700;
-            color: #667eea;
+            color: var(--color-primary);
             text-transform: uppercase;
             font-size: 0.85rem;
         }
@@ -410,7 +428,7 @@
 <div class="container">
   <nav class="sidebar">
     <div class="logo">
-      <h2><i class="fas fa-trophy"></i> Sistema</h2>
+      <h2><i class="fas fa-trophy"></i> PadelApp</h2>
     </div>
 
     <div class="menu-section-title">Navegación Principal</div>
@@ -440,7 +458,7 @@
       <i class="fas fa-file-excel"></i> Exportar Excel
     </a>
 
-    <form th:action="@{/login}" method="post" style="margin: 2rem 0 0 0;">
+    <form th:action="@{/logout}" method="post" style="margin: 2rem 0 0 0;">
       <a href="#" onclick="this.parentNode.submit()" class="menu-item danger">
         <i class="fas fa-sign-out-alt"></i> Cerrar Sesión
       </a>
@@ -531,13 +549,19 @@
 </div>
 
 <script>
+  // Script para manejar el estado de carga y el nombre del logo (Asegurando PadelApp)
+  document.addEventListener('DOMContentLoaded', function() {
+      const logo = document.querySelector('.logo h2');
+      logo.innerHTML = '<i class="fas fa-trophy"></i> PadelApp';
+  });
+
   function addLoadingState(button) {
       button.classList.add('loading');
       const originalHTML = button.innerHTML;
 
       // Determinar el texto de carga según la acción
       let loadingText = 'Cargando...';
-      if (button.textContent.includes('Editar') || button.textContent.includes('Crear')) {
+      if (button.textContent.includes('Editar') || button.textContent.includes('Crear') || button.textContent.includes('Ver')) {
           loadingText = 'Cargando...';
       } else if (button.textContent.includes('Eliminar')) {
           loadingText = 'Eliminando...';
