@@ -40,7 +40,6 @@ public class PadelMatchController {
     private final UsuarioServicio usuarioServicio;
 
     @Autowired
-    // ⭐️ CAMBIO 1: Eliminada la inyección de StripeService del constructor.
     public PadelMatchController(PadelMatchService padelMatchService, UsuarioServicio usuarioServicio) {
         this.padelMatchService = padelMatchService;
         this.usuarioServicio = usuarioServicio;
