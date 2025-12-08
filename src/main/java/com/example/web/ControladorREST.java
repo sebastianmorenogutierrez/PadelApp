@@ -5,7 +5,7 @@ import com.example.servicio.UsuarioServicio;
 import com.example.domain.usuario.Usuario;
 import com.example.servicio.IndividuoServicio;
 import com.example.servicio.CorreoServicio;
-import com.example.servicio.PerfilServicio; // 💡 ¡NUEVA DEPENDENCIA!
+import com.example.servicio.PerfilServicio;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 import jakarta.validation.Valid;
@@ -20,7 +20,6 @@ import org.springframework.ui.Model;
 import org.springframework.validation.Errors;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
-
 import java.io.IOException;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -74,7 +73,6 @@ public class ControladorREST { // Renombrar a MvcController si lo deseas
 
         if (errors.hasErrors()) {
             System.out.println("Errores de validación en el registro: " + errors.getAllErrors());
-            // Mantener datos y errores en el redireccionamiento para repoblar el formulario
             redirectAttributes.addFlashAttribute("org.springframework.validation.BindingResult.usuario", errors);
             redirectAttributes.addFlashAttribute("usuario", usuario);
             redirectAttributes.addFlashAttribute("mensajeError", "Error en el formulario. Por favor, revisa los campos.");
@@ -82,11 +80,9 @@ public class ControladorREST { // Renombrar a MvcController si lo deseas
         }
 
         try {
-            // Establece el perfil por defecto (si lo desea, el ID 2 es generalmente 'Jugador')
             usuario.setPerfil(perfilServicio.buscarPorId(2));
 
             usuario.getIndividuo().setEliminado(false);
-            individuoServicio.salvar(usuario.getIndividuo());
             usuarioServicio.registrarNuevoUsuario(usuario);
 
             redirectAttributes.addFlashAttribute("mensajeExito", "¡Registro exitoso! Ya puedes iniciar sesión.");
