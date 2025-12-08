@@ -383,7 +383,7 @@
         <div class="content-header">
             <h1><i class="fas fa-gamepad"></i> Gestión de Partidos</h1>
             <p>Administra y organiza los partidos creados por los usuarios.</p>
-            <a th:href="@{/partido/nuevo}" class="btn btn-create">
+            <a th:href="@{/partido/crear}" class="btn btn-create">
                 <i class="fas fa-plus-circle"></i> Crear Nuevo Partido
             </a>
         </div>
@@ -412,10 +412,10 @@
                         <td data-label="Nivel">Alto</td>
                         <td data-label="Creador">sebastian</td>
                         <td class="table-actions" data-label="Acciones">
-                            <a th:href="@{/partido_detalle" class="btn-table edit">
+                            <a th:href="@{/partido/editar/10}" class="btn-table edit">
                                 <i class="fas fa-edit"></i> Editar
                             </a>
-                            <a th:href="@{/partido_detalle/10}" class="btn-table details">
+                            <a th:href="@{/partido/detalles/10}" class="btn-table details">
                                 <i class="fas fa-info-circle"></i> Detalles
                             </a>
                             <a th:href="@{/partido/pdf/10}" class="btn-table pdf">
