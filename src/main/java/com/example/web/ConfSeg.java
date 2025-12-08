@@ -10,6 +10,7 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 
 @Configuration
 public class ConfSeg {
@@ -43,7 +44,27 @@ public class ConfSeg {
         http
                 .authenticationProvider(authenticationProvider())
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/", "/principal", "/login", "/registro", "/API/registro", "/css/**", "/js/**", "/images/**").permitAll()
+                        .requestMatchers(
+                                "/css/**", "/js/**", "/images/**",
+                                "/", "/principal", "/login", "/registro", "/API/registro",
+                                "/login?rolDesconocido"
+                        ).permitAll()
+                        .requestMatchers("/api/**").authenticated()
+                        .requestMatchers(
+                                "/correo/enviar", "/correo/masivo", "/correo/individual/{idUsuario}",
+                                "/correo/estadisticas", "/correo/estado", "/correo/previsualizar",
+                                "/correo/cancelar"
+                        ).authenticated()
+                        .requestMatchers("/torneo/**").authenticated()
+                        .requestMatchers("/partido/**").authenticated()
+                        .requestMatchers(
+                                "/anexar", "/salvar", "/cambiar/{idIndividuo}", "/cambiar/guardar",
+                                "/borrar/{idIndividuo}", "/jugadores", "/jugadores-registrados"
+                        ).authenticated()
+                        .requestMatchers(
+                                "/redirigir", "/indicejugador", "/indice", "/datos", "/modificar",
+                                "/eliminarCuenta", "/equipo", "/torneos-vista", "/exportarExcel"
+                        ).authenticated()
                         .anyRequest().authenticated()
                 )
                 .formLogin(form -> form
@@ -52,7 +73,10 @@ public class ConfSeg {
                         .failureUrl("/login?error=true")
                         .permitAll()
                 )
+
+                // Configuración de Logout
                 .logout(logout -> logout
+                        .logoutRequestMatcher(new AntPathRequestMatcher("/logout"))
                         .logoutSuccessUrl("/login?logout=true")
                         .permitAll()
                 );
