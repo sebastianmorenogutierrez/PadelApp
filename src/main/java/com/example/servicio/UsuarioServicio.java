@@ -6,12 +6,10 @@ import com.example.dao.UsuarioDao;
 import com.example.dao.IndividuoDao;
 import com.example.dao.PerfilDao;
 import org.springframework.beans.factory.annotation.Autowired;
-// import org.springframework.scheduling.annotation.Async; // Eliminada
 import org.springframework.stereotype.Service;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import jakarta.transaction.Transactional;
 import java.util.List;
-// import java.util.concurrent.CompletableFuture; // Eliminada
 
 @Service
 public class UsuarioServicio {
@@ -30,13 +28,7 @@ public class UsuarioServicio {
 
     @Transactional
     public void registrarNuevoUsuario(Usuario usuario) {
-        Individuo nuevoIndividuo = usuario.getIndividuo();
-
-        // 1. Guardar el Individuo para que se genere su ID (clave foránea)
-        individuoDao.save(nuevoIndividuo); // Persiste datos personales
-
-        // 2. Guardar el Usuario (que ahora referencia al Individuo con ID)
-        guardarUsuario(usuario); // Persiste credenciales
+        guardarUsuario(usuario);
     }
 
     private void guardarUsuario(Usuario usuario) {
