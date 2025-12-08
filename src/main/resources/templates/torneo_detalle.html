@@ -8,17 +8,27 @@
     <style>
         /* Nueva Paleta de Colores (Verde Azulado) */
         :root {
+            /* Colores Principales de la Marca */
             --color-primary: #00b894; /* Verde Azulado Brillante */
             --color-primary-dark: #00a383; /* Variante oscura */
+
+            /* Color Clave del Fondo */
+            --color-bg-soft: #F4FFF8; /* <-- NUEVO FONDO SUAVE */
+
+            /* Otros Colores */
             --color-secondary: #0984e3; /* Azul Brillante */
             --color-accent: #fdcb6e; /* Amarillo Dorado */
             --color-danger: #d63031; /* Rojo Ladrillo */
             --color-text: #2d3436; /* Gris Oscuro Casi Negro */
             --color-text-light: #636e72; /* Gris Medio */
-            --color-background: #f8f9fa; /* Gris Muy Claro */
+            --color-background: #f8f9fa; /* Gris Muy Claro (ya no se usa en body) */
             --color-white: #ffffff; /* Blanco Puro */
-            --gradient-primary: linear-gradient(135deg, #00b894 0%, #00cec9 100%);
-            --gradient-danger: linear-gradient(135deg, #d63031 0%, #ff7675 100%);
+
+            /* Gradientes */
+            --gradient-primary: linear-gradient(135deg, var(--color-primary) 0%, var(--color-primary-dark) 100%);
+            --gradient-danger: linear-gradient(135deg, var(--color-danger) 0%, #ff7675 100%);
+
+            /* Sombras */
             --shadow-soft: 0 2px 20px rgba(0, 184, 148, 0.08);
             --shadow-medium: 0 8px 30px rgba(0, 184, 148, 0.12);
         }
@@ -31,8 +41,8 @@
 
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            /* Fondo actualizado a tonos claros con toque primario */
-            background: linear-gradient(135deg, #e8f5e9 0%, #e0f7fa 50%, #f1f8e9 100%);
+            /* CAMBIO CLAVE: Usando el color sólido y suave para el fondo */
+            background-color: var(--color-bg-soft);
             min-height: 100vh;
             color: var(--color-text);
         }
@@ -49,7 +59,7 @@
             backdrop-filter: blur(10px);
             padding: 2rem 0;
             box-shadow: 4px 0 20px rgba(0, 0, 0, 0.1);
-            border-right: 1px solid rgba(0, 184, 148, 0.1); /* Usando primary */
+            border-right: 1px solid rgba(0, 184, 148, 0.1);
             position: sticky;
             top: 0;
         }
@@ -57,12 +67,12 @@
         .logo {
             text-align: center;
             padding: 0 2rem 2rem;
-            border-bottom: 1px solid rgba(0, 184, 148, 0.2); /* Usando primary */
+            border-bottom: 1px solid rgba(0, 184, 148, 0.2);
             margin-bottom: 2rem;
         }
 
         .logo h2 {
-            color: var(--color-primary); /* Usando primary */
+            color: var(--color-primary);
             font-size: 1.5rem;
             font-weight: 700;
         }
@@ -79,10 +89,9 @@
 
         .menu-item:hover,
         .menu-item.active {
-            /* Degradado de hover actualizado a primary */
             background: linear-gradient(90deg, rgba(0, 184, 148, 0.1) 0%, rgba(0, 184, 148, 0.05) 100%);
-            color: var(--color-primary); /* Usando primary */
-            border-left-color: var(--color-primary); /* Usando primary */
+            color: var(--color-primary);
+            border-left-color: var(--color-primary);
             transform: translateX(5px);
         }
 
@@ -101,25 +110,15 @@
             color: white;
             border-radius: 0 25px 25px 0;
             margin: 0.5rem 0;
-            /* Nota: Dejé estos verdes si el acento es diferente de #fdcb6e */
         }
 
         .menu-item.accent:hover {
             background: linear-gradient(135deg, #2ca52c 0%, #228b22 100%);
             transform: translateX(10px);
         }
-        /* Nota: Se mantiene el estilo accent anterior para el item "Exportar Excel"
-           Si se desea usar el --color-accent de la nueva paleta (#fdcb6e):
-           .menu-item.accent {
-               background: var(--gradient-accent);
-               color: var(--color-text);
-               border-radius: 0 25px 25px 0;
-               margin: 0.5rem 0;
-           } */
-
 
         .menu-item.danger {
-            background: var(--gradient-danger); /* Usando danger */
+            background: var(--gradient-danger);
             color: white;
             border-radius: 0 25px 25px 0;
             margin-top: 1rem;
@@ -145,7 +144,7 @@
             border-radius: 20px;
             margin-bottom: 2rem;
             box-shadow: var(--shadow-medium);
-            border: 1px solid rgba(0, 184, 148, 0.1); /* Usando primary */
+            border: 1px solid rgba(0, 184, 148, 0.1);
             position: relative;
             overflow: hidden;
         }
@@ -157,11 +156,11 @@
             left: 0;
             right: 0;
             height: 4px;
-            background: var(--gradient-primary); /* Usando primary */
+            background: var(--gradient-primary);
         }
 
         .tournament-title {
-            color: var(--color-primary); /* Usando primary */
+            color: var(--color-primary);
             font-size: 2.5rem;
             margin-bottom: 1rem;
             font-weight: 700;
@@ -178,15 +177,14 @@
         }
 
         .info-card {
-            /* Degradado de fondo de la tarjeta de info, actualizado a primary */
             background: linear-gradient(135deg, rgba(0, 184, 148, 0.1) 0%, rgba(0, 184, 148, 0.05) 100%);
             padding: 1.5rem;
             border-radius: 15px;
-            border: 1px solid rgba(0, 184, 148, 0.2); /* Usando primary */
+            border: 1px solid rgba(0, 184, 148, 0.2);
         }
 
         .info-card h4 {
-            color: var(--color-primary); /* Usando primary */
+            color: var(--color-primary);
             font-size: 0.9rem;
             text-transform: uppercase;
             letter-spacing: 1px;
@@ -201,7 +199,7 @@
         }
 
         .info-card i {
-            color: var(--color-primary); /* Usando primary */
+            color: var(--color-primary);
             margin-right: 0.5rem;
         }
 
@@ -220,7 +218,7 @@
             padding: 2rem;
             border-radius: 20px;
             box-shadow: var(--shadow-medium);
-            border: 1px solid rgba(0, 184, 148, 0.1); /* Usando primary */
+            border: 1px solid rgba(0, 184, 148, 0.1);
         }
 
         .section-header {
@@ -229,17 +227,17 @@
             gap: 1rem;
             margin-bottom: 1.5rem;
             padding-bottom: 1rem;
-            border-bottom: 2px solid rgba(0, 184, 148, 0.1); /* Usando primary */
+            border-bottom: 2px solid rgba(0, 184, 148, 0.1);
         }
 
         .section-header h3 {
-            color: var(--color-primary); /* Usando primary */
+            color: var(--color-primary);
             font-size: 1.5rem;
             font-weight: 600;
         }
 
         .participants-count {
-            background: var(--gradient-primary); /* Usando primary */
+            background: var(--gradient-primary);
             color: white;
             padding: 0.3rem 0.8rem;
             border-radius: 20px;
@@ -254,10 +252,10 @@
         }
 
         .participant-item {
-            background: rgba(0, 184, 148, 0.05); /* Usando primary */
+            background: rgba(0, 184, 148, 0.05);
             padding: 1rem 1.5rem;
             border-radius: 12px;
-            border-left: 4px solid var(--color-primary); /* Usando primary */
+            border-left: 4px solid var(--color-primary);
             display: flex;
             align-items: center;
             gap: 1rem;
@@ -265,7 +263,7 @@
         }
 
         .participant-item:hover {
-            background: rgba(0, 184, 148, 0.1); /* Usando primary */
+            background: rgba(0, 184, 148, 0.1);
             transform: translateX(5px);
         }
 
@@ -273,7 +271,7 @@
             width: 40px;
             height: 40px;
             border-radius: 50%;
-            background: var(--gradient-primary); /* Usando primary */
+            background: var(--gradient-primary);
             display: flex;
             align-items: center;
             justify-content: center;
@@ -296,7 +294,7 @@
 
         .empty-participants i {
             font-size: 3rem;
-            color: rgba(0, 184, 148, 0.3); /* Tono suave de primary */
+            color: rgba(0, 184, 148, 0.3);
             margin-bottom: 1rem;
         }
 
@@ -307,7 +305,7 @@
             padding: 2rem;
             border-radius: 20px;
             box-shadow: var(--shadow-medium);
-            border: 1px solid rgba(0, 184, 148, 0.1); /* Usando primary */
+            border: 1px solid rgba(0, 184, 148, 0.1);
             height: fit-content;
         }
 
@@ -324,7 +322,7 @@
         }
 
         .form-label {
-            color: var(--color-primary); /* Usando primary */
+            color: var(--color-primary);
             font-weight: 600;
             font-size: 0.9rem;
             text-transform: uppercase;
@@ -333,7 +331,7 @@
 
         .form-input {
             padding: 1rem 1.5rem;
-            border: 2px solid rgba(0, 184, 148, 0.2); /* Usando primary */
+            border: 2px solid rgba(0, 184, 148, 0.2);
             border-radius: 12px;
             font-size: 1rem;
             transition: all 0.3s ease;
@@ -342,9 +340,9 @@
 
         .form-input:focus {
             outline: none;
-            border-color: var(--color-primary); /* Usando primary */
+            border-color: var(--color-primary);
             background: var(--color-white);
-            box-shadow: 0 0 20px rgba(0, 184, 148, 0.2); /* Usando primary */
+            box-shadow: 0 0 20px rgba(0, 184, 148, 0.2);
         }
 
         .btn {
@@ -363,25 +361,25 @@
         }
 
         .btn-primary {
-            background: var(--gradient-primary); /* Usando primary */
+            background: var(--gradient-primary);
             color: white;
-            box-shadow: 0 4px 15px rgba(0, 184, 148, 0.4); /* Usando primary */
+            box-shadow: 0 4px 15px rgba(0, 184, 148, 0.4);
         }
 
         .btn-primary:hover {
             transform: translateY(-2px);
-            box-shadow: 0 8px 25px rgba(0, 184, 148, 0.6); /* Usando primary */
+            box-shadow: 0 8px 25px rgba(0, 184, 148, 0.6);
         }
 
         .btn-secondary {
             background: var(--color-white);
-            color: var(--color-primary); /* Usando primary */
-            border: 2px solid var(--color-primary); /* Usando primary */
+            color: var(--color-primary);
+            border: 2px solid var(--color-primary);
             box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
         }
 
         .btn-secondary:hover {
-            background: var(--color-primary); /* Usando primary */
+            background: var(--color-primary);
             color: white;
             transform: translateY(-2px);
         }
@@ -393,7 +391,7 @@
             padding: 1.5rem 2rem;
             border-radius: 20px;
             box-shadow: var(--shadow-medium);
-            border: 1px solid rgba(0, 184, 148, 0.1); /* Usando primary */
+            border: 1px solid rgba(0, 184, 148, 0.1);
             display: flex;
             gap: 1rem;
             flex-wrap: wrap;
@@ -428,8 +426,8 @@
         }
         .alert-success {
             /* Colores de éxito basados en primary */
-            background-color: #d4f5ee; /* Verde muy claro */
-            color: #007a63; /* Verde oscuro para el texto */
+            background-color: #d4f5ee;
+            color: #007a63;
             border: 1px solid #00b894;
         }
         .alert-error {
@@ -510,7 +508,7 @@
 <div class="container">
     <nav class="sidebar">
         <div class="logo">
-            <h2><i class="fas fa-trophy"></i> Sistema</h2>
+            <h2><i class="fas fa-trophy"></i> PadelApp</h2>
         </div>
 
         <div class="menu-section-title">Navegación Principal</div>
@@ -656,6 +654,12 @@
 
 <script>
     document.addEventListener('DOMContentLoaded', function() {
+        // Fix for logo not updating from "Sistema" to "PadelApp"
+        const logo = document.querySelector('.logo h2');
+        if (logo) {
+            logo.innerHTML = '<i class="fas fa-trophy"></i> PadelApp';
+        }
+
         // Add loading state to form submission
         const form = document.querySelector('.registration-form');
         if (form) {

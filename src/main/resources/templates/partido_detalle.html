@@ -14,7 +14,8 @@
             --color-danger: #d63031; /* Rojo Ladrillo */
             --color-text: #2d3436; /* Gris Oscuro Casi Negro */
             --color-text-light: #636e72; /* Gris Medio */
-            --color-background: #f8f9fa; /* Gris Muy Claro */
+            /* NUEVO COLOR DE FONDO SUAVE */
+            --color-bg-soft: #F4FFF8; /* Blanco ligeramente verdoso, muy suave */
             --color-white: #ffffff; /* Blanco Puro */
             --color-court: #3498db; /* Azul Claro Vívido */
             --color-court-line: #ecf0f1; /* Gris Muy Claro/Blanco Suave */
@@ -27,8 +28,8 @@
         /* Estilos base del partido_detalle */
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            /* Fondo actualizado a Primary Gradient */
-            background: var(--gradient-primary);
+            /* CAMBIO: Fondo actualizado a Color Sólido Suave */
+            background-color: var(--color-bg-soft);
             min-height: 100vh;
             padding: 2rem;
             color: var(--color-text);
@@ -48,6 +49,7 @@
         }
 
         .info-card {
+            /* Mantenido en blanco para contraste con el fondo suave */
             background: var(--color-white);
             backdrop-filter: blur(5px);
             padding: 1.5rem;
@@ -78,12 +80,13 @@
 
         /* Título del Partido */
         .partido-header {
-            color: var(--color-white);
+            /* CAMBIO: Color de texto a Gris Oscuro para legibilidad sobre fondo suave */
+            color: var(--color-text);
             font-size: 2.5rem;
             text-align: center;
             margin-bottom: 2rem;
             font-weight: 700;
-            text-shadow: 1px 1px 3px rgba(0,0,0,0.2);
+            text-shadow: 1px 1px 3px rgba(0,0,0,0.1); /* Sombra más sutil */
         }
 
         /* Grid Principal para Jugadores y Formulario */
@@ -101,6 +104,7 @@
 
         /* Sección de Participantes */
         .section-card {
+            /* Mantenido en blanco para contraste con el fondo suave */
             background: var(--color-white);
             backdrop-filter: blur(5px);
             padding: 2rem;
@@ -185,6 +189,7 @@
 
         /* Formulario de Inscripción */
         .registration-section {
+            /* Mantenido en blanco para contraste con el fondo suave */
             background: var(--color-white);
             backdrop-filter: blur(5px);
             padding: 2rem;

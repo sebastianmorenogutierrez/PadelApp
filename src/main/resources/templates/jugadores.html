@@ -15,12 +15,12 @@
             --color-danger: #d63031; /* Rojo Ladrillo */
             --color-text: #2d3436; /* Gris Oscuro Casi Negro */
             --color-text-light: #636e72; /* Gris Medio */
-            --color-background: #f8f9fa; /* Gris Muy Claro */
+            --color-bg-soft: #F4FFF8; /* <-- NUEVO FONDO SUAVE */
             --color-white: #ffffff; /* Blanco Puro */
 
             /* Gradientes Ajustados */
             --gradient-primary: linear-gradient(135deg, var(--color-primary) 0%, var(--color-primary-dark) 100%);
-            --gradient-accent-menu: linear-gradient(135deg, #2ecc71 0%, #27ae60 100%); /* Verde estándar para Excel */
+            --gradient-accent-menu: linear-gradient(135deg, #2ecc71 0%, #27ae60 100%); /* Verde estándar para Excel/Correo */
             --gradient-edit: linear-gradient(135deg, #2ecc71 0%, #27ae60 100%); /* Verde estándar para botón Editar */
             --gradient-danger: linear-gradient(135deg, var(--color-danger) 0%, #e74c3c 100%); /* Rojo Ladrillo para peligro */
 
@@ -38,7 +38,8 @@
 
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background: var(--gradient-primary);
+            /* Fondo sólido y suave */
+            background-color: var(--color-bg-soft);
             min-height: 100vh;
             color: var(--color-text);
         }
@@ -176,7 +177,7 @@
         }
 
         .btn-email {
-            background: var(--gradient-primary);
+            background: var(--gradient-primary); /* Se mantiene el color primario para el botón */
             color: var(--color-white);
             padding: 0.8rem 1.5rem;
             border: none;
@@ -830,6 +831,41 @@
 </div>
 
 <script>
+    // ====================================================================
+    // FUNCIONES DEL MODAL (Agregado del código faltante)
+    // ====================================================================
+    function openEmailModal() {
+        document.getElementById('emailModal').style.display = 'block';
+        document.body.style.overflow = 'hidden';
+    }
+
+    function closeEmailModal() {
+        document.getElementById('emailModal').style.display = 'none';
+        document.body.style.overflow = '';
+    }
+
+    // ====================================================================
+    // SIMULACIÓN DE ACCIONES (Agregado del código faltante)
+    // ====================================================================
+
+    function editPlayer(button) {
+        const playerId = button.getAttribute('data-id');
+        alert(`Simulando la acción de EDITAR al jugador con ID: ${playerId}`);
+        // Aquí se colocaría la lógica para redirigir a la página de edición.
+        // window.location.href = `/jugadores/editar/${playerId}`;
+    }
+
+    function deletePlayer(button) {
+        const playerId = button.getAttribute('data-id');
+        const playerName = button.getAttribute('data-name');
+        if (confirm(`¿Estás seguro de ELIMINAR al jugador "${playerName}" (ID: ${playerId})? Esta acción es irreversible.`)) {
+            alert(`Simulando la acción de ELIMINAR al jugador con ID: ${playerId}`);
+            // Aquí se colocaría la lógica para enviar la solicitud de eliminación.
+            // window.location.href = `/jugadores/eliminar/${playerId}`;
+        }
+    }
+
+
     document.addEventListener('DOMContentLoaded', function() {
         // ====================================================================
         // BÚSQUEDA Y FILTRADO
@@ -933,92 +969,6 @@
         });
     });
 
-    // ====================================================================
-    // FUNCIONES DEL MODAL
-    // ====================================================================
-    function openEmailModal() {
-        document.getElementById('emailModal').style.display = 'block';
-        document.body.style.overflow = 'hidden';
-    }
-
-    function closeEmailModal() {
-        document.getElementById('emailModal').style.display = 'none';
-        document.body.style.overflow = 'auto';
-        document.getElementById('emailForm').reset();
-
-        // Restablecer el botón de envío
-        const sendBtn = document.getElementById('sendEmailBtn');
-        sendBtn.innerHTML = '<i class="fas fa-paper-plane"></i> Enviar Correo';
-        sendBtn.disabled = false;
-    }
-
-    // Cerrar modal al hacer click fuera
-    window.onclick = function(event) {
-        const modal = document.getElementById('emailModal');
-        if (event.target == modal) {
-            closeEmailModal();
-        }
-    }
-
-    // ====================================================================
-    // ACCIONES DE TABLA: EDITAR
-    // ====================================================================
-    function editPlayer(buttonElement) {
-        const playerId = buttonElement.getAttribute('data-id');
-        const row = buttonElement.closest('tr');
-
-        row.classList.add('row-loading');
-        buttonElement.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Cargando...';
-        buttonElement.disabled = true;
-
-        // Simula la navegación al endpoint de edición
-        setTimeout(() => {
-            window.location.href = `/jugadores/editar/${playerId}`;
-        }, 500);
-    }
-
-    // ====================================================================
-    // ACCIONES DE TABLA: ELIMINAR
-    // ====================================================================
-    function deletePlayer(buttonElement) {
-        const playerId = buttonElement.getAttribute('data-id');
-        const playerName = buttonElement.getAttribute('data-name');
-
-        const confirmed = confirm(`¿Estás seguro que deseas eliminar al jugador "${playerName}" (ID: ${playerId})?\n\nEsta acción no se puede deshacer.`);
-
-        if (confirmed) {
-            const row = buttonElement.closest('tr');
-            row.classList.add('row-loading');
-
-            buttonElement.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Eliminando...';
-            buttonElement.disabled = true;
-
-            // Simula la navegación al endpoint de borrado
-            setTimeout(() => {
-                window.location.href = `/jugadores/borrar/${playerId}`;
-            }, 800);
-        }
-    }
-
-    // ====================================================================
-    // ESTADO DE CARGA EN ENLACES DEL MENÚ
-    // ====================================================================
-    document.querySelectorAll('.menu-item').forEach(link => {
-        link.addEventListener('click', function(e) {
-            // Excluir enlaces con funcionalidad onclick (como Correo Masivo y Logout)
-            if (this.getAttribute('href') !== '#' && !this.onclick && !this.parentNode.matches('form')) {
-                e.preventDefault();
-                this.style.opacity = '0.7';
-                const originalHTML = this.innerHTML;
-                this.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Cargando...';
-
-                // Redirecciona después de un breve retraso
-                setTimeout(() => {
-                    window.location.href = this.href;
-                }, 300);
-            }
-        });
-    });
 </script>
 </body>
 </html>

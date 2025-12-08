@@ -6,7 +6,22 @@
     <title>Editar Perfil - Sistema de Gestión</title>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
     <style>
-        /* --- Base CSS (Igual que en las plantillas anteriores) --- */
+        /* --- Paleta de Colores PadelApp --- */
+        :root {
+            /* Colores Principales de la Marca */
+            --color-primary: #00b894; /* Verde Azulado Brillante */
+            --color-primary-dark: #00a383;
+            /* Color Clave del Fondo */
+            --color-bg-soft: #F4FFF8; /* Blanco ligeramente verdoso, muy suave */
+            /* Otros Colores */
+            --color-secondary: #0984e3; /* Azul Brillante */
+            --color-danger: #d63031; /* Rojo Ladrillo */
+            --color-text: #2d3436; /* Gris Oscuro */
+            --color-white: #ffffff;
+            --color-shadow: rgba(0, 0, 0, 0.1);
+        }
+
+        /* --- Base CSS (Adaptado a la nueva paleta) --- */
         * {
             margin: 0;
             padding: 0;
@@ -15,36 +30,39 @@
 
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            /* CAMBIO CLAVE: Nuevo fondo suave */
+            background-color: var(--color-bg-soft);
             min-height: 100vh;
-            color: #333;
+            color: var(--color-text);
         }
 
         .container {
             display: flex;
             min-height: 100vh;
-            width: 100%; /* Asegura que ocupe todo el ancho */
+            width: 100%;
         }
 
         /* --- Sidebar --- */
         .sidebar {
             width: 280px;
-            background: rgba(255, 255, 255, 0.95);
+            /* CAMBIO: Sidebar en blanco */
+            background: var(--color-white);
             backdrop-filter: blur(10px);
             padding: 2rem 0;
-            box-shadow: 4px 0 20px rgba(0, 0, 0, 0.1);
-            border-right: 1px solid rgba(255, 255, 255, 0.2);
+            box-shadow: 4px 0 20px var(--color-shadow);
+            border-right: 1px solid rgba(0, 0, 0, 0.05); /* Borde más sutil */
         }
 
         .logo {
             text-align: center;
             padding: 0 2rem 2rem;
-            border-bottom: 1px solid rgba(102, 126, 234, 0.2);
+            border-bottom: 1px solid rgba(0, 0, 0, 0.1);
             margin-bottom: 2rem;
         }
 
         .logo h2 {
-            color: #667eea;
+            /* CAMBIO: Color de logo principal */
+            color: var(--color-primary);
             font-size: 1.5rem;
             font-weight: 700;
         }
@@ -62,7 +80,7 @@
             display: block;
             padding: 1rem 2rem;
             text-decoration: none;
-            color: #555;
+            color: var(--color-text);
             transition: all 0.3s ease;
             border-left: 4px solid transparent;
             position: relative;
@@ -70,9 +88,10 @@
 
         .menu-item:hover,
         .menu-item.active {
-            background: linear-gradient(90deg, rgba(102, 126, 234, 0.1) 0%, rgba(118, 75, 162, 0.05) 100%);
-            color: #667eea;
-            border-left-color: #667eea;
+            /* CAMBIO: Colores de hover y activo */
+            background: linear-gradient(90deg, rgba(0, 184, 148, 0.1) 0%, rgba(0, 163, 131, 0.05) 100%);
+            color: var(--color-primary);
+            border-left-color: var(--color-primary);
             transform: translateX(5px);
         }
 
@@ -83,26 +102,30 @@
         }
 
         .menu-item.accent {
-            background: linear-gradient(135deg, #33b633 0%, #2ca52c 100%);
-            color: white;
+            /* CAMBIO: Usar color-secondary para el acento positivo (Exportar) */
+            background: linear-gradient(135deg, var(--color-secondary) 0%, #066fb3 100%);
+            color: var(--color-white);
             border-radius: 0 25px 25px 0;
             margin: 0.5rem 0;
+            border-left: none;
         }
 
         .menu-item.accent:hover {
-            background: linear-gradient(135deg, #2ca52c 0%, #228b22 100%);
+            background: linear-gradient(135deg, #066fb3 0%, #044d7e 100%);
             transform: translateX(10px);
         }
 
         .menu-item.danger {
-            background: linear-gradient(135deg, #ff4d4d 0%, #e03c3c 100%);
-            color: white;
+            /* CAMBIO: Usar color-danger */
+            background: linear-gradient(135deg, var(--color-danger) 0%, #b82728 100%);
+            color: var(--color-white);
             border-radius: 0 25px 25px 0;
             margin-top: 1rem;
+            border-left: none;
         }
 
         .menu-item.danger:hover {
-            background: linear-gradient(135deg, #e03c3c 0%, #cc2929 100%);
+            background: linear-gradient(135deg, #b82728 0%, #9c1f20 100%);
             transform: translateX(10px);
         }
 
@@ -119,14 +142,15 @@
 
         /* Contenedor del Formulario */
         .form-container {
-            background: rgba(255, 255, 255, 0.95);
+            /* CAMBIO CLAVE: Contenedor en blanco */
+            background: var(--color-white);
             backdrop-filter: blur(20px);
             padding: 3rem;
             border-radius: 25px;
-            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.1);
-            border: 1px solid rgba(255, 255, 255, 0.2);
+            box-shadow: 0 15px 35px var(--color-shadow);
+            border: 1px solid rgba(0, 0, 0, 0.05);
             width: 100%;
-            max-width: 500px; /* Un poco más ancho que tu max-width anterior */
+            max-width: 500px;
             position: relative;
             overflow: hidden;
             animation: fadeInUp 0.8s ease 0.1s both;
@@ -140,14 +164,16 @@
             left: 0;
             right: 0;
             height: 5px;
-            background: linear-gradient(90deg, #667eea 0%, #764ba2 100%);
+            /* CAMBIO: Línea superior con color primario */
+            background: linear-gradient(90deg, var(--color-primary) 0%, var(--color-primary-dark) 100%);
         }
 
         /* Título */
         .form-header h1 {
             font-size: 2.5rem;
             font-weight: 700;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            /* CAMBIO: Color del título con color primario */
+            background: linear-gradient(135deg, var(--color-primary) 0%, var(--color-primary-dark) 100%);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
             background-clip: text;
@@ -171,7 +197,8 @@
             display: block;
             margin-bottom: 0.8rem;
             font-weight: 600;
-            color: #667eea;
+            /* CAMBIO: Color de etiqueta con color primario */
+            color: var(--color-primary);
             font-size: 1rem;
             text-transform: uppercase;
             letter-spacing: 0.5px;
@@ -189,21 +216,23 @@
 
         input {
             width: 100%;
-            padding: 1.2rem 1.5rem; /* Ajustado para el icono */
-            padding-right: 3.5rem; /* Espacio para el icono */
-            border: 2px solid rgba(102, 126, 234, 0.2);
+            padding: 1.2rem 1.5rem;
+            padding-right: 3.5rem;
+            /* CAMBIO: Borde del input con color primario, más transparente */
+            border: 2px solid rgba(0, 184, 148, 0.2);
             border-radius: 15px;
             font-size: 1rem;
             transition: all 0.3s ease;
-            background: rgba(255, 255, 255, 0.8);
-            color: #333;
+            background: var(--color-white);
+            color: var(--color-text);
         }
 
         input:focus {
             outline: none;
-            border-color: #667eea;
-            background: white;
-            box-shadow: 0 0 10px rgba(102, 126, 234, 0.2);
+            /* CAMBIO: Foco del input con color primario */
+            border-color: var(--color-primary);
+            background: var(--color-white);
+            box-shadow: 0 0 10px rgba(0, 184, 148, 0.2);
             transform: translateY(-2px);
         }
 
@@ -212,14 +241,15 @@
             right: 1.5rem;
             top: 50%;
             transform: translateY(-50%);
-            color: #aaa; /* Color por defecto */
+            color: #aaa;
             font-size: 1.1rem;
             pointer-events: none;
             transition: all 0.3s ease;
         }
 
         input:focus + .input-icon {
-            color: #764ba2;
+            /* CAMBIO: Color del icono al enfocar */
+            color: var(--color-primary-dark);
             transform: translateY(-50%) scale(1.1);
         }
 
@@ -244,32 +274,34 @@
             align-items: center;
             justify-content: center;
             gap: 0.8rem;
-            flex-grow: 1; /* Para que ocupen el espacio disponible */
+            flex-grow: 1;
         }
 
         .btn-primary {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: white;
-            box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);
+            /* CAMBIO: Botón primario con color primario */
+            background: linear-gradient(135deg, var(--color-primary) 0%, var(--color-primary-dark) 100%);
+            color: var(--color-white);
+            box-shadow: 0 4px 15px rgba(0, 184, 148, 0.4);
         }
 
         .btn-primary:hover {
             transform: translateY(-3px);
-            box-shadow: 0 8px 25px rgba(102, 126, 234, 0.6);
+            box-shadow: 0 8px 25px rgba(0, 184, 148, 0.6);
         }
 
         .btn-secondary {
-            background: #fff;
-            color: #667eea;
-            border: 2px solid #667eea;
+            background: var(--color-white);
+            /* CAMBIO: Botón secundario con color primario */
+            color: var(--color-primary);
+            border: 2px solid var(--color-primary);
             box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
         }
 
         .btn-secondary:hover {
-            background: #667eea;
-            color: white;
+            background: var(--color-primary);
+            color: var(--color-white);
             transform: translateY(-3px);
-            box-shadow: 0 8px 25px rgba(102, 126, 234, 0.3);
+            box-shadow: 0 8px 25px rgba(0, 184, 148, 0.3);
         }
 
         /* Estado de carga */
@@ -299,15 +331,17 @@
         }
 
         .message.success {
-            background-color: #d4edda;
-            color: #155724;
-            border: 1px solid #c3e6cb;
+            /* Ajuste de colores de mensaje (manteniendo el tono) */
+            background-color: #e6ffec; /* Verde muy claro */
+            color: #008037; /* Verde oscuro */
+            border: 1px solid #00b894;
         }
 
         .message.error {
-            background-color: #f8d7da;
-            color: #721c24;
-            border: 1px solid #f5c6cb;
+            /* Ajuste de colores de mensaje (usando danger) */
+            background-color: #ffe6e6;
+            color: var(--color-danger);
+            border: 1px solid #d63031;
         }
 
         /* Animación de entrada */

@@ -1,27 +1,28 @@
 <!DOCTYPE html>
 <html lang="es" xmlns:th="http://www.thymeleaf.org">
 <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>PadelApp - Sistema de Gestión Profesional</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Jugadores Registrados - Sistema de Gestión</title>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
     <style>
         /* Paleta de Colores Solicitada (Verde Azulado Brillante) */
         :root {
             --color-primary: #00b894; /* Verde Azulado Brillante */
             --color-primary-dark: #00a383; /* Variante más oscura del primario */
-            --color-secondary: #0984e3; /* Azul Brillante */
-            --color-accent: #fdcb6e; /* Amarillo Dorado */
+            --color-secondary: #0984e3; /* Azul Brillante, usado para acento secundario */
+            --color-accent: #fdcb6e; /* Amarillo Dorado, usado para elementos especiales/advertencias (no aplicado directamente aquí) */
             --color-danger: #d63031; /* Rojo Ladrillo */
             --color-text: #2d3436; /* Gris Oscuro Casi Negro */
             --color-text-light: #636e72; /* Gris Medio */
-            --color-background: #f8fafc;
-            --color-white: #ffffff;
+            --color-bg-soft: #F4FFF8; /* <-- NUEVO FONDO SUAVE */
+            --color-white: #ffffff; /* Blanco Puro */
 
             /* Gradientes Ajustados */
             --gradient-primary: linear-gradient(135deg, var(--color-primary) 0%, var(--color-primary-dark) 100%);
-            --gradient-accent-menu: linear-gradient(135deg, #2ecc71 0%, #27ae60 100%); /* Verde estándar para Excel */
-            --gradient-danger-menu: linear-gradient(135deg, var(--color-danger) 0%, #e74c3c 100%); /* Rojo Ladrillo para peligro */
+            --gradient-accent-menu: linear-gradient(135deg, #2ecc71 0%, #27ae60 100%); /* Verde estándar para Excel/Correo */
+            --gradient-edit: linear-gradient(135deg, #2ecc71 0%, #27ae60 100%); /* Verde estándar para botón Editar */
+            --gradient-danger: linear-gradient(135deg, var(--color-danger) 0%, #e74c3c 100%); /* Rojo Ladrillo para peligro */
 
             /* Sombras Ajustadas */
             --shadow-light: 0 4px 15px rgba(0, 184, 148, 0.1);
@@ -37,219 +38,44 @@
 
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background: var(--gradient-primary);
+            /* Fondo sólido y suave */
+            background-color: var(--color-bg-soft);
             min-height: 100vh;
             color: var(--color-text);
-            position: relative;
-            overflow-x: hidden;
-        }
-
-        /* Background Elements */
-        .background-decoration {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            z-index: -2;
-            opacity: 0.1;
-        }
-
-        .background-decoration::before {
-            content: '';
-            position: absolute;
-            width: 300px;
-            height: 300px;
-            border-radius: 50%;
-            background: rgba(255, 255, 255, 0.1);
-            top: 10%;
-            right: 10%;
-            animation: float 6s ease-in-out infinite;
-        }
-
-        .background-decoration::after {
-            content: '';
-            position: absolute;
-            width: 200px;
-            height: 200px;
-            border-radius: 50%;
-            background: rgba(255, 255, 255, 0.05);
-            bottom: 20%;
-            left: 5%;
-            animation: float 8s ease-in-out infinite reverse;
-        }
-
-        @keyframes float {
-            0%, 100% { transform: translateY(0px) rotate(0deg); }
-            50% { transform: translateY(-20px) rotate(10deg); }
         }
 
         .container {
             display: flex;
             min-height: 100vh;
-            position: relative;
-        }
-
-        /* User Profile Area */
-        .user-profile {
-            position: fixed;
-            top: 20px;
-            right: 20px;
-            background: var(--color-white);
-            backdrop-filter: blur(20px);
-            border-radius: 50px;
-            padding: 12px 20px;
-            box-shadow: var(--shadow-medium);
-            border: 1px solid rgba(0, 184, 148, 0.2);
-            z-index: 1000;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            min-width: 200px;
-            text-decoration: none;
-        }
-
-        .user-profile:hover {
-            background: var(--color-white);
-            transform: scale(1.02);
-            box-shadow: var(--shadow-heavy);
-        }
-
-        .user-avatar {
-            width: 40px;
-            height: 40px;
-            background: var(--gradient-primary);
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: var(--color-white);
-            font-weight: 700;
-            font-size: 16px;
-            flex-shrink: 0;
-        }
-
-        .user-info {
-            flex: 1;
-            min-width: 0;
-        }
-
-        .user-name {
-            font-weight: 600;
-            color: var(--color-primary);
-            font-size: 14px;
-            white-space: nowrap;
-            overflow: hidden;
-            text-decoration: none;
-            display: block;
-        }
-
-        .user-role {
-            font-size: 12px;
-            color: var(--color-text-light);
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-            margin-top: 2px;
-        }
-
-        .user-chevron {
-            color: var(--color-primary);
-            font-size: 12px;
-            transition: transform 0.3s ease;
-        }
-
-        .user-profile:hover .user-chevron {
-            transform: translateX(3px);
-        }
-
-        /* Hamburger Button */
-        .hamburger {
-            position: fixed;
-            top: 20px;
-            left: 20px;
-            width: 50px;
-            height: 50px;
-            background: var(--color-white);
-            backdrop-filter: blur(10px);
-            border: none;
-            border-radius: 12px;
-            cursor: pointer;
-            z-index: 1000;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            box-shadow: var(--shadow-medium);
-            transition: all 0.3s ease;
-        }
-
-        .hamburger:hover {
-            background: var(--color-white);
-            transform: scale(1.05);
-            box-shadow: var(--shadow-heavy);
-        }
-
-        .hamburger i {
-            font-size: 20px;
-            color: var(--color-primary);
-            transition: transform 0.3s ease;
-        }
-
-        .hamburger.active i {
-            transform: rotate(90deg);
         }
 
         /* Sidebar */
         .sidebar {
-            width: 320px;
+            width: 280px;
             background: var(--color-white);
-            backdrop-filter: blur(20px);
             padding: 2rem 0;
-            position: fixed;
-            top: 0;
-            left: -320px;
-            height: 100vh;
-            transition: left 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-            z-index: 999;
-            box-shadow: 4px 0 30px rgba(0, 0, 0, 0.1);
-            border-right: 1px solid rgba(0, 184, 148, 0.1);
-            overflow-y: auto;
+            box-shadow: 4px 0 20px rgba(0, 0, 0, 0.1);
+            border-right: 1px solid rgba(0, 184, 148, 0.2);
         }
 
-        .sidebar.active {
-            left: 0;
-        }
-
-        .sidebar-header {
+        .logo {
             text-align: center;
             padding: 0 2rem 2rem;
-            border-bottom: 1px solid rgba(0, 184, 148, 0.1);
+            border-bottom: 1px solid rgba(0, 184, 148, 0.2);
             margin-bottom: 2rem;
         }
 
-        .sidebar-header h2 {
+        .logo h2 {
             color: var(--color-primary);
-            font-size: 1.8rem;
+            font-size: 1.5rem;
             font-weight: 700;
-            margin-bottom: 0.5rem;
         }
 
-        .sidebar-header .subtitle {
-            color: var(--color-text-light);
-            font-size: 0.9rem;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-        }
-
-        .menu-section {
-            margin-bottom: 2rem;
-        }
-
+        /* Menu sections */
         .menu-section-title {
-            padding: 0 2rem 1rem;
+            padding: 0 2rem 0.5rem;
             color: var(--color-text-light);
-            font-size: 0.8rem;
+            font-size: 0.75rem;
             text-transform: uppercase;
             letter-spacing: 1px;
             font-weight: 600;
@@ -263,25 +89,24 @@
             transition: all 0.3s ease;
             border-left: 4px solid transparent;
             position: relative;
-            font-weight: 500;
         }
 
         .menu-item:hover,
         .menu-item.active {
-            background: linear-gradient(90deg, rgba(0, 184, 148, 0.1) 0%, transparent 100%);
+            background: linear-gradient(90deg, rgba(0, 184, 148, 0.1) 0%, rgba(0, 163, 131, 0.05) 100%);
             color: var(--color-primary);
             border-left-color: var(--color-primary);
             transform: translateX(5px);
         }
 
         .menu-item i {
-            margin-right: 1rem;
+            margin-right: 0.8rem;
             width: 20px;
             text-align: center;
-            font-size: 1.1rem;
         }
 
         .menu-item.accent {
+            /* Usando Verde estándar para Excel */
             background: var(--gradient-accent-menu);
             color: var(--color-white);
             border-radius: 0 25px 25px 0;
@@ -294,10 +119,10 @@
         }
 
         .menu-item.danger {
-            background: var(--gradient-danger-menu);
+            background: var(--gradient-danger);
             color: var(--color-white);
             border-radius: 0 25px 25px 0;
-            margin-top: 2rem;
+            margin-top: 1rem;
         }
 
         .menu-item.danger:hover {
@@ -308,159 +133,90 @@
         /* Main Content */
         .main-content {
             flex: 1;
-            padding: 6rem 3rem 3rem;
-            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-            position: relative;
-            margin-left: 0;
+            padding: 2rem;
+            overflow-y: auto;
         }
 
-        @media (min-width: 1025px) {
-             .main-content {
-                margin-left: 0;
-             }
-        }
-
-        /* Hero Section */
-        .hero-section {
+        .content-header {
             background: var(--color-white);
-            backdrop-filter: blur(20px);
-            border-radius: 30px;
-            padding: 3rem;
-            margin-bottom: 3rem;
-            box-shadow: var(--shadow-heavy);
-            border: 1px solid rgba(0, 184, 148, 0.2);
-            position: relative;
-            overflow: hidden;
-        }
-
-        .hero-section::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            height: 5px;
-            background: var(--gradient-primary);
-        }
-
-        .hero-title {
-            font-size: 3.5rem;
-            font-weight: 800;
-            background: var(--gradient-primary);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-            margin-bottom: 1rem;
-            line-height: 1.1;
-        }
-
-        .hero-subtitle {
-            font-size: 1.4rem;
-            color: var(--color-text-light);
+            padding: 2rem;
+            border-radius: 20px;
             margin-bottom: 2rem;
-            line-height: 1.6;
-        }
-
-        .hero-description {
-            font-size: 1.1rem;
-            color: var(--color-text);
-            line-height: 1.7;
-            margin-bottom: 2rem;
-        }
-
-        /* Content Cards */
-        .content-grid {
-            display: grid;
-            grid-template-columns: 2fr 1fr;
-            gap: 2rem;
-            margin-bottom: 3rem;
-        }
-
-        .content-card {
-            background: var(--color-white);
-            backdrop-filter: blur(20px);
-            border-radius: 25px;
-            padding: 2.5rem;
-            box-shadow: var(--shadow-medium);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
             border: 1px solid rgba(0, 184, 148, 0.2);
-            transition: all 0.3s ease;
         }
 
-        .content-card:hover {
-            transform: translateY(-5px);
-            box-shadow: var(--shadow-heavy);
-        }
-
-        .card-title {
-            font-size: 1.8rem;
-            font-weight: 700;
+        .content-header h1 {
             color: var(--color-primary);
-            margin-bottom: 1.5rem;
+            font-size: 2.5rem;
+            margin-bottom: 0.5rem;
+            font-weight: 700;
             display: flex;
             align-items: center;
             gap: 1rem;
         }
 
-        .card-title i {
-            font-size: 2rem;
-        }
-
-        .tips-list {
-            list-style: none;
-            padding: 0;
-        }
-
-        .tips-list li {
-            padding: 1rem 0;
-            border-bottom: 1px solid rgba(0, 184, 148, 0.1);
-            transition: all 0.3s ease;
-        }
-
-        .tips-list li:last-child {
-            border-bottom: none;
-        }
-
-        .tips-list li:hover {
-            background: rgba(0, 184, 148, 0.05);
-            border-radius: 12px;
-            padding-left: 1rem;
-        }
-
-        .tip-title {
-            font-weight: 600;
-            color: var(--color-primary);
-            margin-bottom: 0.5rem;
-        }
-
-        .tip-description {
+        .content-header p {
             color: var(--color-text-light);
-            font-size: 0.95rem;
-            line-height: 1.5;
+            font-size: 1.1rem;
         }
 
-        /* Stats Card */
-        .stats-card {
-            text-align: center;
+        /* Action Bar (New) */
+        .action-bar {
+            background: var(--color-white);
+            padding: 1.5rem 2rem;
+            border-radius: 15px;
+            margin-bottom: 2rem;
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.1);
+            border: 1px solid rgba(0, 184, 148, 0.2);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 1rem;
         }
 
-        .stats-grid {
+        .btn-email {
+            background: var(--gradient-primary); /* Se mantiene el color primario para el botón */
+            color: var(--color-white);
+            padding: 0.8rem 1.5rem;
+            border: none;
+            border-radius: 10px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .btn-email:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0, 184, 148, 0.4);
+        }
+
+        /* Stats Row */
+        .stats-row {
             display: grid;
-            grid-template-columns: 1fr 1fr;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
             gap: 1.5rem;
             margin-bottom: 2rem;
         }
 
-        .stat-item {
-            background: rgba(0, 184, 148, 0.1);
+        .stat-card {
+            background: var(--color-white);
             padding: 1.5rem;
-            border-radius: 20px;
+            border-radius: 15px;
+            box-shadow: 0 4px 15px rgba(0, 184, 148, 0.1);
             border: 1px solid rgba(0, 184, 148, 0.2);
+            text-align: center;
             transition: all 0.3s ease;
         }
 
-        .stat-item:hover {
-            background: rgba(0, 184, 148, 0.15);
-            transform: scale(1.05);
+        .stat-card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 25px rgba(0, 184, 148, 0.15);
         }
 
         .stat-number {
@@ -468,132 +224,390 @@
             font-weight: 800;
             color: var(--color-primary);
             display: block;
-            min-height: 38px;
         }
 
         .stat-label {
-            font-size: 0.9rem;
             color: var(--color-text-light);
+            font-size: 0.9rem;
             text-transform: uppercase;
             letter-spacing: 0.5px;
             margin-top: 0.5rem;
         }
 
-        .cta-button {
-            background: var(--gradient-primary);
-            color: var(--color-white);
-            padding: 1rem 2rem;
-            border: none;
-            border-radius: 15px;
-            font-size: 1.1rem;
+        /* Table Container */
+        .table-container {
+            background: var(--color-white);
+            border-radius: 20px;
+            padding: 2rem;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            border: 1px solid rgba(0, 184, 148, 0.2);
+            overflow-x: auto;
+        }
+
+        .table-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+
+        .table-title {
+            font-size: 1.5rem;
             font-weight: 600;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            box-shadow: var(--shadow-medium);
-            text-decoration: none;
-            display: inline-flex;
+            color: var(--color-primary);
+            display: flex;
             align-items: center;
             gap: 0.8rem;
         }
 
-        .cta-button:hover {
-            transform: translateY(-3px);
-            box-shadow: var(--shadow-heavy);
-        }
-
-        /* Footer */
-        .footer {
-            background: var(--color-white);
-            backdrop-filter: blur(20px);
-            border-radius: 25px;
-            padding: 2rem;
-            box-shadow: var(--shadow-medium);
-            border: 1px solid rgba(0, 184, 148, 0.2);
-            text-align: center;
+        .search-box {
             position: relative;
-            overflow: hidden;
+            flex: 1;
+            max-width: 300px;
         }
 
-        .footer::before {
-            content: '';
+        .search-input {
+            width: 100%;
+            padding: 0.8rem 1rem 0.8rem 3rem;
+            border: 2px solid rgba(0, 184, 148, 0.2);
+            border-radius: 25px;
+            font-size: 0.9rem;
+            transition: all 0.3s ease;
+            background: rgba(255, 255, 255, 0.8);
+        }
+
+        .search-input:focus {
+            outline: none;
+            border-color: var(--color-primary);
+            background: var(--color-white);
+            box-shadow: 0 0 15px rgba(0, 184, 148, 0.2);
+        }
+
+        .search-icon {
             position: absolute;
-            bottom: 0;
-            left: 0;
-            right: 0;
-            height: 4px;
-            background: var(--gradient-primary);
+            left: 1rem;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--color-primary);
+            font-size: 1rem;
         }
 
-        .footer-content {
+        /* Table Styles */
+        .jugadores-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 1rem;
+        }
+
+        .jugadores-table thead tr {
+            background: var(--gradient-primary);
+            color: var(--color-white);
+        }
+
+        .jugadores-table th,
+        .jugadores-table td {
+            padding: 1rem 0.8rem;
+            text-align: left;
+            border-bottom: 1px solid rgba(0, 184, 148, 0.1);
+            font-size: 0.9rem;
+        }
+
+        .jugadores-table th {
+            font-weight: 600;
+            text-transform: uppercase;
+            font-size: 0.8rem;
+            letter-spacing: 0.5px;
+            position: sticky;
+            top: 0;
+            z-index: 10;
+        }
+
+        .jugadores-table tbody tr {
+            transition: all 0.3s ease;
+        }
+
+        .jugadores-table tbody tr:hover {
+            background: rgba(0, 184, 148, 0.05);
+            transform: scale(1.01);
+        }
+
+        .jugadores-table td {
+            color: var(--color-text);
+        }
+
+        /* User Avatar */
+        .user-info {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .user-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: var(--gradient-primary);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--color-white);
+            font-weight: 600;
+            font-size: 1.1rem;
+        }
+
+        .user-details {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .user-name {
+            font-weight: 600;
+            color: var(--color-text);
+        }
+
+        .username {
+            font-size: 0.8rem;
             color: var(--color-text-light);
-            font-size: 0.95rem;
+        }
+
+        /* Action Buttons */
+        .btn {
+            padding: 0.6rem 1rem;
+            border: none;
+            border-radius: 8px;
+            font-size: 0.85rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .btn-edit {
+            background: var(--gradient-edit);
+            color: var(--color-white);
+            box-shadow: 0 2px 8px rgba(46, 204, 113, 0.3);
+        }
+
+        .btn-edit:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 15px rgba(46, 204, 113, 0.5);
+        }
+
+        .btn-delete {
+            background: var(--gradient-danger);
+            color: var(--color-white);
+            box-shadow: 0 2px 8px rgba(214, 48, 49, 0.3);
+        }
+
+        .btn-delete:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 15px rgba(214, 48, 49, 0.5);
+        }
+
+        /* Contact Info */
+        .contact-info {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-size: 0.9rem;
+        }
+
+        .contact-info i {
+            color: var(--color-primary);
+            width: 16px;
+        }
+
+        /* Age Badge */
+        .age-badge {
+            background: rgba(0, 184, 148, 0.1);
+            color: var(--color-primary);
+            padding: 0.3rem 0.8rem;
+            border-radius: 15px;
+            font-weight: 600;
+            font-size: 0.85rem;
+            border: 1px solid rgba(0, 184, 148, 0.2);
+        }
+
+        /* Empty State */
+        .empty-state {
+            text-align: center;
+            padding: 3rem;
+            color: var(--color-text-light);
+        }
+
+        .empty-state i {
+            font-size: 4rem;
+            color: #ccc;
+            margin-bottom: 1rem;
+        }
+
+        .empty-state h3 {
+            margin-bottom: 1rem;
+            color: var(--color-primary);
+        }
+
+        /* Email Modal Styles (NEW) */
+        .modal {
+            display: none; /* Oculto por defecto */
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            overflow: auto;
+            background-color: rgba(0,0,0,0.4);
+            backdrop-filter: blur(4px);
+        }
+
+        .modal-content {
+            background: var(--color-white);
+            margin: 10% auto; /* 10% desde arriba y centrado */
+            padding: 30px;
+            border-radius: 15px;
+            width: 90%;
+            max-width: 600px;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+            animation: modalopen 0.4s;
+        }
+
+        @keyframes modalopen {
+            from {opacity: 0; transform: translateY(-50px);}
+            to {opacity: 1; transform: translateY(0);}
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+            padding-bottom: 10px;
+            border-bottom: 1px solid #eee;
+        }
+
+        .modal-title {
+            color: var(--color-primary);
+            font-size: 1.8rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .close {
+            color: #aaa;
+            font-size: 28px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: color 0.3s;
+        }
+
+        .close:hover,
+        .close:focus {
+            color: var(--color-primary);
+            text-decoration: none;
+        }
+
+        .form-group {
+            margin-bottom: 1rem;
+        }
+
+        .form-label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 600;
+            color: #444;
+        }
+
+        .form-input {
+            width: 100%;
+            padding: 0.8rem;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            font-size: 1rem;
+            transition: border-color 0.3s;
+            box-sizing: border-box;
+        }
+
+        .form-input:focus {
+            border-color: var(--color-primary);
+            outline: none;
+            box-shadow: 0 0 5px rgba(0, 184, 148, 0.5);
+        }
+
+        .form-textarea {
+            resize: vertical;
+            min-height: 150px;
+        }
+
+        /* Loading animation for row interactions */
+        .row-loading {
+            opacity: 0.5;
+            pointer-events: none;
+            background: rgba(0, 184, 148, 0.1);
         }
 
         /* Responsive Design */
-        @media (max-width: 1024px) {
-            .content-grid {
-                grid-template-columns: 1fr;
+        @media (max-width: 1200px) {
+            .jugadores-table th:nth-child(n+6),
+            .jugadores-table td:nth-child(n+6) {
+                display: none;
             }
         }
 
         @media (max-width: 768px) {
+            .container {
+                flex-direction: column;
+            }
+
             .sidebar {
-                width: 80%;
-                left: -80%;
+                width: 100%;
+                padding: 1rem 0;
             }
 
             .main-content {
-                padding: 5rem 1.5rem 2rem;
+                padding: 1rem;
             }
 
-            .hero-title {
-                font-size: 2.5rem;
+            .content-header h1 {
+                font-size: 2rem;
             }
 
-            .hero-subtitle {
-                font-size: 1.2rem;
+            .stats-row {
+                grid-template-columns: repeat(2, 1fr);
             }
 
-            .stats-grid {
-                grid-template-columns: 1fr;
+            .table-header {
+                flex-direction: column;
+                align-items: stretch;
             }
 
-            /* Mobile adjustments for user profile */
-            .user-profile {
-                padding: 8px 12px;
-                min-width: unset;
-                max-width: 180px;
+            .search-box {
+                max-width: none;
             }
 
-            .user-avatar {
-                width: 35px;
-                height: 35px;
-                font-size: 14px;
+            .jugadores-table {
+                font-size: 0.8rem;
             }
 
-            .user-name {
-                font-size: 13px;
+            .jugadores-table th,
+            .jugadores-table td {
+                padding: 0.5rem;
             }
 
-            .user-role {
-                display: none;
-            }
-
-            /* Mueve el user profile a la derecha para no chocar con el hamburguer */
-            .user-profile {
-                right: 20px;
-                left: unset;
-            }
-
-            /* El hamburguer button siempre a la izquierda */
-            .hamburger {
-                left: 20px;
-                right: unset;
+            .user-info {
+                align-items: flex-start;
+                gap: 0.5rem;
+                text-align: left;
             }
         }
 
         /* Animations */
-        @keyframes slideInUp {
+        @keyframes fadeInUp {
             from {
                 opacity: 0;
                 transform: translateY(30px);
@@ -604,118 +618,57 @@
             }
         }
 
-        @keyframes slideInRight {
-            from {
-                opacity: 0;
-                transform: translateX(30px);
-            }
-            to {
-                opacity: 1;
-                transform: translateX(0);
-            }
+        .content-header {
+            animation: fadeInUp 0.6s ease;
         }
 
-        .hero-section {
-            animation: slideInUp 0.8s ease;
+        .stats-row {
+            animation: fadeInUp 0.6s ease 0.1s both;
         }
 
-        .content-card:nth-child(1) {
-            animation: slideInUp 0.8s ease 0.2s both;
-        }
-
-        .content-card:nth-child(2) {
-            animation: slideInUp 0.8s ease 0.4s both;
-        }
-
-        .footer {
-            animation: slideInUp 0.8s ease 0.6s both;
-        }
-
-        .user-profile {
-            animation: slideInRight 0.6s ease 0.3s both;
-        }
-
-        /* Overlay for mobile menu */
-        .overlay {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0, 0, 0, 0.5);
-            backdrop-filter: blur(5px);
-            z-index: 998;
-            opacity: 0;
-            visibility: hidden;
-            transition: all 0.3s ease;
-        }
-
-        .overlay.active {
-            opacity: 1;
-            visibility: visible;
+        .table-container {
+            animation: fadeInUp 0.6s ease 0.2s both;
         }
     </style>
 </head>
 <body>
-<div class="background-decoration"></div>
-
-<div class="overlay" id="overlay" onclick="toggleMenu()"></div>
-
-<a th:href="@{/datos}" class="user-profile" id="userProfile">
-    <div class="user-avatar">
-        <span th:text="${nombreCompleto != null ? #strings.substring(nombreCompleto, 0, 1) : 'U'}">U</span>
-    </div>
-    <div class="user-info">
-        <div class="user-name" th:text="${nombreCompleto != null ? nombreCompleto : 'Usuario'}">Usuario</div>
-        <div class="user-role" th:text="${usuario?.perfil?.descripcion_perfil != null ? usuario.perfil.descripcion_perfil : 'Usuario'}">Usuario</div>
-    </div>
-    <i class="fas fa-chevron-right user-chevron"></i>
-</a>
-
-<button class="hamburger" id="hamburger" onclick="toggleMenu()">
-    <i class="fas fa-bars"></i>
-</button>
-
 <div class="container">
-    <nav class="sidebar" id="sidebar">
-        <div class="sidebar-header">
+    <nav class="sidebar">
+        <div class="logo">
             <h2><i class="fas fa-table-tennis"></i> PadelApp</h2>
-            <div class="subtitle">Sistema Profesional</div>
         </div>
 
-        <div class="menu-section">
-            <div class="menu-section-title">Navegación Principal</div>
-            <a th:href="@{/indice}" class="menu-item active"> <i class="fas fa-home"></i> Inicio
-            </a>
-        </div>
+        <div class="menu-section-title">Navegación Principal</div>
+        <a th:href="@{/indice}" class="menu-item">
+            <i class="fas fa-home"></i> Inicio
+        </a>
 
-        <div class="menu-section">
-            <div class="menu-section-title">Gestión Principal</div>
-            <a th:href="@{/partido}" class="menu-item">
-                <i class="fas fa-gamepad"></i> Partidos
-            </a>
-            <a th:href="@{/equipo}" class="menu-item">
-                <i class="fas fa-users"></i> Equipos
-            </a>
-            <a th:href="@{/torneo}" class="menu-item">
-                <i class="fas fa-trophy"></i> Torneos
-            </a>
-            <a th:href="@{/jugadores}" class="menu-item">
-                <i class="fas fa-user-friends"></i> Jugadores
-            </a>
-        </div>
+        <div class="menu-section-title" style="margin-top: 2rem;">Gestión Principal</div>
+        <a th:href="@{/partido}" class="menu-item">
+            <i class="fas fa-gamepad"></i> Partidos
+        </a>
+        <a th:href="@{/equipo}" class="menu-item">
+            <i class="fas fa-users"></i> Equipos
+        </a>
+        <a th:href="@{/torneo}" class="menu-item">
+            <i class="fas fa-trophy"></i> Torneos
+        </a>
+        <a th:href="@{/jugadores}" class="menu-item active">
+            <i class="fas fa-user-friends"></i> Jugadores
+        </a>
 
-        <div class="menu-section">
-            <div class="menu-section-title">Usuario & Datos</div>
-            <a th:href="@{/datos}" class="menu-item">
-                <i class="fas fa-user-cog"></i> Mi Perfil
-            </a>
-            <a th:href="@{/exportarExcel}" class="menu-item accent">
-                <i class="fas fa-file-excel"></i> Exportar Excel
-            </a>
-        </div>
+        <div class="menu-section-title" style="margin-top: 2rem;">Usuario & Datos</div>
+        <a href="#" onclick="openEmailModal(); return false;" class="menu-item accent">
+            <i class="fas fa-paper-plane"></i> Correo Masivo
+        </a>
+        <a th:href="@{/datos}" class="menu-item">
+            <i class="fas fa-user-cog"></i> Mi Perfil
+        </a>
+        <a th:href="@{/exportarExcel}" class="menu-item accent">
+            <i class="fas fa-file-excel"></i> Exportar Excel
+        </a>
 
-        <form th:action="@{/logout}" method="post" style="margin: 0;">
+        <form th:action="@{/logout}" method="post" style="margin: 2rem 0 0 0;">
             <a href="#" onclick="this.parentNode.submit()" class="menu-item danger">
                 <i class="fas fa-sign-out-alt"></i> Cerrar Sesión
             </a>
@@ -723,246 +676,299 @@
     </nav>
 
     <main class="main-content">
-        <div class="hero-section">
-            <h1 class="hero-title">
-                <i class="fas fa-table-tennis" style="color: #00b894;"></i>
-                Bienvenido a PadelApp
-            </h1>
-            <p class="hero-subtitle" th:text="'¡Hola ' + (${nombreCompleto} != null ? ${nombreCompleto} : 'Usuario') + '! La plataforma profesional para la gestión integral de pádel'">
-                ¡Hola Usuario! La plataforma profesional para la gestión integral de pádel
-            </p>
-            <p class="hero-description">
-                El pádel es un deporte dinámico que combina estrategia, agilidad y trabajo en equipo. Su popularidad ha crecido gracias a su accesibilidad y ritmo emocionante. PadelApp te acompaña en tu progreso, facilitando la gestión de torneos, equipos y estadísticas para que te enfoques en lo que realmente importa: jugar mejor cada día.
-            </p>
+        <div class="content-header">
+            <h1><i class="fas fa-user-friends"></i> Gestión de Jugadores</h1>
+            <p>Administra, busca y comunica a todos los jugadores registrados en la plataforma.</p>
         </div>
 
-        <div class="content-grid">
-            <div class="content-card">
-                <h3 class="card-title">
-                    <i class="fas fa-lightbulb"></i>
-                    ¿Cómo mejorar en pádel?
-                </h3>
-                <ul class="tips-list">
-                    <li>
-                        <div class="tip-title">
-                            <i class="fas fa-calendar-check" style="color: var(--color-primary); margin-right: 0.5rem;"></i>
-                            Practica regularmente
-                        </div>
-                        <div class="tip-description">La constancia mejora reflejos y coordinación.</div>
-                    </li>
-                    <li>
-                        <div class="tip-title">
-                            <i class="fas fa-crosshairs" style="color: var(--color-primary); margin-right: 0.5rem;"></i>
-                            Trabaja en tu posicionamiento
-                        </div>
-                        <div class="tip-description">Aprende a moverte en pareja y cubrir espacios.</div>
-                    </li>
-                    <li>
-                        <div class="tip-title">
-                            <i class="fas fa-tennis-ball" style="color: var(--color-primary); margin-right: 0.5rem;"></i>
-                            Domina el saque
-                        </div>
-                        <div class="tip-description">Un buen saque puede darte ventaja desde el inicio.</div>
-                    </li>
-                    <li>
-                        <div class="tip-title">
-                            <i class="fas fa-eye" style="color: var(--color-primary); margin-right: 0.5rem;"></i>
-                            Observa partidos
-                        </div>
-                        <div class="tip-description">Analizar a jugadores expertos te da nuevas ideas tácticas.</div>
-                    </li>
-                    <li>
-                        <div class="tip-title">
-                            <i class="fas fa-dumbbell" style="color: var(--color-primary); margin-right: 0.5rem;"></i>
-                            Entrena tu físico
-                        </div>
-                        <div class="tip-description">Resistencia y fuerza son clave para mantener el ritmo.</div>
-                    </li>
-                </ul>
+        <div class="action-bar">
+            <h3 class="table-title">
+                <i class="fas fa-envelope-open-text"></i>
+                Herramienta de Comunicación
+            </h3>
+            <button class="btn-email" onclick="openEmailModal()">
+                <i class="fas fa-paper-plane"></i>
+                Enviar Correo Masivo
+            </button>
+        </div>
+        <div class="stats-row">
+            <div class="stat-card">
+                <span class="stat-number" th:text="${#lists.size(jugadores)}">0</span>
+                <span class="stat-label">Total Jugadores</span>
             </div>
+            <div class="stat-card">
+                <span class="stat-number">24</span>
+                <span class="stat-label">Activos</span>
+            </div>
+            <div class="stat-card">
+                <span class="stat-number">156</span>
+                <span class="stat-label">Partidos Jugados</span>
+            </div>
+            <div class="stat-card">
+                <span class="stat-number">68%</span>
+                <span class="stat-label">Tasa Participación</span>
+            </div>
+        </div>
 
-            <div class="content-card stats-card">
-                <h3 class="card-title">
-                    <i class="fas fa-chart-line"></i>
-                    Tu Progreso
+        <div class="table-container">
+            <div class="table-header">
+                <h3 class="table-title">
+                    <i class="fas fa-list"></i>
+                    Lista de Jugadores
                 </h3>
-                <div class="stats-grid">
-                    <div class="stat-item">
-                        <span class="stat-number" data-target="24">0</span> <span class="stat-label">Partidos Jugados</span>
-                    </div>
-                    <div class="stat-item">
-                        <span class="stat-number" data-target="68">0%</span>
-                        <span class="stat-label">Tasa de Victoria</span>
-                    </div>
-                    <div class="stat-item">
-                        <span class="stat-number" data-target="12">0</span>
-                        <span class="stat-label">Torneos</span>
-                    </div>
-                    <div class="stat-item">
-                        <span class="stat-number" data-target="156">0</span>
-                        <span class="stat-label">Puntos Ganados</span>
-                    </div>
+                <div class="search-box">
+                    <i class="fas fa-search search-icon"></i>
+                    <input type="text" class="search-input" id="searchInput" placeholder="Buscar jugadores por nombre, cédula o correo...">
                 </div>
-                <a th:href="@{/torneo}" class="cta-button">
-                    <i class="fas fa-trophy"></i>
-                    Explorar Torneos
-                </a>
             </div>
-        </div>
 
-        <div class="footer">
-            <div class="footer-content">
-                <p>
-                    <i class="fas fa-copyright"></i>
-                    2024 PadelApp. Todos los derechos reservados.
-                    Sistema profesional de gestión deportiva.
-                </p>
+            <div th:if="${#lists.isEmpty(jugadores)}" class="empty-state">
+                <i class="fas fa-user-friends"></i>
+                <h3>No hay jugadores registrados</h3>
+                <p>Los jugadores aparecerán aquí una vez que se registren en el sistema</p>
             </div>
+
+            <table class="jugadores-table" th:unless="${#lists.isEmpty(jugadores)}">
+                <thead>
+                <tr>
+                    <th><i class="fas fa-user"></i> Jugador</th>
+                    <th><i class="fas fa-hashtag"></i> ID</th>
+                    <th><i class="fas fa-id-card"></i> Cédula</th>
+                    <th><i class="fas fa-envelope"></i> Correo</th>
+                    <th><i class="fas fa-phone"></i> Teléfono</th>
+                    <th><i class="fas fa-calendar"></i> Edad</th>
+                    <th><i class="fas fa-cogs"></i> Acciones</th>
+                </tr>
+                </thead>
+                <tbody id="playersTableBody">
+                <tr th:each="jugador : ${jugadores}" class="player-row">
+                    <td>
+                        <div class="user-info">
+                            <div class="user-avatar"
+                                 th:text="${#strings.substring(#strings.defaultString(jugador.individuo.nombre, 'X'), 0, 1) + #strings.substring(#strings.defaultString(jugador.individuo.apellido, 'X'), 0, 1)}">NA</div>
+                            <div class="user-details">
+                                            <span class="user-name"
+                                                  th:text="${#strings.defaultString(jugador.individuo.nombre, 'Sin Nombre') + ' ' + #strings.defaultString(jugador.individuo.apellido, '')}">
+                                            Nombre Apellido
+                                        </span>
+                                <span class="username" th:text="'@' + ${jugador.nombreUsuario}">@usuario</span>
+                            </div>
+                        </div>
+                    </td>
+                    <td th:text="${jugador.id_usuario}" class="user-id">1</td>
+                    <td th:text="${jugador.individuo.cedula ?: 'N/A'}">12345678</td>
+                    <td>
+                        <div class="contact-info">
+                            <i class="fas fa-envelope"></i>
+                            <span th:text="${jugador.individuo.correo ?: 'Sin Correo'}">correo@ejemplo.com</span>
+                        </div>
+                    </td>
+                    <td>
+                        <div class="contact-info">
+                            <i class="fas fa-phone"></i>
+                            <span th:text="${jugador.individuo.telefono ?: 'Sin Teléfono'}">123-456-7890</span>
+                        </div>
+                    </td>
+                    <td>
+                        <span class="age-badge" th:text="${(jugador.individuo.edad ?: 'N/A') + ' años'}">25 años</span>
+                    </td>
+                    <td>
+                        <div class="action-buttons">
+                            <button class="btn btn-edit"
+                                    th:data-id="${jugador.id_usuario}"
+                                    onclick="editPlayer(this)">
+                                <i class="fas fa-edit"></i> Editar
+                            </button>
+                            <button class="btn btn-delete"
+                                    th:data-id="${jugador.id_usuario}"
+                                    th:data-name="${#strings.defaultString(jugador.individuo.nombre, 'Jugador')}"
+                                    onclick="deletePlayer(this)">
+                                <i class="fas fa-trash"></i> Eliminar
+                            </button>
+                        </div>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
         </div>
     </main>
 </div>
 
-<script>
-    function toggleMenu() {
-        const sidebar = document.getElementById('sidebar');
-        const hamburger = document.getElementById('hamburger');
-        const overlay = document.getElementById('overlay');
+<div id="emailModal" class="modal">
+    <div class="modal-content">
+        <div class="modal-header">
+            <h2 class="modal-title">
+                <i class="fas fa-paper-plane"></i> Enviar Correo Masivo
+            </h2>
+            <span class="close" onclick="closeEmailModal()">&times;</span>
+        </div>
 
-        sidebar.classList.toggle('active');
-        hamburger.classList.toggle('active');
-        overlay.classList.toggle('active');
+        <form th:action="@{/enviar-correo-masivo}" method="post" id="emailForm">
+            <input type="hidden" name="tipoEvento" value="GENERAL">
+
+            <div class="form-group">
+                <label class="form-label" for="asunto">Asunto del Correo</label>
+                <input type="text" id="asunto" name="asunto" class="form-input" required
+                       placeholder="Escriba un asunto claro y conciso">
+            </div>
+
+            <div class="form-group">
+                <label class="form-label" for="mensaje">Mensaje</label>
+                <textarea id="mensaje" name="mensaje" class="form-input form-textarea" required
+                          placeholder="Escriba el cuerpo del mensaje que se enviará a todos los jugadores..."></textarea>
+            </div>
+
+            <div style="text-align: right; margin-top: 20px;">
+                <button type="button" class="btn" style="background: #ccc; color: #333;" onclick="closeEmailModal()">
+                    <i class="fas fa-times"></i> Cancelar
+                </button>
+                <button type="submit" class="btn-email" id="sendEmailBtn">
+                    <i class="fas fa-paper-plane"></i> Enviar Correo
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<script>
+    // ====================================================================
+    // FUNCIONES DEL MODAL (Agregado del código faltante)
+    // ====================================================================
+    function openEmailModal() {
+        document.getElementById('emailModal').style.display = 'block';
+        document.body.style.overflow = 'hidden';
     }
 
-    // Close menu when clicking outside
-    document.addEventListener('click', function(event) {
-        const sidebar = document.getElementById('sidebar');
-        const hamburger = document.getElementById('hamburger');
-        const overlay = document.getElementById('overlay');
-        const userProfile = document.getElementById('userProfile');
+    function closeEmailModal() {
+        document.getElementById('emailModal').style.display = 'none';
+        document.body.style.overflow = '';
+    }
 
-        if (!sidebar.contains(event.target) &&
-            !hamburger.contains(event.target) &&
-            !userProfile.contains(event.target) &&
-            sidebar.classList.contains('active')) {
-            sidebar.classList.remove('active');
-            hamburger.classList.remove('active');
-            overlay.classList.remove('active');
+    // ====================================================================
+    // SIMULACIÓN DE ACCIONES (Agregado del código faltante)
+    // ====================================================================
+
+    function editPlayer(button) {
+        const playerId = button.getAttribute('data-id');
+        alert(`Simulando la acción de EDITAR al jugador con ID: ${playerId}`);
+        // Aquí se colocaría la lógica para redirigir a la página de edición.
+        // window.location.href = `/jugadores/editar/${playerId}`;
+    }
+
+    function deletePlayer(button) {
+        const playerId = button.getAttribute('data-id');
+        const playerName = button.getAttribute('data-name');
+        if (confirm(`¿Estás seguro de ELIMINAR al jugador "${playerName}" (ID: ${playerId})? Esta acción es irreversible.`)) {
+            alert(`Simulando la acción de ELIMINAR al jugador con ID: ${playerId}`);
+            // Aquí se colocaría la lógica para enviar la solicitud de eliminación.
+            // window.location.href = `/jugadores/eliminar/${playerId}`;
         }
-    });
-
-    // Add loading animation to navigation links
-    document.querySelectorAll('.menu-item').forEach(link => {
-        link.addEventListener('click', function(e) {
-            // Previene la animación si es un enlace de logout o un ancla vacía
-            if (this.getAttribute('href') !== '#' && !this.parentNode.matches('form')) {
-                e.preventDefault();
-                this.style.opacity = '0.7';
-                this.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Cargando...';
-                // Navega después de un breve retraso
-                setTimeout(() => {
-                    window.location.href = this.href;
-                }, 300);
-            }
-        });
-    });
-
-    // Add loading animation to user profile
-    document.getElementById('userProfile').addEventListener('click', function(e) {
-        this.style.opacity = '0.8';
-        this.querySelector('.user-info').innerHTML = '<div class="user-name">Cargando...</div><div class="user-role"><i class="fas fa-spinner fa-spin"></i></div>';
-    });
+    }
 
 
-    // ====================================================================
-    // LÓGICA DE ANIMACIÓN DE ESTADÍSTICAS
-    // ====================================================================
+    document.addEventListener('DOMContentLoaded', function() {
+        // ====================================================================
+        // BÚSQUEDA Y FILTRADO
+        // ====================================================================
+        const searchInput = document.getElementById('searchInput');
+        const tableBody = document.getElementById('playersTableBody');
+        const rows = tableBody ? tableBody.querySelectorAll('.player-row') : [];
 
-    const statsObserver = new IntersectionObserver(function(entries, observer) {
-        entries.forEach(entry => {
-            if (entry.isIntersecting) {
-                const statNumbers = entry.target.querySelectorAll('.stat-number');
-                statNumbers.forEach(stat => {
-                    const finalNumber = parseInt(stat.getAttribute('data-target'));
-                    const isPercentage = stat.textContent.includes('%');
+        if (searchInput && rows.length > 0) {
+            searchInput.addEventListener('input', function() {
+                const searchTerm = this.value.toLowerCase();
 
-                    // Solo animar si el valor actual es 0 (o la etiqueta inicial '0%')
-                    if (parseInt(stat.textContent) === 0) {
-                        let current = 0;
-                        const duration = 1500; // 1.5 segundos
-                        const steps = 60;
-                        const increment = finalNumber / steps;
-                        let stepCount = 0;
+                rows.forEach(row => {
+                    // Texto a buscar: Nombre, Cédula, Correo
+                    const name = row.querySelector('.user-name').textContent.toLowerCase();
+                    const id = row.querySelector('.user-id').textContent.toLowerCase();
+                    const email = row.querySelector('.contact-info span:nth-child(2)').textContent.toLowerCase();
+                    const cedula = row.cells[2].textContent.toLowerCase();
 
-                        const timer = setInterval(() => {
-                            current += increment;
-                            stepCount++;
-
-                            if (stepCount >= steps) {
-                                current = finalNumber;
-                                clearInterval(timer);
-                            }
-
-                            stat.textContent = Math.floor(current) + (isPercentage ? '%' : '');
-                        }, duration / steps);
+                    if (name.includes(searchTerm) || id.includes(searchTerm) || email.includes(searchTerm) || cedula.includes(searchTerm)) {
+                        row.style.display = '';
+                    } else {
+                        row.style.display = 'none';
                     }
                 });
-                // Una vez animado, deja de observar para que no se reinicie
-                observer.unobserve(entry.target);
-            }
+            });
+        }
+
+        // ====================================================================
+        // ANIMACIÓN DE ESTADÍSTICAS (CONTADOR)
+        // ====================================================================
+        const statsObserver = new IntersectionObserver(function(entries, observer) {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    const statNumbers = entry.target.querySelectorAll('.stat-number');
+                    statNumbers.forEach(stat => {
+                        const finalNumberText = stat.textContent.replace('%', '');
+                        const isPercentage = stat.textContent.includes('%');
+                        const number = parseInt(finalNumberText);
+
+                        if (!stat.hasAttribute('data-animated') && !isNaN(number)) {
+                            stat.setAttribute('data-animated', 'true');
+                            let current = 0;
+                            const duration = 1200;
+                            const steps = 40;
+                            const increment = number / steps;
+                            let stepCount = 0;
+
+                            const timer = setInterval(() => {
+                                current += increment;
+                                stepCount++;
+
+                                if (stepCount >= steps) {
+                                    current = number;
+                                    clearInterval(timer);
+                                }
+
+                                stat.textContent = Math.floor(current) + (isPercentage ? '%' : '');
+                            }, duration / steps);
+                        }
+                    });
+                }
+            });
+        }, {
+            threshold: 0.5,
+            rootMargin: '0px 0px -50px 0px'
         });
-    }, {
-        threshold: 0.5,
-        rootMargin: '0px 0px -50px 0px'
+
+        const statsCards = document.querySelectorAll('.stat-card');
+        statsCards.forEach(card => statsObserver.observe(card));
+
+        // ====================================================================
+        // ANIMACIÓN DE FILAS DE TABLA
+        // ====================================================================
+        const rowObserver = new IntersectionObserver(function(entries) {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.style.opacity = '1';
+                    entry.target.style.transform = 'translateX(0)';
+                    rowObserver.unobserve(entry.target); // Detener observación después de la animación
+                }
+            });
+        }, { threshold: 0.1 });
+
+        rows.forEach((row, index) => {
+            row.style.opacity = '0';
+            row.style.transform = 'translateX(-20px)';
+            row.style.transition = `opacity 0.6s ease ${index * 0.05}s, transform 0.6s ease ${index * 0.05}s`;
+            rowObserver.observe(row);
+        });
+
+        // ====================================================================
+        // MANEJO DEL FORMULARIO DE CORREO MASIVO
+        // ====================================================================
+        document.getElementById('emailForm').addEventListener('submit', function(e) {
+            const sendBtn = document.getElementById('sendEmailBtn');
+            // Muestra estado de carga en el botón
+            sendBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Enviando...';
+            sendBtn.disabled = true;
+            // La navegación real la maneja el action de Thymeleaf.
+        });
     });
 
-    // Observar la tarjeta de estadísticas
-    const statsCard = document.querySelector('.stats-card');
-    if (statsCard) {
-        statsObserver.observe(statsCard);
-    }
-
-    // ====================================================================
-    // LÓGICA DE INICIALES CORREGIDA
-    // ====================================================================
-
-    /**
-     * Genera iniciales (dos letras si es posible, una si es solo un nombre).
-     * @param {string} fullName - El nombre completo del usuario.
-     * @returns {string} Las iniciales en mayúsculas.
-     */
-    function generateInitials(fullName) {
-        if (!fullName || fullName.trim() === 'Usuario' || fullName.trim().length === 0) return 'U';
-
-        // Separa el nombre por espacios y filtra cadenas vacías
-        const names = fullName.trim().split(/\s+/).filter(Boolean);
-
-        // Si hay al menos dos palabras (nombre y apellido), usa las iniciales de la primera y última palabra.
-        if (names.length >= 2) {
-            return (names[0].charAt(0) + names[names.length - 1].charAt(0)).toUpperCase();
-        }
-
-        // Si solo hay una palabra, usa su inicial.
-        if (names.length === 1) {
-            return names[0].charAt(0).toUpperCase();
-        }
-
-        return 'U';
-    }
-
-    // Sobreescribe la inicial simple de Thymeleaf con la versión de iniciales dobles del JS
-    window.addEventListener('DOMContentLoaded', function() {
-        const userNameElement = document.querySelector('.user-name');
-        const avatar = document.querySelector('.user-avatar span');
-
-        if (userNameElement && avatar) {
-             // Lee el nombre completo ya renderizado por Thymeleaf
-            const userName = userNameElement.textContent.trim();
-
-            if (userName && userName !== 'Usuario' && userName.length > 0) {
-                avatar.textContent = generateInitials(userName);
-            }
-        }
-    });
 </script>
 </body>
 </html>

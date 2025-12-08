@@ -1,23 +1,47 @@
 <!DOCTYPE html>
 <html lang="es" xmlns:th="http://www.thymeleaf.org">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Gestión de Torneos - Sistema de Gestión</title>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>Gestión de Torneos - PadelApp</title>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
     <style>
-        /* --- CSS Compilado para el Formulario (Mismo Estilo Lavanda/Púrpura) --- */
+        /* Paleta de Colores PadelApp */
+        :root {
+            /* Colores Principales de la Marca */
+            --color-primary: #00b894; /* Verde Azulado Brillante (Para acentos, botones, barra lateral activa) */
+            --color-primary-dark: #00a383;
+
+            /* Color Clave del Fondo (¡ACTUALIZADO!) */
+            --color-bg-soft: #F4FFF8; /* Blanco ligeramente verdoso, muy suave */
+
+            /* Otros Colores (Opcionales) */
+            --color-secondary: #0984e3; /* Azul Brillante (Para botones de Editar/Secundarios) */
+            --color-danger: #d63031; /* Rojo Ladrillo (Para botones de Eliminar/Cerrar Sesión) */
+            --color-text: #2d3436; /* Gris Oscuro */
+            --color-text-light: #636e72; /* Gris Medio */
+            --color-white: #ffffff;
+
+            /* Gradientes Ajustados */
+            --gradient-primary: linear-gradient(135deg, var(--color-primary) 0%, var(--color-primary-dark) 100%);
+            --gradient-accent-menu: linear-gradient(135deg, #2ecc71 0%, #27ae60 100%);
+            --gradient-danger-menu: linear-gradient(135deg, var(--color-danger) 0%, #e74c3c 100%);
+        }
+
+        /* --- Base CSS --- */
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
         }
 
+        /* Aplicación del Fondo (¡ACTUALIZADO!) */
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            /* Reemplazar el degradado por el color sólido y suave */
+            background-color: var(--color-bg-soft);
             min-height: 100vh;
-            color: #333;
+            color: var(--color-text);
         }
 
         .container {
@@ -25,33 +49,33 @@
             min-height: 100vh;
         }
 
-        /* Sidebar */
+        /* --- Sidebar --- */
         .sidebar {
             width: 280px;
-            background: rgba(255, 255, 255, 0.95);
+            background: var(--color-white);
             backdrop-filter: blur(10px);
             padding: 2rem 0;
             box-shadow: 4px 0 20px rgba(0, 0, 0, 0.1);
-            border-right: 1px solid rgba(255, 255, 255, 0.2);
+            border-right: 1px solid rgba(0, 184, 148, 0.2);
         }
 
         .logo {
             text-align: center;
             padding: 0 2rem 2rem;
-            border-bottom: 1px solid rgba(102, 126, 234, 0.2);
+            border-bottom: 1px solid rgba(0, 184, 148, 0.2);
             margin-bottom: 2rem;
         }
 
         .logo h2 {
-            color: #667eea;
+            color: var(--color-primary);
             font-size: 1.5rem;
             font-weight: 700;
         }
 
-        /* Menu sections */
+        /* --- Menu sections --- */
         .menu-section-title {
             padding: 0 2rem 0.5rem;
-            color: #888;
+            color: var(--color-text-light);
             font-size: 0.75rem;
             text-transform: uppercase;
             letter-spacing: 1px;
@@ -62,7 +86,7 @@
             display: block;
             padding: 1rem 2rem;
             text-decoration: none;
-            color: #555;
+            color: var(--color-text);
             transition: all 0.3s ease;
             border-left: 4px solid transparent;
             position: relative;
@@ -70,9 +94,9 @@
 
         .menu-item:hover,
         .menu-item.active {
-            background: linear-gradient(90deg, rgba(102, 126, 234, 0.1) 0%, rgba(118, 75, 162, 0.05) 100%);
-            color: #667eea;
-            border-left-color: #667eea;
+            background: linear-gradient(90deg, rgba(0, 184, 148, 0.1) 0%, rgba(0, 163, 131, 0.05) 100%);
+            color: var(--color-primary);
+            border-left-color: var(--color-primary);
             transform: translateX(5px);
         }
 
@@ -83,73 +107,85 @@
         }
 
         .menu-item.accent {
-            background: linear-gradient(135deg, #33b633 0%, #2ca52c 100%);
-            color: white;
+            background: var(--gradient-accent-menu);
+            color: var(--color-white);
             border-radius: 0 25px 25px 0;
             margin: 0.5rem 0;
         }
 
         .menu-item.accent:hover {
-            background: linear-gradient(135deg, #2ca52c 0%, #228b22 100%);
+            background: #27ae60;
             transform: translateX(10px);
         }
 
         .menu-item.danger {
-            background: linear-gradient(135deg, #ff4d4d 0%, #e03c3c 100%);
-            color: white;
+            background: var(--gradient-danger-menu);
+            color: var(--color-white);
             border-radius: 0 25px 25px 0;
             margin-top: 1rem;
         }
 
         .menu-item.danger:hover {
-            background: linear-gradient(135deg, #e03c3c 0%, #cc2929 100%);
+            background: var(--color-danger);
             transform: translateX(10px);
         }
 
-        /* Main Content */
+        /* --- Main Content & Layout --- */
         .main-content {
             flex: 1;
             padding: 2rem;
             overflow-y: auto;
             display: flex;
+            flex-direction: column;
             align-items: center;
-            justify-content: center;
+            justify-content: flex-start;
         }
 
-        /* Form Container */
-        .form-container {
-            background: rgba(255, 255, 255, 0.95);
+        /* Contenedores y Tablas (¡ACTUALIZADO!) */
+        .list-container {
+            /* Asegurar que estos elementos interiores sean completamente blancos para el contraste */
+            background: var(--color-white);
             backdrop-filter: blur(20px);
             border-radius: 25px;
             padding: 3rem;
             box-shadow: 0 15px 35px rgba(0, 0, 0, 0.1);
-            border: 1px solid rgba(255, 255, 255, 0.2);
+            border: 1px solid rgba(0, 184, 148, 0.2);
             width: 100%;
-            max-width: 600px;
+            max-width: 1000px;
             position: relative;
             overflow: hidden;
-            animation: fadeInUp 0.8s ease;
+            margin-top: 2rem;
+            animation: fadeInUp 0.8s ease 0.1s both;
         }
 
-        .form-container::before {
+        /* El selector .form-container no estaba presente en este archivo, pero lo incluimos por si acaso */
+        .form-container {
+            background: var(--color-white);
+        }
+
+        .list-container::before {
             content: '';
             position: absolute;
             top: 0;
             left: 0;
             right: 0;
             height: 5px;
-            background: linear-gradient(90deg, #667eea 0%, #764ba2 100%);
+            background: var(--gradient-primary);
         }
 
-        .form-header {
+        /* --- Content Header --- */
+        .content-header {
+            width: 100%;
+            max-width: 1000px;
+            margin-bottom: 2rem;
+            padding: 1.5rem 0;
             text-align: center;
-            margin-bottom: 2.5rem;
         }
 
-        .form-title {
+        .content-header h1 {
             font-size: 2.5rem;
             font-weight: 700;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            background: var(--gradient-primary);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
             background-clip: text;
@@ -160,93 +196,15 @@
             gap: 1rem;
         }
 
-        .form-subtitle {
-            color: #666;
+        .content-header p {
+            color: var(--color-text-light);
             font-size: 1.1rem;
+            margin-bottom: 1.5rem;
         }
 
-        /* Form Styles */
-        .form-group {
-            margin-bottom: 2rem;
-            position: relative;
-            animation: fadeInUp 0.8s ease;
-        }
-
-        .form-group:nth-child(1) { animation-delay: 0.1s; }
-        .form-group:nth-child(2) { animation-delay: 0.2s; }
-        .form-group:nth-child(3) { animation-delay: 0.3s; }
-        .form-group:nth-child(4) { animation-delay: 0.4s; }
-
-
-        .form-label {
-            display: block;
-            margin-bottom: 0.8rem;
-            font-weight: 600;
-            color: #667eea;
-            font-size: 1rem;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
-        }
-
-        .form-input {
-            width: 100%;
-            padding: 1.2rem 1.5rem;
-            border: 2px solid rgba(102, 126, 234, 0.2);
-            border-radius: 15px;
-            font-size: 1rem;
-            transition: all 0.3s ease;
-            background: rgba(255, 255, 255, 0.8);
-            color: #333;
-        }
-
-        .form-input:focus {
-            outline: none;
-            border-color: #667eea;
-            background: white;
-            box-shadow: 0 0 20px rgba(102, 126, 234, 0.2);
-            transform: translateY(-2px);
-        }
-
-        .form-input:valid {
-            border-color: #33b633;
-        }
-
-        /* Input Icons */
-        .input-with-icon {
-            position: relative;
-        }
-
-        .input-icon {
-            position: absolute;
-            right: 1.5rem;
-            top: 50%;
-            transform: translateY(-50%);
-            color: #667eea;
-            font-size: 1.1rem;
-            pointer-events: none;
-            transition: all 0.3s ease;
-        }
-
-        .form-input:focus + .input-icon {
-            color: #764ba2;
-            transform: translateY(-50%) scale(1.1);
-        }
-
-        /* Buttons */
-        .form-actions {
-            display: flex;
-            gap: 1rem;
-            margin-top: 3rem;
-            justify-content: center;
-            flex-wrap: wrap;
-            animation: fadeInUp 0.8s ease 0.5s both;
-        }
-
+        /* --- Buttons --- */
         .btn {
-            padding: 1rem 2.5rem;
+            padding: 1rem 2rem;
             border: none;
             border-radius: 15px;
             font-weight: 600;
@@ -258,79 +216,128 @@
             align-items: center;
             justify-content: center;
             gap: 0.8rem;
-            min-width: 150px;
+            min-width: 160px;
         }
 
-        .btn-primary {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: white;
-            box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);
+        .btn-create {
+            /* Usando el color primario como color principal para crear */
+            background: var(--gradient-primary);
+            color: var(--color-white);
+            box-shadow: 0 4px 15px rgba(0, 184, 148, 0.4);
         }
-
-        .btn-primary:hover {
+        .btn-create:hover {
             transform: translateY(-3px);
-            box-shadow: 0 8px 25px rgba(102, 126, 234, 0.6);
+            box-shadow: 0 8px 25px rgba(0, 184, 148, 0.6);
         }
 
-        .btn-secondary {
-            background: rgba(255, 255, 255, 0.9);
-            color: #667eea;
-            border: 2px solid #667eea;
-            box-shadow: 0 4px 15px rgba(102, 126, 234, 0.1);
-        }
-
-        .btn-secondary:hover {
-            background: #667eea;
-            color: white;
-            transform: translateY(-3px);
-            box-shadow: 0 8px 25px rgba(102, 126, 234, 0.3);
-        }
-
-        /* Loading state */
-        .btn.loading {
-            pointer-events: none;
-            opacity: 0.8;
-        }
-
-        .btn.loading i {
-            animation: spin 1s linear infinite;
-        }
-
-        @keyframes spin {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
-        }
-
-        /* Validation Messages */
-        .validation-message {
-            color: #ff4d4d;
+        .btn-table {
+            padding: 0.6rem 1rem;
             font-size: 0.85rem;
-            margin-top: 0.5rem;
+            border-radius: 10px;
+            border: none;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-decoration: none;
+        }
+
+        .btn-table.edit {
+            background: var(--color-secondary); /* Azul para Editar */
+            color: var(--color-white);
+        }
+        .btn-table.edit:hover {
+            background: #0077c2;
+            transform: translateY(-1px);
+        }
+        .btn-table.delete {
+            background: var(--color-danger); /* Rojo para Eliminar */
+            color: var(--color-white);
+        }
+        .btn-table.delete:hover {
+            background: #b82c2c;
+            transform: translateY(-1px);
+        }
+        .btn-table.view {
+            background: var(--color-primary); /* Verde Azulado para Ver/Resultados */
+            color: var(--color-white);
+        }
+        .btn-table.view:hover {
+            background: var(--color-primary-dark);
+            transform: translateY(-1px);
+        }
+
+        /* --- Table Styling --- */
+        .table-title {
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: var(--color-text);
+            margin-bottom: 2rem;
+            border-bottom: 2px solid rgba(0, 184, 148, 0.2);
+            padding-bottom: 1rem;
             display: flex;
             align-items: center;
-            gap: 0.5rem;
-            opacity: 0;
-            transform: translateY(-10px);
+            gap: 0.8rem;
+        }
+
+        .table-title i {
+            color: var(--color-primary);
+        }
+
+        .data-table {
+            width: 100%;
+            border-collapse: separate;
+            border-spacing: 0;
+            font-size: 0.95rem;
+            margin-top: 1.5rem;
+            overflow: hidden;
+        }
+
+        .data-table th, .data-table td {
+            padding: 1.2rem 1.5rem;
+            text-align: left;
+            border-bottom: 1px solid rgba(0, 184, 148, 0.1);
             transition: all 0.3s ease;
         }
 
-        .validation-message.show {
-            opacity: 1;
-            transform: translateY(0);
+        .data-table th {
+            background: var(--gradient-primary); /* Encabezado de la tabla con gradiente */
+            color: white;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            position: sticky;
+            top: 0;
         }
 
-        /* Success animation */
-        @keyframes successPulse {
-            0% { transform: scale(1); }
-            50% { transform: scale(1.02); } /* Pulso más sutil */
-            100% { transform: scale(1); }
+        .data-table tr:nth-child(even) {
+            background-color: rgba(0, 184, 148, 0.03);
         }
 
-        .success-animation {
-            animation: successPulse 0.6s ease-in-out;
+        .data-table tr:hover {
+            background-color: rgba(0, 184, 148, 0.1);
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0, 184, 148, 0.1);
         }
 
-        /* Responsive Design */
+        /* Bordes redondeados para la cabecera */
+        .data-table th:first-child {
+            border-top-left-radius: 15px;
+        }
+
+        .data-table th:last-child {
+            border-top-right-radius: 15px;
+        }
+
+        .data-table td:last-child {
+            text-align: center;
+        }
+
+        .table-actions {
+            display: flex;
+            gap: 0.5rem;
+            justify-content: center;
+        }
+
+        /* --- Responsive Design --- */
         @media (max-width: 768px) {
             .container {
                 flex-direction: column;
@@ -344,29 +351,67 @@
 
             .main-content {
                 padding: 1rem;
-                align-items: flex-start;
                 padding-top: 2rem;
             }
 
-            .form-container {
-                padding: 2rem;
-                margin-top: 1rem;
-            }
-
-            .form-title {
+            .content-header h1 {
                 font-size: 2rem;
             }
 
-            .form-actions {
-                flex-direction: column;
+            .list-container {
+                padding: 2rem 1rem;
+                margin-top: 1rem;
             }
 
-            .btn {
-                width: 100%;
+            .table-title {
+                font-size: 1.5rem;
+            }
+
+            .data-table {
+                display: block;
+                overflow-x: auto;
+                white-space: nowrap;
+            }
+
+            .data-table thead, .data-table tbody, .data-table th, .data-table td, .data-table tr {
+                display: block;
+            }
+
+            .data-table thead {
+                display: none;
+            }
+
+            .data-table tr {
+                margin-bottom: 1rem;
+                border-radius: 15px;
+                box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+                border: 1px solid rgba(0, 184, 148, 0.1);
+            }
+
+            .data-table td {
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+                padding: 1rem;
+                border-bottom: 1px solid rgba(0, 184, 148, 0.1);
+            }
+
+            .data-table td:before {
+                content: attr(data-label);
+                font-weight: 700;
+                color: var(--color-primary);
+                text-transform: uppercase;
+                font-size: 0.85rem;
+            }
+
+            .data-table td:last-child {
+                border-bottom: none;
+                justify-content: center;
+                padding-top: 1.5rem;
             }
         }
 
-        /* Animations */
+        /* --- Animations --- */
         @keyframes fadeInUp {
             from {
                 opacity: 0;
@@ -377,13 +422,27 @@
                 transform: translateY(0);
             }
         }
+
+        .btn.loading {
+            pointer-events: none;
+            opacity: 0.8;
+        }
+
+        .btn.loading i {
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
     </style>
 </head>
 <body>
 <div class="container">
     <nav class="sidebar">
         <div class="logo">
-            <h2><i class="fas fa-trophy"></i> Sistema</h2>
+            <h2><i class="fas fa-trophy"></i> PadelApp</h2>
         </div>
 
         <div class="menu-section-title">Navegación Principal</div>
@@ -413,7 +472,7 @@
             <i class="fas fa-file-excel"></i> Exportar Excel
         </a>
 
-        <form th:action="@{/login}" method="post" style="margin: 2rem 0 0 0;">
+        <form th:action="@{/logout}" method="post" style="margin: 2rem 0 0 0;">
             <a href="#" onclick="this.parentNode.submit()" class="menu-item danger">
                 <i class="fas fa-sign-out-alt"></i> Cerrar Sesión
             </a>
@@ -421,234 +480,121 @@
     </nav>
 
     <main class="main-content">
-        <form id="torneoForm" th:action="@{/torneo/guardar}" th:object="${torneo}" method="post" class="form-container">
 
-            <input type="hidden" th:field="*{id}" />
+        <div class="content-header">
+            <h1><i class="fas fa-trophy"></i> Gestión de Torneos</h1>
+            <p>Visualiza, edita o crea nuevos torneos de pádel.</p>
+            <a th:href="@{/torneo/crear}" class="btn btn-create" onclick="addLoadingState(this)">
+                <i class="fas fa-plus-circle"></i> Crear Nuevo Torneo
+            </a>
+        </div>
 
-            <div class="form-header">
-                <h1 class="form-title">
-                    <i class="fas fa-trophy"></i>
-                    <span th:text="${torneo.id == null ? 'Nuevo Torneo' : 'Editar Torneo'}"></span>
-                </h1>
-                <p class="form-subtitle">Complete los datos para gestionar un torneo</p>
+        <div class="list-container">
+            <h3 class="table-title">
+                <i class="fas fa-list-alt"></i> Torneos Activos
+            </h3>
+
+            <div style="overflow-x: auto;">
+                <table class="data-table">
+                    <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Nombre del Torneo</th>
+                        <th>Fecha Inicio</th>
+                        <th>Estado</th>
+                        <th>N° Participantes</th>
+                        <th style="text-align: center;">Acciones</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr>
+                        <td data-label="ID">1</td>
+                        <td data-label="Torneo">Open de Primavera - Dobles</td>
+                        <td data-label="Fecha Inicio">2024-05-10</td>
+                        <td data-label="Estado">En curso</td>
+                        <td data-label="Participantes">16</td>
+                        <td class="table-actions" data-label="Acciones">
+                            <a th:href="@{/torneo/editar/1}" class="btn-table edit" onclick="addLoadingState(this)">
+                                <i class="fas fa-edit"></i> Editar
+                            </a>
+                            <a th:href="@{/torneo/ver/1}" class="btn-table view">
+                                <i class="fas fa-eye"></i> Ver
+                            </a>
+                            <form th:action="@{/torneo/eliminar/1}" method="post" onsubmit="return confirm('¿Estás seguro de eliminar este torneo?')" style="display: inline;">
+                                <button type="submit" class="btn-table delete" onclick="addLoadingState(this)">
+                                    <i class="fas fa-trash-alt"></i>
+                                </button>
+                            </form>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td data-label="ID">2</td>
+                        <td data-label="Torneo">Copa de Verano - Mixto</td>
+                        <td data-label="Fecha Inicio">2024-07-20</td>
+                        <td data-label="Estado">Próximo</td>
+                        <td data-label="Participantes">32</td>
+                        <td class="table-actions" data-label="Acciones">
+                            <a th:href="@{/torneo/editar/2}" class="btn-table edit" onclick="addLoadingState(this)">
+                                <i class="fas fa-edit"></i> Editar
+                            </a>
+                            <a th:href="@{/torneo/ver/2}" class="btn-table view">
+                                <i class="fas fa-eye"></i> Ver
+                            </a>
+                            <form th:action="@{/torneo/eliminar/2}" method="post" onsubmit="return confirm('¿Estás seguro de eliminar este torneo?')" style="display: inline;">
+                                <button type="submit" class="btn-table delete" onclick="addLoadingState(this)">
+                                    <i class="fas fa-trash-alt"></i>
+                                </button>
+                            </form>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td data-label="ID">3</td>
+                        <td data-label="Torneo">Master Otoño - Individual</td>
+                        <td data-label="Fecha Inicio">2023-11-01</td>
+                        <td data-label="Estado">Finalizado</td>
+                        <td data-label="Participantes">8</td>
+                        <td class="table-actions" data-label="Acciones">
+                            <a th:href="@{/torneo/ver/3}" class="btn-table view" style="width: 100%;">
+                                <i class="fas fa-poll"></i> Ver Resultados
+                            </a>
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
             </div>
-
-            <div class="form-group">
-                <label class="form-label" for="nombre">
-                    <i class="fas fa-tag"></i>
-                    Nombre del Torneo
-                </label>
-                <div class="input-with-icon">
-                    <input type="text"
-                           id="nombre"
-                           class="form-input"
-                           th:field="*{nombre}"
-                           placeholder="Ingrese el nombre del torneo"
-                           required />
-                    <i class="fas fa-trophy input-icon"></i>
-                </div>
-                <div class="validation-message" id="nombre-error">
-                    <i class="fas fa-exclamation-circle"></i>
-                    <span>El nombre es requerido</span>
-                </div>
-            </div>
-
-            <div class="form-group">
-                <label class="form-label" for="fechaInicio">
-                    <i class="fas fa-calendar-alt"></i>
-                    Fecha de Inicio
-                </label>
-                <div class="input-with-icon">
-                    <input type="date"
-                           id="fechaInicio"
-                           class="form-input"
-                           th:field="*{fechaInicio}"
-                           required />
-                    <i class="fas fa-calendar-plus input-icon"></i>
-                </div>
-                <div class="validation-message" id="fechaInicio-error">
-                    <i class="fas fa-exclamation-circle"></i>
-                    <span>La fecha de inicio es requerida</span>
-                </div>
-            </div>
-
-            <div class="form-group">
-                <label class="form-label" for="fechaFin">
-                    <i class="fas fa-calendar-check"></i>
-                    Fecha de Finalización
-                </label>
-                <div class="input-with-icon">
-                    <input type="date"
-                           id="fechaFin"
-                           class="form-input"
-                           th:field="*{fechaFin}"
-                           required />
-                    <i class="fas fa-calendar-minus input-icon"></i>
-                </div>
-                <div class="validation-message" id="fechaFin-error">
-                    <i class="fas fa-exclamation-circle"></i>
-                    <span>La fecha de fin debe ser posterior a la fecha de inicio</span>
-                </div>
-            </div>
-
-            <div class="form-group">
-                <label class="form-label" for="ubicacion">
-                    <i class="fas fa-map-marker-alt"></i>
-                    Ubicación
-                </label>
-                <div class="input-with-icon">
-                    <input type="text"
-                           id="ubicacion"
-                           class="form-input"
-                           th:field="*{ubicacion}"
-                           placeholder="Ingrese la ubicación del torneo" />
-                    <i class="fas fa-map-pin input-icon"></i>
-                </div>
-            </div>
-
-            <div class="form-actions">
-                <button type="submit" class="btn btn-primary" id="submitBtn">
-                    <i class="fas fa-save"></i>
-                    <span th:text="${torneo.id == null ? 'Crear Torneo' : 'Actualizar Torneo'}"></span>
-                </button>
-                <a th:href="@{/torneo}" class="btn btn-secondary">
-                    <i class="fas fa-arrow-left"></i>
-                    Cancelar
-                </a>
-            </div>
-        </form>
+        </div>
     </main>
 </div>
 
 <script>
+    // Script para manejar el estado de carga y el nombre del logo (Asegurando PadelApp)
     document.addEventListener('DOMContentLoaded', function() {
-        const form = document.getElementById('torneoForm');
-        const submitBtn = document.getElementById('submitBtn');
-        const nombreInput = document.getElementById('nombre');
-        const fechaInicioInput = document.getElementById('fechaInicio');
-        const fechaFinInput = document.getElementById('fechaFin');
-
-        // --- Funciones de Utilidad ---
-        function showError(elementId) {
-            const errorElement = document.getElementById(elementId);
-            errorElement.classList.add('show');
-        }
-
-        function hideError(elementId) {
-            const errorElement = document.getElementById(elementId);
-            errorElement.classList.remove('show');
-        }
-
-        function validateDates() {
-             // Ocultar error de fecha fin si ya hay fecha de inicio, para que el mensaje sea solo sobre la lógica.
-             if (fechaInicioInput.value) {
-                fechaFinInput.min = fechaInicioInput.value;
-             }
-
-             if (fechaInicioInput.value && fechaFinInput.value) {
-                if (fechaFinInput.value <= fechaInicioInput.value) {
-                    showError('fechaFin-error');
-                    document.querySelector('#fechaFin-error span').textContent = 'La fecha de fin debe ser posterior a la fecha de inicio';
-                } else {
-                    hideError('fechaFin-error');
-                }
-            } else if (!fechaFinInput.value) {
-                 // Si no hay fecha de fin, mostramos que es requerida.
-                showError('fechaFin-error');
-                document.querySelector('#fechaFin-error span').textContent = 'La fecha de finalización es requerida';
-            }
-        }
-
-        function validateForm() {
-            let isValid = true;
-
-            // Validate nombre
-            if (!nombreInput.value.trim()) {
-                showError('nombre-error');
-                isValid = false;
-            } else {
-                hideError('nombre-error');
-            }
-
-            // Validate fecha inicio
-            if (!fechaInicioInput.value) {
-                showError('fechaInicio-error');
-                isValid = false;
-            } else {
-                hideError('fechaInicio-error');
-            }
-
-            // Validate fecha fin (y lógica de fechas)
-            if (!fechaFinInput.value || fechaFinInput.value <= fechaInicioInput.value) {
-                validateDates(); // Llama a la validación detallada
-                isValid = false;
-            } else {
-                hideError('fechaFin-error');
-            }
-
-            return isValid;
-        }
-
-
-        // --- Event Listeners para Validación en Tiempo Real ---
-        nombreInput.addEventListener('blur', function() {
-            if (this.value.trim()) {
-                hideError('nombre-error');
-            } else {
-                showError('nombre-error');
-            }
-        });
-
-        fechaInicioInput.addEventListener('change', function() {
-            if (this.value) {
-                hideError('fechaInicio-error');
-            } else {
-                showError('fechaInicio-error');
-            }
-            validateDates(); // Revalida la fecha de fin al cambiar la de inicio
-        });
-
-        fechaFinInput.addEventListener('change', function() {
-            validateDates();
-        });
-
-
-        // --- Lógica de Envío del Formulario ---
-        form.addEventListener('submit', function(e) {
-            e.preventDefault();
-
-            if (!validateForm()) {
-                // Si la validación falla, se detiene y se muestran los errores
-                return;
-            }
-
-            // Si es válido:
-            // 1. Añadir estado de carga
-            submitBtn.classList.add('loading');
-            submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Guardando...';
-            submitBtn.disabled = true;
-
-            // 2. Añadir animación de éxito al formulario
-            setTimeout(() => {
-                document.querySelector('.form-container').classList.add('success-animation');
-            }, 100);
-
-            // 3. Enviar el formulario después de la animación (simulando un proceso asíncrono)
-            setTimeout(() => {
-                this.submit(); // Envía el formulario Thymeleaf/Spring
-            }, 800);
-        });
-
-        // --- Inicialización ---
-        // Auto-focus en el primer input
-        setTimeout(() => {
-            nombreInput.focus();
-        }, 300);
-
-        // Establecer la fecha de hoy como mínimo para fechaInicio (no se puede iniciar en el pasado)
-        const today = new Date().toISOString().split('T')[0];
-        fechaInicioInput.min = today;
+        const logo = document.querySelector('.logo h2');
+        logo.innerHTML = '<i class="fas fa-trophy"></i> PadelApp';
     });
+
+    function addLoadingState(button) {
+        button.classList.add('loading');
+        const originalHTML = button.innerHTML;
+
+        // Determinar el texto de carga según la acción
+        let loadingText = 'Cargando...';
+        if (button.textContent.includes('Editar') || button.textContent.includes('Crear') || button.textContent.includes('Ver')) {
+            loadingText = 'Cargando...';
+        } else if (button.textContent.includes('Eliminar')) {
+            loadingText = 'Eliminando...';
+        }
+
+        button.innerHTML = '<i class="fas fa-spinner fa-spin"></i> ' + loadingText;
+        button.style.pointerEvents = 'none';
+
+        // Restaurar botón (prevención si la navegación falla)
+        setTimeout(() => {
+            button.innerHTML = originalHTML;
+            button.classList.remove('loading');
+            button.style.pointerEvents = 'auto';
+        }, 5000);
+    }
 </script>
 </body>
 </html>

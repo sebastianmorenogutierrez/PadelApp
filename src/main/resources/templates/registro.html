@@ -10,6 +10,10 @@
         :root {
             --color-primary: #00b894; /* Verde Azulado Brillante */
             --color-primary-dark: #00a383; /* Variante oscura */
+
+            /* Color Clave del Fondo */
+            --color-bg-soft: #F4FFF8; /* <-- NUEVO FONDO SÚPER CLARO */
+
             --color-secondary: #0984e3; /* Azul Brillante */
             --color-accent: #fdcb6e; /* Amarillo Dorado */
             --color-danger: #d63031; /* Rojo Ladrillo */
@@ -23,8 +27,9 @@
 
         body {
             font-family: 'Arial', sans-serif;
-            /* Se asume que /images/cancha_padel.jpg existe */
-            background-image: url('/images/cancha_padel.jpg');
+            /* CAMBIO CLAVE: Usando el fondo suave en lugar de la imagen */
+            background-color: var(--color-bg-soft);
+
             background-size: cover;
             background-position: center;
             background-repeat: no-repeat;
@@ -40,12 +45,12 @@
         .container {
             max-width: 500px;
             padding: 40px;
-            /* Fondo actualizado a blanco para mejor legibilidad */
-            background-color: rgba(255, 255, 255, 0.95);
+            /* Fondo de formulario blanco, que ya estaba bien */
+            background-color: var(--color-white);
             border-radius: 20px;
             box-shadow: 0 15px 50px rgba(0, 184, 148, 0.3); /* Sombra basada en primary */
             color: var(--color-text-light);
-            backdrop-filter: blur(5px); /* Desenfoque incrementado */
+            /* Quitamos el backdrop-filter ya que el fondo es sólido */
             border: 1px solid rgba(0, 184, 148, 0.1);
         }
 

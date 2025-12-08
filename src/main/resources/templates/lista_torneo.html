@@ -17,6 +17,9 @@
             --color-background: #f8f9fa; /* Gris Muy Claro */
             --color-white: #ffffff; /* Blanco Puro */
 
+            /* NUEVO COLOR DE FONDO SUAVE */
+            --color-bg-soft: #F4FFF8;
+
             /* Gradientes */
             --gradient-primary: linear-gradient(135deg, var(--color-primary) 0%, #00cec9 100%);
             --gradient-primary-btn: linear-gradient(135deg, var(--color-primary) 0%, var(--color-primary-dark) 100%);
@@ -40,8 +43,8 @@
 
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            /* Fondo actualizado a Primary Gradient */
-            background: var(--gradient-primary);
+            /* CAMBIO: Fondo actualizado a Color Sólido Suave */
+            background-color: var(--color-bg-soft);
             min-height: 100vh;
             color: var(--color-text);
         }
@@ -53,6 +56,7 @@
 
         /* Sidebar */
         .sidebar {
+            /* Mantenido en blanco para contraste */
             width: 280px;
             background: var(--color-white);
             padding: 2rem 0;
@@ -133,6 +137,7 @@
         }
 
         .content-header {
+            /* Mantenido en blanco para contraste */
             background: var(--color-white);
             padding: 2rem;
             border-radius: 20px;
@@ -240,6 +245,7 @@
 
         /* Table Container */
         .table-container {
+            /* Mantenido en blanco para contraste */
             background: var(--color-white);
             border-radius: 20px;
             padding: 2rem;

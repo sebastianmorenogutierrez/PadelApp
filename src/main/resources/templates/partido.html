@@ -8,8 +8,13 @@
     <style>
         /* Paleta de Colores Solicitada (Verde Azulado) */
         :root {
+            /* Colores Principales de la Marca */
             --color-primary: #00b894; /* Verde Azulado Brillante */
             --color-primary-dark: #00a383; /* Variante más oscura del primario */
+
+            /* Color Clave del Fondo */
+            --color-bg-soft: #F4FFF8; /* <-- NUEVO FONDO SÚPER CLARO */
+
             --color-secondary: #0984e3; /* Azul Brillante */
             --color-accent: #fdcb6e; /* Amarillo Dorado */
             --color-danger: #d63031; /* Rojo Ladrillo */
@@ -32,8 +37,8 @@
 
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            /* Fondo actualizado a Primary Gradient */
-            background: var(--gradient-primary);
+            /* CAMBIO CLAVE: Usando el color sólido y suave para el fondo */
+            background-color: var(--color-bg-soft);
             min-height: 100vh;
             color: var(--color-text);
         }
@@ -137,7 +142,7 @@
 
         /* Form Container */
         .form-container {
-            background: var(--color-white);
+            background: var(--color-white); /* Fondo del formulario: Blanco puro */
             border-radius: 25px;
             padding: 3rem;
             box-shadow: 0 15px 35px rgba(0, 0, 0, 0.1);
@@ -220,6 +225,7 @@
             border-radius: 15px;
             font-size: 1rem;
             transition: all 0.3s ease;
+            /* Usamos var(--color-white) o var(--color-background) para un contraste sutil */
             background: var(--color-background);
             color: var(--color-text);
         }
@@ -476,7 +482,7 @@
 <div class="container">
     <nav class="sidebar">
         <div class="logo">
-            <h2><i class="fas fa-trophy"></i> Sistema</h2>
+            <h2><i class="fas fa-trophy"></i> PadelApp</h2>
         </div>
 
         <div class="menu-section-title">Navegación Principal</div>
@@ -683,6 +689,12 @@
 
 <script>
     document.addEventListener('DOMContentLoaded', function() {
+        // Fix: Update logo text from "Sistema" to "PadelApp"
+        const logo = document.querySelector('.logo h2');
+        if (logo) {
+            logo.innerHTML = '<i class="fas fa-trophy"></i> PadelApp';
+        }
+
         const form = document.getElementById('partidoForm');
         const submitBtn = document.getElementById('submitBtn');
         const fechaInput = document.getElementById('fecha');
@@ -810,7 +822,7 @@
             // Add loading state
             submitBtn.classList.add('loading');
             const submitText = isEditing ? 'Guardando...' : 'Creando Partido...';
-            submitBtn.innerHTML = `<i class="fas fa-spinner"></i> ${submitText}`;
+            submitBtn.innerHTML = `<i class="fas fa-spinner fa-spin"></i> ${submitText}`;
             submitBtn.disabled = true;
 
             setTimeout(() => {

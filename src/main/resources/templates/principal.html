@@ -6,23 +6,25 @@
     <title>Tu Club PadelApp | La Pasión por el Padel</title>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
     <style>
-        /* Paleta de Colores Solicitada (Verde Azulado) */
+        /* Paleta de Colores PadelApp */
         :root {
-            --color-primary: #00b894; /* Verde Azulado Brillante */
+            /* Colores Principales de la Marca (Verde Azulado) */
+            --color-primary: #00b894; /* Verde Azulado Brillante (Acentos, botones) */
             --color-primary-dark: #00a383; /* Variante más oscura del primario */
-            --color-secondary: #0984e3; /* Azul Brillante */
+
+            /* Color Clave del Fondo */
+            --color-bg-soft: #F4FFF8; /* Blanco ligeramente verdoso, muy suave */
+
+            /* Otros Colores */
+            --color-secondary: #0984e3; /* Azul Brillante (Hover de Auth) */
             --color-accent: #fdcb6e; /* Amarillo Dorado */
             --color-danger: #d63031; /* Rojo Ladrillo */
             --color-text: #2d3436; /* Gris Oscuro Casi Negro */
             --color-text-light: #636e72; /* Gris Medio */
-            --color-background: #f8f9fa; /* Gris Muy Claro */
             --color-white: #ffffff; /* Blanco Puro */
-            --color-court: #3498db; /* Azul Claro Vívido */
-            --color-court-line: #ecf0f1; /* Gris Muy Claro/Blanco Suave */
 
-            /* Degradados actualizados */
+            /* Degradados */
             --gradient-primary: linear-gradient(135deg, var(--color-primary) 0%, #00cec9 100%);
-            /* Uso del color secundario para el hover de los botones de auth */
             --gradient-accent: linear-gradient(135deg, var(--color-secondary) 0%, #74b9ff 100%);
             --color-texto: var(--color-text); /* Alias */
         }
@@ -33,10 +35,8 @@
 
         body {
             font-family: 'Arial', sans-serif;
-            /* Fondo de imagen de pádel (se mantiene) */
-            background-image: url('/images/padel_principal.png');
-            background-size: cover;
-            background-position: center;
+            /* Aplicación del fondo suave, reemplazando la imagen */
+            background-color: var(--color-bg-soft);
             background-repeat: no-repeat;
             background-attachment: fixed;
             margin: 0;
@@ -48,7 +48,7 @@
         }
 
         header {
-            /* Fondo ahora basado en Primary */
+            /* Fondo basado en Primary */
             background-color: rgba(0, 184, 148, 0.95);
             color: white;
             padding: 15px 40px;
@@ -85,7 +85,7 @@
         }
 
         .auth-buttons a:hover {
-            background: var(--gradient-accent); /* Ahora usa Secondary (Azul Brillante) */
+            background: var(--gradient-accent); /* Usa Secondary (Azul Brillante) */
             color: white;
             transform: translateY(-2px);
             box-shadow: 0 4px 10px rgba(9, 132, 227, 0.4);
@@ -97,7 +97,7 @@
         }
 
         .hero-section {
-            /* Fondo ahora basado en Primary Gradient */
+            /* Fondo basado en Primary Gradient */
             background-image: var(--gradient-primary);
             color: white;
             padding: 60px 40px;
@@ -293,7 +293,6 @@
             }
         }
 
-
         @media (max-width: 768px) {
             header {
                 flex-direction: column;
@@ -384,7 +383,6 @@
             <p>Canchas de última generación, vestuarios modernos, tienda especializada y zona de descanso. Todo lo que necesitas para vivir la mejor experiencia de pádel.</p>
         </div>
     </section>
-
 
     <section class="about-section">
         <h2>¿Por qué elegir Tu Club PadelApp?</h2>
