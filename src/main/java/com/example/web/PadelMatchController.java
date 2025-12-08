@@ -54,7 +54,7 @@ public class PadelMatchController {
     @GetMapping("/nuevo")
     public String mostrarFormularioCreacion(Model model) {
         model.addAttribute("partido", new PadelMatch());
-        return "partido";
+        return "nuevopartido";
     }
 
     @PostMapping("/crear")
