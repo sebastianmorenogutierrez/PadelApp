@@ -4,7 +4,6 @@ import com.example.domain.PadelMatch;
 import com.example.domain.Individuo;
 import com.example.domain.usuario.Usuario;
 import com.example.servicio.PadelMatchService;
-import com.example.servicio.StripeService;
 import com.example.servicio.UsuarioServicio;
 import com.itextpdf.io.font.constants.StandardFonts;
 import com.itextpdf.kernel.colors.ColorConstants;
@@ -41,6 +40,7 @@ public class PadelMatchController {
     private final UsuarioServicio usuarioServicio;
 
     @Autowired
+    // ⭐️ CAMBIO 1: Eliminada la inyección de StripeService del constructor.
     public PadelMatchController(PadelMatchService padelMatchService, UsuarioServicio usuarioServicio) {
         this.padelMatchService = padelMatchService;
         this.usuarioServicio = usuarioServicio;
@@ -115,22 +115,18 @@ public class PadelMatchController {
                     model.addAttribute("partido", match);
 
                     boolean yaInscrito = false;
-                    boolean yaPago = false;
+                    // boolean yaPago = false;  <-- Eliminada la variable de pago
 
                     if (nombreUsuarioLogueado != null) {
                         // Verificar si está inscrito
                         yaInscrito = match.getJugadores().stream()
                                 .anyMatch(j -> j.getNombreUsuario().equals(nombreUsuarioLogueado));
 
-                        // Verificar si ya pagó (agregar este código)
-                        Usuario usuarioActual = usuarioServicio.localizarPorNombreUsuario(nombreUsuarioLogueado);
-                        if (usuarioActual != null) {
-                            yaPago = stripeService.usuarioYaPago(usuarioActual, match);
-                        }
+                        // ⭐️ CAMBIO 2: Eliminada la lógica de verificación de pagos (Usuario, match, stripeService)
                     }
 
                     model.addAttribute("usuarioYaInscrito", yaInscrito);
-                    model.addAttribute("usuarioYaPago", yaPago); // Nueva variable
+                    // model.addAttribute("usuarioYaPago", yaPago); <-- Eliminada la variable de pago
 
                     return "partido_detalle";
                 })
@@ -139,8 +135,8 @@ public class PadelMatchController {
                     return "redirect:/partido";
                 });
     }
-    @Autowired
-    private StripeService stripeService;
+
+    // ⭐️ CAMBIO 3: Eliminada la inyección incompleta @Autowired private
 
     @PostMapping("/{matchId}/inscribir")
     public String inscribirJugadorPorNombre(
@@ -288,7 +284,6 @@ public class PadelMatchController {
             }
             document.add(tablaJugadores);
 
-            // Footer (simplemente la fecha de generación)
             document.add(new Paragraph("Documento generado el: " + java.time.LocalDate.now().format(dateFormatter))
                     .setFont(PdfFontFactory.createFont(StandardFonts.HELVETICA_OBLIQUE))
                     .setFontSize(10)
@@ -300,12 +295,10 @@ public class PadelMatchController {
 
             response.getOutputStream().write(baos.toByteArray());
         } catch (Exception e) {
-            // Manejar excepciones de IO y PDF
             throw new IOException("Error generando PDF del Partido: " + e.getMessage(), e);
         }
     }
 
-    /** Método auxiliar para crear celdas de encabezado de detalle */
     private Cell createDetailHeaderCell(String text, PdfFont font) {
         return new Cell()
                 .add(new Paragraph(text).setFont(font).setFontSize(11))
@@ -314,7 +307,6 @@ public class PadelMatchController {
                 .setPadding(5);
     }
 
-    /** Método auxiliar para crear celdas de valor de detalle */
     private Cell createDetailValueCell(String text, PdfFont font) {
         return new Cell()
                 .add(new Paragraph(text).setFont(font).setFontSize(11))

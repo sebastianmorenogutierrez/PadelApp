@@ -68,12 +68,6 @@ public class PadelMatchService {
         return match;
     }
 
-    /**
-     * Guarda el partido y registra al usuario creador como primer jugador.
-     * @param match Los datos del partido.
-     * @param creadorId El ID del usuario que está logueado y creando el partido (Integer).
-     * @return El objeto PadelMatch guardado.
-     */
     @Transactional
     public PadelMatch crearPartidoYRegistrarCreador(PadelMatch match, Integer creadorId) {
         // 1. Buscar al usuario creador por su ID (usa Integer correctamente)

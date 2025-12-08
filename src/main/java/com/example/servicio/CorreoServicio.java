@@ -1,6 +1,5 @@
 package com.example.servicio;
 
-import com.example.model.Pago; // Si el paquete es 'model'
 import com.example.domain.PadelMatch; // Necesitas importar la clase PadelMatch
 import com.example.domain.usuario.Usuario;
 import com.example.domain.torneo.Torneo;
