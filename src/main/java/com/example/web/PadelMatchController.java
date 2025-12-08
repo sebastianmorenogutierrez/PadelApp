@@ -300,7 +300,6 @@ public class PadelMatchController {
             throw new IOException("Error generando PDF del Partido: " + e.getMessage(), e);
         }
     }
-
     private Cell createDetailHeaderCell(String text, PdfFont font) {
         return new Cell()
                 .add(new Paragraph(text).setFont(font).setFontSize(11))
