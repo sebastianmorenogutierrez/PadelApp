@@ -4,39 +4,50 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Iniciar Sesión</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
     <style>
+        /* Definición de colores principales */
+        :root {
+            --color-principal: #667eea; /* Azul violeta */
+            --color-secundario: #764ba2; /* Morado */
+            --color-fondo-limpio: #f5f7fa; /* Gris muy claro */
+            --color-texto: #333;
+            --color-error: #721c24;
+            --color-error-bg: #f8d7da;
+            --color-exito: #155724;
+            --color-exito-bg: #d4edda;
+        }
+
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background-image: url('/images/cancha_padel.jpg');
-            background-size: cover;
-            background-position: center;
-            background-repeat: no-repeat;
+            /* CAMBIO: Fondo limpio y sólido con degradado suave */
+            background: linear-gradient(135deg, var(--color-fondo-limpio) 0%, #e0e6f7 100%);
             display: flex;
             justify-content: center;
             align-items: center;
             height: 100vh;
             margin: 0;
-            /* Fondo sutilmente oscuro para que el formulario resalte */
-            background-color: rgba(0, 0, 0, 0.1);
         }
 
         .login-form {
             width: 100%;
             max-width: 420px;
             padding: 40px;
-            /* Color más neutro y transparente para un look moderno */
+            /* Fondo blanco con ligera transparencia */
             background-color: rgba(255, 255, 255, 0.95);
             border-radius: 12px;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+            /* Sombra suave y moderna */
+            box-shadow: 0 15px 45px rgba(0, 0, 0, 0.15);
             backdrop-filter: blur(5px);
-            border: 1px solid rgba(255, 255, 255, 0.3);
+            border: 1px solid rgba(255, 255, 255, 0.5);
         }
 
         .login-form h2 {
             text-align: center;
             margin-bottom: 30px;
-            color: #333;
-            font-size: 1.8rem;
+            color: var(--color-principal);
+            font-size: 2rem;
+            font-weight: 700;
         }
 
         .login-form div {
@@ -46,21 +57,22 @@
         .login-form label {
             display: block;
             margin-bottom: 8px;
-            color: #555;
+            color: var(--color-texto);
             font-weight: 600;
+            font-size: 0.95rem;
         }
 
         .login-form input {
             width: 100%;
             padding: 12px 15px;
-            border: 1px solid #ccc;
+            border: 2px solid #e0e0e0;
             border-radius: 8px;
             font-size: 16px;
-            transition: border-color 0.3s;
+            transition: border-color 0.3s, box-shadow 0.3s;
         }
 
         .login-form input:focus {
-            border-color: #667eea;
+            border-color: var(--color-principal);
             outline: none;
             box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.2);
         }
@@ -82,14 +94,15 @@
 
         /* Botón de Ingreso (Primario) */
         .login-form button[type="submit"] {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            background: linear-gradient(135deg, var(--color-principal) 0%, var(--color-secundario) 100%);
             color: white;
             margin-top: 10px;
+            box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);
         }
 
         .login-form button[type="submit"]:hover {
             transform: translateY(-2px);
-            box-shadow: 0 4px 10px rgba(102, 126, 234, 0.4);
+            box-shadow: 0 8px 20px rgba(102, 126, 234, 0.5);
         }
 
         /* Contenedor y estilos para botones de navegación */
@@ -101,20 +114,21 @@
 
         /* Botones de Navegación (Secundarios) */
         .btn-secondary {
-            background-color: #f0f0f0;
-            color: #667eea;
-            border: 1px solid #667eea;
+            background-color: #ffffff;
+            color: var(--color-principal);
+            border: 2px solid var(--color-principal);
             flex-grow: 1;
         }
 
         .btn-secondary:hover {
-            background-color: #e0e0e0;
+            background-color: var(--color-principal);
+            color: white;
             transform: translateY(-1px);
         }
 
         .message-success {
-            background-color: #d4edda;
-            color: #155724;
+            background-color: var(--color-exito-bg);
+            color: var(--color-exito);
             border: 1px solid #c3e6cb;
             padding: 12px;
             border-radius: 8px;
@@ -122,29 +136,37 @@
             text-align: center;
             margin-bottom: 20px;
         }
+        /* Ajuste para el mensaje de error */
+        .message-error {
+            background-color: var(--color-error-bg);
+            color: var(--color-error);
+            border-color: #f5c6cb;
+        }
     </style>
 </head>
 <body>
 <div class="login-form">
     <div th:if="${param.cuentaEliminada}" class="message-success">
-        Tu cuenta ha sido eliminada exitosamente.
+        <i class="fas fa-check-circle"></i> Tu cuenta ha sido eliminada exitosamente.
     </div>
-    <div th:if="${param.error}" class="message-success" style="background-color: #f8d7da; color: #721c24; border-color: #f5c6cb;">
-        Usuario o contraseña inválidos.
+    <div th:if="${param.error}" class="message-success message-error">
+        <i class="fas fa-exclamation-triangle"></i> Usuario o contraseña inválidos.
     </div>
 
-    <h2><i class="fas fa-sign-in-alt"></i> Acceder al Sistema</h2>
+    <h2><i class="fas fa-lock"></i> Acceder al Sistema</h2>
     <form th:action="@{/login}" method="post">
         <div>
-            <label for="username">Usuario:</label>
-            <input type="text" id="username" name="username" required>
+            <label for="username"><i class="fas fa-user"></i> Usuario:</label>
+            <input type="text" id="username" name="username" placeholder="Ingresa tu nombre de usuario" required>
         </div>
         <div>
-            <label for="password">Contraseña:</label>
-            <input type="password" id="password" name="password" required>
+            <label for="password"><i class="fas fa-key"></i> Contraseña:</label>
+            <input type="password" id="password" name="password" placeholder="Ingresa tu contraseña" required>
         </div>
         <div>
-            <button type="submit">Ingresar</button>
+            <button type="submit">
+                <i class="fas fa-sign-in-alt"></i> Ingresar
+            </button>
         </div>
     </form>
 
