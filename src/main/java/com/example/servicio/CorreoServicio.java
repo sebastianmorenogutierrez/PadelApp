@@ -14,12 +14,12 @@ import org.thymeleaf.context.Context;
 
 import jakarta.mail.MessagingException;
 import jakarta.mail.internet.MimeMessage;
-import java.text.NumberFormat; // Importación necesaria
+// import java.text.NumberFormat; // ❌ Eliminada importación de formato de número (solo para pagos)
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter; // Importación necesaria
+// import java.util.Locale; // ❌ Eliminada importación de Locale (solo para pagos)
 import java.util.HashMap;
 import java.util.List;
-import java.util.Locale; // Importación necesaria
 import java.util.Map;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.atomic.AtomicInteger;
@@ -71,46 +71,13 @@ public class CorreoServicio {
     }
 
 
+    // ❌ ELIMINADO: Método enviarConfirmacionPago que dependía de la clase Pago y Stripe
+    /*
     public void enviarConfirmacionPago(Pago pago) {
-        try {
-            Usuario usuario = pago.getUsuario();
-            PadelMatch partido = pago.getPartido();
-
-            // Formatos
-            DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
-            NumberFormat currencyFormat = NumberFormat.getCurrencyInstance(new Locale("es", "CO"));
-
-            // 1. Crear el Contexto para Thymeleaf
-            Context context = new Context();
-            context.setVariable("usuarioNombre", usuario.getNombreUsuario());
-            context.setVariable("montoFormateado", currencyFormat.format(pago.getMonto()));
-            context.setVariable("nombrePartido", partido.getNombrePartido());
-            context.setVariable("fechaPartido", partido.getFecha().format(dateFormatter));
-            context.setVariable("horaPartido", partido.getHora().toString());
-            context.setVariable("club", partido.getClub());
-            context.setVariable("nivelJuego", partido.getNivelJuego());
-            context.setVariable("idTransaccion", pago.getStripePaymentIntentId() != null ?
-                    pago.getStripePaymentIntentId().substring(0, 20) + "..." :
-                    "N/A");
-            context.setVariable("fechaPago", pago.getFechaPago() != null ?
-                    pago.getFechaPago().format(DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm")) :
-                    "N/A");
-
-            String asunto = "✅ Confirmación de Pago - " + partido.getNombrePartido();
-            // Asegúrate de que este archivo exista en src/main/resources/templates/email/confirmacion-pago.html
-            String templateName = "email/confirmacion-pago";
-
-            // 2. Usar el método general de envío HTML
-            enviarCorreoHTML(usuario.getIndividuo().getCorreo(), asunto, templateName, context);
-
-            correosEnviados.incrementAndGet();
-            System.out.println("Email de confirmación de pago enviado a: " + usuario.getIndividuo().getCorreo());
-
-        } catch (MessagingException e) {
-            correosError.incrementAndGet();
-            System.err.println("Error al enviar email de confirmación de pago: " + e.getMessage());
-        }
+        // ... Lógica eliminada ...
     }
+    */
+
 
     public CompletableFuture<Void> enviarCorreoMasivo(List<Usuario> jugadores, String asunto,
                                                       String mensaje, String tipoEvento) {
