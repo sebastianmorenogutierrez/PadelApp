@@ -113,7 +113,6 @@ public class CorreoServicio {
                     }
                 }
             }
-
             ultimoEnvio = LocalDateTime.now();
             System.out.println("Envío masivo completado - Exitosos: " + exitosos + ", Fallos: " + fallos);
         });
