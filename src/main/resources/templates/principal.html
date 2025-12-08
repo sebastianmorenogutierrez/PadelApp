@@ -35,7 +35,7 @@
 
         body {
             font-family: 'Arial', sans-serif;
-            /* CAMBIO CLAVE: Aplicación estricta del fondo #F4FFF8 */
+            /* Aplicación estricta del fondo #F4FFF8 */
             background-color: var(--color-bg-soft);
             margin: 0;
             padding: 0;
@@ -91,14 +91,16 @@
 
         main {
             flex: 1;
+            /* Permitir que el contenido use todo el ancho de la pantalla */
             padding: 60px 20px;
         }
 
-        /* --- Hero Section --- */
+        /* --- Hero Section (Ajuste de tamaño) --- */
         .hero-section {
             background-image: var(--gradient-primary);
             color: var(--color-text);
-            padding: 80px 40px;
+            /* CAMBIO CLAVE: Reducción del padding vertical (de 80px a 50px) */
+            padding: 50px 40px;
             border-radius: 20px;
             max-width: 1200px;
             margin: 0 auto 60px;
@@ -116,7 +118,6 @@
         }
 
         .hero-section p {
-            /* Fuente ligeramente reducida para ocupar menos espacio vertical */
             font-size: 20px;
             margin-bottom: 0;
             font-weight: 500;
@@ -146,7 +147,8 @@
 
         /* --- Video y Beneficios (Distribución Ancha) --- */
         .video-wrapper {
-            max-width: 1200px;
+            /* Aumento del ancho máximo para ocupar más pantalla */
+            max-width: 1400px;
             margin: 50px auto 70px;
             padding: 0 20px;
         }
@@ -160,7 +162,6 @@
         }
 
         .video-container {
-            /* El video ahora ocupa una columna */
             position: relative;
             width: 100%;
             padding-bottom: 56.25%;
@@ -180,7 +181,7 @@
             border: none;
         }
 
-        /* Contenedor de las dos tarjetas principales (ahora se apilan verticalmente en la segunda columna) */
+        /* Contenedor de las dos tarjetas principales */
         .benefits-card-group {
             display: flex;
             flex-direction: column;
@@ -189,7 +190,6 @@
         }
 
         .card-benefit {
-            /* Fondo blanco para contraste con el body (#F4FFF8) */
             background-color: var(--color-white);
             padding: 25px;
             border-radius: 15px;
@@ -216,9 +216,11 @@
 
         /* --- Grid de Características (4 Tarjetas) --- */
         .features-grid {
-            max-width: 1200px;
+            /* Aumento del ancho máximo para ocupar más pantalla */
+            max-width: 1400px;
             margin: 70px auto 70px;
             display: grid;
+            /* 4 columnas que ocupan el espacio disponible */
             grid-template-columns: repeat(4, 1fr);
             gap: 30px;
             padding: 0 20px;
@@ -237,7 +239,6 @@
         }
 
         .feature-card {
-            /* Fondo blanco para contraste con el body (#F4FFF8) */
             background-color: var(--color-white);
             padding: 30px;
             border-radius: 15px;
@@ -274,9 +275,9 @@
 
         /* --- About Section --- */
         .about-section {
-            max-width: 1200px;
+            /* Aumento del ancho máximo para ocupar más pantalla */
+            max-width: 1400px;
             margin: 50px auto;
-            /* Fondo blanco para contraste con el body (#F4FFF8) */
             background-color: var(--color-white);
             padding: 40px;
             border-radius: 15px;
@@ -339,6 +340,7 @@
             }
 
             .hero-section {
+                /* Mantener el padding más pequeño en móvil */
                 padding: 40px 20px;
             }
 
@@ -354,7 +356,6 @@
                 font-size: 28px;
             }
 
-            /* CAMBIO CLAVE para móviles: Las secciones de Video y Beneficios vuelven a ser una sola columna */
             .video-benefits-layout {
                 grid-template-columns: 1fr;
             }
@@ -403,7 +404,8 @@
                 </div>
             </div>
 
-        </div> </section>
+        </div>
+    </section>
 
     <section class="features-grid">
         <div class="feature-card">
@@ -443,7 +445,7 @@
 </main>
 
 <footer>
-    &copy; 2025 Tu Club de Pádel. Desarrollado por 1 pequeño desarrollador.
+    &copy; 2025 Tu Club de Pádel. Desarrollado por 3 pequeños desarrolladores.
 </footer>
 
 <script>
