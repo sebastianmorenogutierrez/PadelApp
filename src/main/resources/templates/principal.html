@@ -6,14 +6,14 @@
     <title>Tu Club PadelApp | La Pasión por el Padel</title>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
     <style>
-        /* Paleta de Colores PadelApp (Verde Azulado SUAVIZADO Y FONDO CREMA) */
+        /* Paleta de Colores PadelApp (Verde Azulado VIBRANTE: #25B3A2) */
         :root {
-            /* Colores Principales de la Marca (Verde Menta MÁS CLARO) */
-            --color-primary: #61e8ce; /* ¡NUEVO! Verde Menta más claro y suave */
-            --color-primary-dark: #39e0c5; /* ¡NUEVO! El anterior primary, ahora como dark (aún suave) */
+            /* Colores Principales de la Marca (NUEVO: #25B3A2) */
+            --color-primary: #25B3A2; /* ¡NUEVO! Verde Azulado Fuerte */
+            --color-primary-dark: #1D8E81; /* Variante más oscura para el degradado */
 
-            /* Color Clave del Fondo (SOLICITADO: Crema/Beige muy suave) */
-            --color-bg-soft: #FFFAF0; /* ¡NUEVO! Fondo Crema muy claro (Floral White) */
+            /* Color Clave del Fondo (Mantenido: Crema/Beige muy suave) */
+            --color-bg-soft: #FFFAF0; /* Fondo Crema muy claro (Floral White) */
 
             /* Otros Colores */
             --color-secondary: #0984e3; /* Azul Brillante (Hover de Auth) */
@@ -23,7 +23,7 @@
             --color-text-light: #636e72; /* Gris Medio */
             --color-white: #ffffff; /* Blanco Puro */
 
-            /* Degradados Ajustados a los nuevos Primary Suaves */
+            /* Degradados Ajustados al nuevo Primary Fuerte */
             --gradient-primary: linear-gradient(135deg, var(--color-primary) 0%, var(--color-primary-dark) 100%);
             --gradient-accent: linear-gradient(135deg, var(--color-secondary) 0%, #74b9ff 100%);
             --color-texto: var(--color-text); /* Alias */
@@ -35,7 +35,7 @@
 
         body {
             font-family: 'Arial', sans-serif;
-            /* Aplicación del nuevo fondo crema suave */
+            /* Aplicación del fondo crema suave */
             background-color: var(--color-bg-soft);
             margin: 0;
             padding: 0;
@@ -47,12 +47,12 @@
 
         /* --- Header y Botones de Autenticación --- */
         header {
-            /* Mantiene el color primario (ahora más claro) */
+            /* Usa el nuevo color primary */
             background-color: var(--color-primary);
             color: white;
             padding: 15px 40px;
-            /* La sombra usa el color anterior, ahora como dark */
-            box-shadow: 0 4px 10px rgba(57, 224, 197, 0.4);
+            /* Sombra ajustada al nuevo color */
+            box-shadow: 0 4px 10px rgba(37, 179, 162, 0.4);
             display: flex;
             justify-content: space-between;
             align-items: center;
@@ -75,7 +75,7 @@
         .auth-buttons a {
             padding: 10px 20px;
             background-color: var(--color-white);
-            /* Los botones de Auth usan el nuevo primary (más claro) */
+            /* Botones Auth usan el nuevo primary */
             color: var(--color-primary);
             text-decoration: none;
             font-weight: bold;
@@ -99,7 +99,7 @@
 
         /* --- Hero Section (Ajuste de tamaño) --- */
         .hero-section {
-            /* Usa el nuevo degradado más suave */
+            /* Usa el nuevo degradado */
             background-image: var(--gradient-primary);
             color: var(--color-text);
             padding: 50px 40px;
@@ -107,8 +107,8 @@
             max-width: 1200px;
             margin: 0 auto 60px;
             text-align: center;
-            /* La sombra usa el color anterior, ahora como dark */
-            box-shadow: 0 10px 40px rgba(57, 224, 197, 0.5);
+            /* Sombra ajustada al nuevo color */
+            box-shadow: 0 10px 40px rgba(37, 179, 162, 0.5);
             border: 1px solid rgba(255, 255, 255, 0.5);
         }
 
@@ -130,7 +130,7 @@
         /* --- Secciones de Contenido (Flexibles) --- */
 
         .section-title {
-            /* Usa el nuevo primary (más claro) */
+            /* Usa el nuevo color primary */
             color: var(--color-primary);
             font-size: 32px;
             margin-bottom: 40px;
@@ -144,7 +144,7 @@
             display: block;
             width: 80px;
             height: 4px;
-            /* Usa el nuevo degradado más suave */
+            /* Usa el nuevo degradado */
             background: var(--gradient-primary);
             margin: 10px auto 0;
             border-radius: 2px;
@@ -194,12 +194,12 @@
         }
 
         .card-benefit {
-            /* Fondo blanco para contraste con el nuevo fondo crema */
+            /* Fondo blanco para contraste con el fondo crema */
             background-color: var(--color-white);
             padding: 25px;
             border-radius: 15px;
             box-shadow: 0 4px 15px rgba(0,0,0,0.1);
-            /* Borde usa el nuevo primary (más claro) */
+            /* Borde usa el nuevo primary */
             border-left: 5px solid var(--color-primary);
             transition: transform 0.3s ease, box-shadow 0.3s ease;
             height: 100%;
@@ -207,12 +207,12 @@
 
         .card-benefit:hover {
             transform: translateY(-5px);
-            /* Sombra usa el color anterior, ahora como dark */
-            box-shadow: 0 8px 25px rgba(57, 224, 197, 0.2);
+            /* Sombra ajustada al nuevo color */
+            box-shadow: 0 8px 25px rgba(37, 179, 162, 0.2);
         }
 
         .card-benefit h3 {
-            /* Título usa el nuevo primary (más claro) */
+            /* Título usa el nuevo primary */
             color: var(--color-primary);
             font-size: 20px;
             margin-bottom: 10px;
@@ -245,7 +245,7 @@
         }
 
         .feature-card {
-            /* Fondo blanco para contraste con el nuevo fondo crema */
+            /* Fondo blanco para contraste con el fondo crema */
             background-color: var(--color-white);
             padding: 30px;
             border-radius: 15px;
@@ -257,15 +257,15 @@
 
         .feature-card:hover {
             transform: translateY(-5px);
-            /* Sombra usa el color anterior, ahora como dark */
-            box-shadow: 0 8px 25px rgba(57, 224, 197, 0.25);
-            /* Hover suave usando el nuevo primary (más claro) */
-            background: rgba(97, 232, 206, 0.05);
+            /* Sombra ajustada al nuevo color */
+            box-shadow: 0 8px 25px rgba(37, 179, 162, 0.25);
+            /* Hover suave usando el nuevo primary */
+            background: rgba(37, 179, 162, 0.05);
         }
 
         .feature-card i {
             font-size: 40px;
-            /* Icono usa el nuevo primary (más claro) */
+            /* Icono usa el nuevo primary */
             color: var(--color-primary);
             margin-bottom: 15px;
         }
@@ -287,12 +287,12 @@
         .about-section {
             max-width: 1400px;
             margin: 50px auto;
-            /* Fondo blanco para contraste con el nuevo fondo crema */
+            /* Fondo blanco para contraste con el fondo crema */
             background-color: var(--color-white);
             padding: 40px;
             border-radius: 15px;
             box-shadow: 0 4px 15px rgba(0,0,0,0.1);
-            /* Borde superior usa el nuevo primary (más claro) */
+            /* Borde superior usa el nuevo primary */
             border-top: 5px solid var(--color-primary);
             text-align: center;
         }
@@ -317,11 +317,11 @@
         .about-section .register-cta {
             margin-top: 30px;
             font-weight: bold;
-            /* CTA usa el nuevo primary (más claro) */
+            /* CTA usa el nuevo primary */
             color: var(--color-primary);
             font-size: 18px;
             padding: 10px 20px;
-            /* Borde usa el nuevo primary (más claro) */
+            /* Borde usa el nuevo primary */
             border: 2px solid var(--color-primary);
             display: inline-block;
             border-radius: 10px;
@@ -329,7 +329,7 @@
         }
 
         .about-section .register-cta:hover {
-            /* Hover usa el nuevo primary (más claro) */
+            /* Hover usa el nuevo primary */
             background-color: var(--color-primary);
             color: var(--color-white);
             text-decoration: none;
@@ -337,14 +337,14 @@
 
         /* --- Footer --- */
         footer {
-            /* Footer usa el nuevo primary (más claro) */
+            /* Footer usa el nuevo primary */
             background-color: var(--color-primary);
             color: var(--color-white);
             text-align: center;
             padding: 20px;
             font-size: 0.95em;
-            /* Sombra usa el color anterior, ahora como dark */
-            box-shadow: 0 -4px 10px rgba(57, 224, 197, 0.4);
+            /* Sombra ajustada al nuevo color */
+            box-shadow: 0 -4px 10px rgba(37, 179, 162, 0.4);
         }
 
         /* --- Responsividad General --- */
