@@ -47,7 +47,6 @@
 
         /* --- Header y Botones de Autenticación --- */
         header {
-            /* Uso del color primario suavizado */
             background-color: var(--color-primary);
             color: white;
             padding: 15px 40px;
@@ -84,7 +83,7 @@
         }
 
         .auth-buttons a:hover {
-            background: var(--gradient-accent); /* Azul Brillante */
+            background: var(--gradient-accent);
             color: white;
             transform: translateY(-2px);
             box-shadow: 0 4px 10px rgba(9, 132, 227, 0.4);
@@ -98,7 +97,7 @@
         /* --- Hero Section --- */
         .hero-section {
             background-image: var(--gradient-primary);
-            color: var(--color-text); /* Texto oscuro para mejor contraste en verde suave */
+            color: var(--color-text);
             padding: 80px 40px;
             border-radius: 20px;
             max-width: 1200px;
@@ -117,7 +116,8 @@
         }
 
         .hero-section p {
-            font-size: 22px;
+            /* Fuente ligeramente reducida para ocupar menos espacio vertical */
+            font-size: 20px;
             margin-bottom: 0;
             font-weight: 500;
             color: var(--color-white);
@@ -144,14 +144,23 @@
             border-radius: 2px;
         }
 
-        /* --- Video y Beneficios --- */
+        /* --- Video y Beneficios (Distribución Ancha) --- */
         .video-wrapper {
-            max-width: 1000px;
+            max-width: 1200px;
             margin: 50px auto 70px;
             padding: 0 20px;
         }
 
+        /* Contenedor Grid que alinea Video y Tarjetas lado a lado */
+        .video-benefits-layout {
+            display: grid;
+            grid-template-columns: 1fr 1fr; /* Dos columnas iguales */
+            gap: 30px;
+            align-items: start; /* Alineación superior */
+        }
+
         .video-container {
+            /* El video ahora ocupa una columna */
             position: relative;
             width: 100%;
             padding-bottom: 56.25%;
@@ -171,12 +180,12 @@
             border: none;
         }
 
-        /* Contenedor de las dos tarjetas principales */
-        .video-info-cards {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
+        /* Contenedor de las dos tarjetas principales (ahora se apilan verticalmente en la segunda columna) */
+        .benefits-card-group {
+            display: flex;
+            flex-direction: column;
             gap: 30px;
-            margin-top: 40px;
+            width: 100%;
         }
 
         .card-benefit {
@@ -210,7 +219,7 @@
             max-width: 1200px;
             margin: 70px auto 70px;
             display: grid;
-            grid-template-columns: repeat(4, 1fr); /* 4 Columnas principales */
+            grid-template-columns: repeat(4, 1fr);
             gap: 30px;
             padding: 0 20px;
         }
@@ -241,7 +250,7 @@
         .feature-card:hover {
             transform: translateY(-5px);
             box-shadow: 0 8px 25px rgba(57, 224, 197, 0.25);
-            background: rgba(57, 224, 197, 0.05); /* Fondo suave en hover */
+            background: rgba(57, 224, 197, 0.05);
         }
 
         .feature-card i {
@@ -313,7 +322,6 @@
 
         /* --- Footer --- */
         footer {
-            /* Fondo del footer en Primary SUAVIZADO */
             background-color: var(--color-primary);
             color: var(--color-white);
             text-align: center;
@@ -346,9 +354,9 @@
                 font-size: 28px;
             }
 
-            .video-info-cards {
+            /* CAMBIO CLAVE para móviles: Las secciones de Video y Beneficios vuelven a ser una sola columna */
+            .video-benefits-layout {
                 grid-template-columns: 1fr;
-                gap: 20px;
             }
         }
     </style>
@@ -367,32 +375,35 @@
 <main>
     <section class="hero-section">
         <h2>La Pasión se Vive en Cada Partido.</h2>
-        <p>Tu Club PadelApp: El ecosistema digital y deportivo para jugadores como tú.</p>
+        <p>Tu Club PadelApp: El ecosistema para jugadores.</p>
     </section>
 
     <section class="video-wrapper">
         <h2 class="section-title">Nuestra Visión y el Mundo del Pádel</h2>
 
-        <div class="video-container">
-            <iframe src="https://www.youtube.com/embed/KGwIxW1JbOw?si=C4Juv9K5buAr4qyo"
-                    title="YouTube video player: ¿Qué es el Padel?"
-                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-                    allowfullscreen>
-            </iframe>
-        </div>
+        <div class="video-benefits-layout">
 
-        <div class="video-info-cards">
-            <div class="card-benefit">
-                <h3><i class="fas fa-trophy"></i> ¿Qué es el Pádel?</h3>
-                <p>El pádel es un deporte de raqueta dinámico que se juega en parejas. Combina la estrategia del tenis con el uso creativo de las paredes de cristal y malla, haciendo cada juego impredecible y emocionante. Accesible para todos los niveles, es la manera perfecta de activarse y divertirse.</p>
+            <div class="video-container">
+                <iframe src="https://www.youtube.com/embed/KGwIxW1JbOw?si=C4Juv9K5buAr4qyo"
+                        title="YouTube video player: ¿Qué es el Padel?"
+                        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                        allowfullscreen>
+                </iframe>
             </div>
 
-            <div class="card-benefit">
-                <h3><i class="fas fa-heartbeat"></i> Beneficios Clave</h3>
-                <p>Mejora tu coordinación, aumenta tu capacidad cardiovascular y es un excelente desestresante. Además, su naturaleza social facilita la creación de una comunidad sólida y amistosa. ¡Juega, ríe y haz ejercicio al mismo tiempo!</p>
+            <div class="benefits-card-group">
+                <div class="card-benefit">
+                    <h3><i class="fas fa-trophy"></i> ¿Qué es el Pádel?</h3>
+                    <p>El pádel es un deporte de raqueta dinámico que se juega en parejas. Combina la estrategia del tenis con el uso creativo de las paredes de cristal y malla, haciendo cada juego impredecible y emocionante. Accesible para todos los niveles, es la manera perfecta de activarse y divertirse.</p>
+                </div>
+
+                <div class="card-benefit">
+                    <h3><i class="fas fa-heartbeat"></i> Beneficios Clave</h3>
+                    <p>Mejora tu coordinación, aumenta tu capacidad cardiovascular y es un excelente desestresante. Además, su naturaleza social facilita la creación de una comunidad sólida y amistosa. ¡Juega, ríe y haz ejercicio al mismo tiempo!</p>
+                </div>
             </div>
-        </div>
-    </section>
+
+        </div> </section>
 
     <section class="features-grid">
         <div class="feature-card">
@@ -432,7 +443,7 @@
 </main>
 
 <footer>
-    &copy; 2025 Tu Club de Pádel. Desarrollado por 3 pequeños desarrolladores.
+    &copy; 2025 Tu Club de Pádel. Desarrollado por 1 pequeño desarrollador.
 </footer>
 
 <script>
