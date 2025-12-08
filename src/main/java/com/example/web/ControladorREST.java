@@ -67,29 +67,36 @@ public class ControladorREST { // Renombrar a MvcController si lo deseas
         return "registro";
     }
 
-    // 2. Procesa el registro (Lógica robusta unificada)
     @PostMapping("/API/registro")
     public String procesarRegistro(@Valid Usuario usuario, Errors errors, RedirectAttributes redirectAttributes) {
 
+        System.out.println(">>> Intentando procesar registro. ¿Hay errores de validación?: " + errors.hasErrors());
+
         if (errors.hasErrors()) {
             System.out.println("Errores de validación en el registro: " + errors.getAllErrors());
-            redirectAttributes.addFlashAttribute("org.springframework.validation.BindingResult.usuario", errors);
-            redirectAttributes.addFlashAttribute("usuario", usuario);
-            redirectAttributes.addFlashAttribute("mensajeError", "Error en el formulario. Por favor, revisa los campos.");
+            // ... (Redirección de error de validación) ...
             return "redirect:/registro";
         }
 
         try {
+            // Asignación de Perfil (Aquí podría fallar si 'perfilServicio' es nulo o el ID no existe)
             usuario.setPerfil(perfilServicio.buscarPorId(2));
 
+            // Inicialización de la bandera de Individuo
             usuario.getIndividuo().setEliminado(false);
+
+            // 💡 LLAMADA AL SERVICIO
             usuarioServicio.registrarNuevoUsuario(usuario);
 
             redirectAttributes.addFlashAttribute("mensajeExito", "¡Registro exitoso! Ya puedes iniciar sesión.");
             return "redirect:/login";
 
         } catch (Exception e) {
+
+            // 🛑 LÍNEA CLAVE: Mostrar la pila de errores completa si falla el guardado
             System.err.println("Error al guardar el nuevo usuario: " + e.getMessage());
+            e.printStackTrace(); // <-- AGREGAR ESTO
+
             redirectAttributes.addFlashAttribute("mensajeError", "Hubo un error al crear la cuenta: " + e.getMessage());
             return "redirect:/registro";
         }
