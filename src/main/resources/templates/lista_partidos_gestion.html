@@ -5,6 +5,33 @@
     <title>Gestión de Partidos</title>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
     <style>
+        /* Paleta de Colores Solicitada (Verde Azulado Brillante) */
+        :root {
+            --color-primary: #00b894; /* Verde Azulado Brillante */
+            --color-primary-dark: #00a383; /* Variante más oscura del primario */
+            --color-secondary: #0984e3; /* Azul Brillante */
+            --color-accent: #fdcb6e; /* Amarillo Dorado */
+            --color-danger: #d63031; /* Rojo Ladrillo */
+            --color-text: #2d3436; /* Gris Oscuro Casi Negro */
+            --color-text-light: #636e72; /* Gris Medio */
+            --color-background: #f8f9fa; /* Gris Muy Claro */
+            --color-white: #ffffff; /* Blanco Puro */
+
+            /* Gradientes */
+            --gradient-primary: linear-gradient(135deg, var(--color-primary) 0%, #00cec9 100%);
+            --gradient-primary-btn: linear-gradient(135deg, var(--color-primary) 0%, var(--color-primary-dark) 100%);
+            --gradient-sidebar-active: linear-gradient(90deg, rgba(0, 184, 148, 0.1) 0%, rgba(0, 163, 131, 0.05) 100%);
+
+            /* Menú Específico */
+            --gradient-menu-accent: linear-gradient(135deg, var(--color-secondary) 0%, #74b9ff 100%); /* Usando secondary/azul */
+            --gradient-menu-danger: linear-gradient(135deg, var(--color-danger) 0%, #ff7675 100%); /* Usando danger/rojo */
+
+            /* Botones de Acción en Tabla */
+            --gradient-edit: linear-gradient(135deg, #2ecc71 0%, #27ae60 100%); /* Verde más estándar para Editar */
+            --gradient-delete: linear-gradient(135deg, var(--color-danger) 0%, #e74c3c 100%);
+            --gradient-pdf: linear-gradient(135deg, var(--color-accent) 0%, #ff851b 100%); /* Amarillo/Naranja para PDF */
+        }
+
         /* Estilos Base */
         * {
             margin: 0;
@@ -14,9 +41,9 @@
 
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            background: var(--gradient-primary); /* Fondo con gradiente primario */
             min-height: 100vh;
-            color: #333;
+            color: var(--color-text);
         }
 
         .container {
@@ -24,25 +51,24 @@
             min-height: 100vh;
         }
 
-        /* Sidebar - Mantenido igual que la referencia */
+        /* Sidebar */
         .sidebar {
             width: 280px;
-            background: rgba(255, 255, 255, 0.95);
-            backdrop-filter: blur(10px);
+            background: var(--color-white);
             padding: 2rem 0;
             box-shadow: 4px 0 20px rgba(0, 0, 0, 0.1);
-            border-right: 1px solid rgba(255, 255, 255, 0.2);
+            border-right: 1px solid rgba(0, 184, 148, 0.2);
         }
 
         .logo {
             text-align: center;
             padding: 0 2rem 2rem;
-            border-bottom: 1px solid rgba(102, 126, 234, 0.2);
+            border-bottom: 1px solid rgba(0, 184, 148, 0.2);
             margin-bottom: 2rem;
         }
 
         .logo h2 {
-            color: #667eea;
+            color: var(--color-primary);
             font-size: 1.5rem;
             font-weight: 700;
         }
@@ -51,7 +77,7 @@
             display: block;
             padding: 1rem 2rem;
             text-decoration: none;
-            color: #555;
+            color: var(--color-text-light);
             transition: all 0.3s ease;
             border-left: 4px solid transparent;
             position: relative;
@@ -59,15 +85,15 @@
 
         .menu-item:hover,
         .menu-item.active {
-            background: linear-gradient(90deg, rgba(102, 126, 234, 0.1) 0%, rgba(118, 75, 162, 0.05) 100%);
-            color: #667eea;
-            border-left-color: #667eea;
+            background: var(--gradient-sidebar-active);
+            color: var(--color-primary);
+            border-left-color: var(--color-primary);
             transform: translateX(5px);
         }
 
         .menu-section-title {
             padding: 0 2rem 0.5rem;
-            color: #888;
+            color: var(--color-text-light);
             font-size: 0.75rem;
             text-transform: uppercase;
             letter-spacing: 1px;
@@ -75,26 +101,26 @@
         }
 
         .menu-item.accent {
-            background: linear-gradient(135deg, #33b633 0%, #2ca52c 100%);
-            color: white;
+            background: var(--gradient-menu-accent);
+            color: var(--color-white);
             border-radius: 0 25px 25px 0;
             margin: 0.5rem 0;
         }
 
         .menu-item.accent:hover {
-            background: linear-gradient(135deg, #2ca52c 0%, #228b22 100%);
+            background: var(--color-secondary);
             transform: translateX(10px);
         }
 
         .menu-item.danger {
-            background: linear-gradient(135deg, #ff4d4d 0%, #e03c3c 100%);
-            color: white;
+            background: var(--gradient-menu-danger);
+            color: var(--color-white);
             border-radius: 0 25px 25px 0;
             margin-top: 1rem;
         }
 
         .menu-item.danger:hover {
-            background: linear-gradient(135deg, #e03c3c 0%, #cc2929 100%);
+            background: var(--color-danger);
             transform: translateX(10px);
         }
 
@@ -106,24 +132,23 @@
         }
 
         .content-header {
-            background: rgba(255, 255, 255, 0.95);
-            backdrop-filter: blur(10px);
+            background: var(--color-white);
             padding: 2rem;
             border-radius: 20px;
             margin-bottom: 2rem;
             box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
-            border: 1px solid rgba(255, 255, 255, 0.2);
+            border: 1px solid rgba(0, 184, 148, 0.2);
         }
 
         .content-header h1 {
-            color: #667eea;
+            color: var(--color-primary);
             font-size: 2.5rem;
             margin-bottom: 0.5rem;
             font-weight: 700;
         }
 
         .content-header p {
-            color: #666;
+            color: var(--color-text-light);
             font-size: 1.1rem;
         }
 
@@ -151,61 +176,62 @@
         }
 
         .btn-primary {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: white;
-            box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);
+            background: var(--gradient-primary-btn);
+            color: var(--color-white);
+            box-shadow: 0 4px 15px rgba(0, 184, 148, 0.4);
         }
 
         .btn-primary:hover {
             transform: translateY(-2px);
-            box-shadow: 0 8px 25px rgba(102, 126, 234, 0.6);
+            box-shadow: 0 8px 25px rgba(0, 184, 148, 0.6);
         }
 
         .btn-secondary {
-            background: rgba(255, 255, 255, 0.9);
-            color: #667eea;
-            border: 2px solid #667eea;
+            background: var(--color-white);
+            color: var(--color-primary);
+            border: 2px solid var(--color-primary);
         }
 
         .btn-secondary:hover {
-            background: #667eea;
-            color: white;
+            background: var(--color-primary);
+            color: var(--color-white);
             transform: translateY(-2px);
         }
 
-        /* Nuevo: Botón de Edición (verde) */
+        /* Botón de Edición (Verde estándar) */
         .btn-edit {
-            background: linear-gradient(135deg, #33b633 0%, #2ca52c 100%);
-            color: white;
-            box-shadow: 0 4px 15px rgba(51, 182, 51, 0.4);
+            background: var(--gradient-edit);
+            color: var(--color-white);
+            box-shadow: 0 4px 15px rgba(46, 204, 113, 0.4);
         }
 
         .btn-edit:hover {
             transform: translateY(-2px);
-            box-shadow: 0 8px 25px rgba(51, 182, 51, 0.6);
+            box-shadow: 0 8px 25px rgba(46, 204, 113, 0.6);
         }
 
+        /* Botón de Eliminar (Rojo Ladrillo) */
         .btn-danger {
-            background: linear-gradient(135deg, #ff6b6b 0%, #ee5a24 100%);
-            color: white;
-            box-shadow: 0 4px 15px rgba(255, 107, 107, 0.4);
+            background: var(--gradient-delete);
+            color: var(--color-white);
+            box-shadow: 0 4px 15px rgba(214, 48, 49, 0.4);
         }
 
         .btn-danger:hover {
             transform: translateY(-2px);
-            box-shadow: 0 8px 25px rgba(255, 107, 107, 0.6);
+            box-shadow: 0 8px 25px rgba(214, 48, 49, 0.6);
         }
 
-        /* Nuevo estilo para el botón de PDF */
+        /* Botón de PDF (Amarillo Dorado/Accent) */
         .btn-pdf {
-            background: linear-gradient(135deg, #ffc107 0%, #ff851b 100%);
-            color: white;
-            box-shadow: 0 4px 15px rgba(255, 193, 7, 0.4);
+            background: var(--gradient-pdf);
+            color: var(--color-text); /* Texto oscuro para contraste */
+            box-shadow: 0 4px 15px rgba(253, 203, 110, 0.4);
         }
 
         .btn-pdf:hover {
             transform: translateY(-2px);
-            box-shadow: 0 8px 25px rgba(255, 193, 7, 0.6);
+            box-shadow: 0 8px 25px rgba(253, 203, 110, 0.6);
         }
 
         .btn-small {
@@ -215,16 +241,15 @@
 
         /* Table Container */
         .table-container {
-            background: rgba(255, 255, 255, 0.95);
-            backdrop-filter: blur(10px);
+            background: var(--color-white);
             border-radius: 20px;
             padding: 2rem;
             box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
-            border: 1px solid rgba(255, 255, 255, 0.2);
+            border: 1px solid rgba(0, 184, 148, 0.2);
             overflow-x: auto;
         }
 
-        /* Table Styles - Renombrado de .torneos-table a .partidos-table */
+        /* Table Styles */
         .partidos-table {
             width: 100%;
             border-collapse: collapse;
@@ -232,15 +257,15 @@
         }
 
         .partidos-table thead tr {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: white;
+            background: var(--gradient-primary-btn); /* Encabezado de tabla con gradiente primario */
+            color: var(--color-white);
         }
 
         .partidos-table th,
         .partidos-table td {
             padding: 1rem;
             text-align: left;
-            border-bottom: 1px solid rgba(102, 126, 234, 0.1);
+            border-bottom: 1px solid rgba(0, 184, 148, 0.1);
         }
 
         .partidos-table th {
@@ -255,13 +280,13 @@
         }
 
         .partidos-table tbody tr:hover {
-            background: rgba(102, 126, 234, 0.05);
+            background: rgba(0, 184, 148, 0.05);
             transform: scale(1.01);
         }
 
         .partidos-table td {
             font-size: 0.95rem;
-            color: #555;
+            color: var(--color-text);
         }
 
         /* Action buttons in table */
@@ -275,10 +300,10 @@
             display: inline;
         }
 
-        /* Mensajes de Alerta */
+        /* Mensajes de Alerta (Ajustados a la nueva paleta) */
         .mensaje-exito {
             background-color: #d4edda;
-            color: #155724;
+            color: #00a383; /* Color verde oscuro relacionado con el primary */
             border: 1px solid #c3e6cb;
             padding: 1rem;
             margin-bottom: 1.5rem;
@@ -288,7 +313,7 @@
 
         .mensaje-error {
             background-color: #f8d7da;
-            color: #721c24;
+            color: var(--color-danger); /* Rojo ladrillo */
             border: 1px solid #f5c6cb;
             padding: 1rem;
             margin-bottom: 1.5rem;
@@ -300,7 +325,7 @@
         .empty-state {
             text-align: center;
             padding: 3rem;
-            color: #666;
+            color: var(--color-text-light);
         }
 
         .empty-state i {
@@ -311,7 +336,7 @@
 
         .empty-state h3 {
             margin-bottom: 1rem;
-            color: #667eea;
+            color: var(--color-primary);
         }
 
         /* Responsive */

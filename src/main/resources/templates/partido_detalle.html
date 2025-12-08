@@ -5,13 +5,33 @@
     <title th:text="'Detalles del Partido: ' + ${partido.nombrePartido}">Detalles del Partido</title>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
     <style>
+        /* Paleta de Colores Solicitada (Verde Azulado) */
+        :root {
+            --color-primary: #00b894; /* Verde Azulado Brillante */
+            --color-primary-dark: #00a383; /* Variante más oscura del primario */
+            --color-secondary: #0984e3; /* Azul Brillante */
+            --color-accent: #fdcb6e; /* Amarillo Dorado */
+            --color-danger: #d63031; /* Rojo Ladrillo */
+            --color-text: #2d3436; /* Gris Oscuro Casi Negro */
+            --color-text-light: #636e72; /* Gris Medio */
+            --color-background: #f8f9fa; /* Gris Muy Claro */
+            --color-white: #ffffff; /* Blanco Puro */
+            --color-court: #3498db; /* Azul Claro Vívido */
+            --color-court-line: #ecf0f1; /* Gris Muy Claro/Blanco Suave */
+
+            --gradient-primary: linear-gradient(135deg, var(--color-primary) 0%, #00cec9 100%);
+            --gradient-danger: linear-gradient(135deg, var(--color-danger) 0%, #ff7675 100%);
+            --gradient-admin-edit: linear-gradient(135deg, var(--color-primary-dark) 0%, var(--color-primary) 100%);
+        }
+
         /* Estilos base del partido_detalle */
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); /* Fondo morado/azul */
+            /* Fondo actualizado a Primary Gradient */
+            background: var(--gradient-primary);
             min-height: 100vh;
             padding: 2rem;
-            color: #333;
+            color: var(--color-text);
         }
 
         .main-content {
@@ -28,16 +48,16 @@
         }
 
         .info-card {
-            background: rgba(255, 255, 255, 0.95);
+            background: var(--color-white);
             backdrop-filter: blur(5px);
             padding: 1.5rem;
             border-radius: 15px;
             box-shadow: 0 4px 15px rgba(0,0,0,0.1);
-            border-left: 5px solid #667eea;
+            border-left: 5px solid var(--color-primary); /* Usando primary */
         }
 
         .info-card h4 {
-            color: #764ba2;
+            color: var(--color-primary-dark); /* Usando dark primary */
             font-size: 0.9rem;
             text-transform: uppercase;
             letter-spacing: 1px;
@@ -46,22 +66,24 @@
         }
 
         .info-card p {
-            color: #555;
+            color: var(--color-text);
             font-size: 1.1rem;
             font-weight: 500;
         }
 
         .info-card i {
             margin-right: 0.5rem;
+            color: var(--color-primary); /* Iconos en primary */
         }
 
         /* Título del Partido */
         .partido-header {
-            color: white;
+            color: var(--color-white);
             font-size: 2.5rem;
             text-align: center;
             margin-bottom: 2rem;
             font-weight: 700;
+            text-shadow: 1px 1px 3px rgba(0,0,0,0.2);
         }
 
         /* Grid Principal para Jugadores y Formulario */
@@ -79,7 +101,7 @@
 
         /* Sección de Participantes */
         .section-card {
-            background: rgba(255, 255, 255, 0.95);
+            background: var(--color-white);
             backdrop-filter: blur(5px);
             padding: 2rem;
             border-radius: 20px;
@@ -92,17 +114,17 @@
             gap: 1rem;
             margin-bottom: 1.5rem;
             padding-bottom: 1rem;
-            border-bottom: 2px solid rgba(102, 126, 234, 0.1);
+            border-bottom: 2px solid rgba(0, 184, 148, 0.1); /* Usando primary */
         }
 
         .section-header h3 {
-            color: #667eea;
+            color: var(--color-primary); /* Usando primary */
             font-size: 1.5rem;
             font-weight: 600;
         }
 
         .players-count {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            background: var(--gradient-primary); /* Usando primary gradient */
             color: white;
             padding: 0.3rem 0.8rem;
             border-radius: 20px;
@@ -119,10 +141,10 @@
         }
 
         .player-item {
-            background: rgba(102, 126, 234, 0.05);
+            background: rgba(0, 184, 148, 0.05); /* Usando primary */
             padding: 1rem 1.5rem;
             border-radius: 12px;
-            border-left: 4px solid #667eea;
+            border-left: 4px solid var(--color-primary); /* Usando primary */
             display: flex;
             align-items: center;
             justify-content: space-between;
@@ -131,14 +153,14 @@
         }
 
         .player-item:hover {
-            background: rgba(102, 126, 234, 0.1);
+            background: rgba(0, 184, 148, 0.1); /* Usando primary */
         }
 
         .player-avatar {
             width: 40px;
             height: 40px;
             border-radius: 50%;
-            background: linear-gradient(135deg, #764ba2 0%, #667eea 100%);
+            background: var(--gradient-primary); /* Usando primary gradient */
             display: flex;
             align-items: center;
             justify-content: center;
@@ -149,14 +171,21 @@
 
         .player-info {
             flex-grow: 1;
-            color: #555;
+            color: var(--color-text);
             font-weight: 500;
             font-size: 1rem;
         }
 
+        /* Etiqueta Creador */
+        .player-item span[th:if*="partido.creador.id_usuario"] {
+            font-size: 0.8em;
+            color: var(--color-primary-dark); /* Color específico para Creador */
+            font-weight: bold;
+        }
+
         /* Formulario de Inscripción */
         .registration-section {
-            background: rgba(255, 255, 255, 0.95);
+            background: var(--color-white);
             backdrop-filter: blur(5px);
             padding: 2rem;
             border-radius: 20px;
@@ -167,7 +196,7 @@
         .form-input {
             width: 100%;
             padding: 1rem;
-            border: 2px solid rgba(102, 126, 234, 0.2);
+            border: 2px solid rgba(0, 184, 148, 0.2); /* Usando primary */
             border-radius: 12px;
             font-size: 1rem;
             transition: all 0.3s ease;
@@ -177,9 +206,9 @@
 
         .form-input:focus {
             outline: none;
-            border-color: #667eea;
-            background: white;
-            box-shadow: 0 0 20px rgba(102, 126, 234, 0.2);
+            border-color: var(--color-primary); /* Usando primary */
+            background: var(--color-white);
+            box-shadow: 0 0 20px rgba(0, 184, 148, 0.2); /* Usando primary */
         }
 
         /* Botón de Acción Principal (Inscripción) */
@@ -192,19 +221,19 @@
             font-size: 1rem;
             cursor: pointer;
             transition: all 0.3s ease;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            background: var(--gradient-primary); /* Usando primary gradient */
             color: white;
-            box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);
+            box-shadow: 0 4px 15px rgba(0, 184, 148, 0.4); /* Usando primary */
         }
 
         .btn-primary:hover {
             transform: translateY(-2px);
-            box-shadow: 0 8px 25px rgba(102, 126, 234, 0.6);
+            box-shadow: 0 8px 25px rgba(0, 184, 148, 0.6); /* Usando primary */
         }
 
         /* Botón de Desinscripción */
         .btn-danger {
-            background: linear-gradient(135deg, #ff4d4d 0%, #e03c3c 100%);
+            background: var(--gradient-danger); /* Usando danger gradient */
             color: white;
             width: 100%;
             padding: 1rem;
@@ -214,12 +243,12 @@
             font-size: 1rem;
             cursor: pointer;
             transition: all 0.3s ease;
-            box-shadow: 0 4px 15px rgba(255, 77, 77, 0.4);
+            box-shadow: 0 4px 15px rgba(214, 48, 49, 0.4); /* Usando danger */
         }
 
         .btn-danger:hover {
             transform: translateY(-2px);
-            box-shadow: 0 8px 25px rgba(255, 77, 77, 0.6);
+            box-shadow: 0 8px 25px rgba(214, 48, 49, 0.6); /* Usando danger */
         }
 
         /* Botones de Acción Global (parte inferior) */
@@ -235,9 +264,9 @@
             align-items: center;
             gap: 0.5rem;
             padding: 10px 20px;
-            background: white;
-            color: #667eea;
-            border: 2px solid #667eea;
+            background: var(--color-white);
+            color: var(--color-primary); /* Usando primary */
+            border: 2px solid var(--color-primary); /* Usando primary */
             text-decoration: none;
             border-radius: 12px;
             transition: all 0.3s;
@@ -245,25 +274,27 @@
         }
 
         .btn-secondary:hover {
-            background-color: #667eea;
+            background-color: var(--color-primary); /* Usando primary */
             color: white;
             transform: translateY(-2px);
         }
 
         /* Botones de Administrador */
         .btn-admin-edit {
-            background: linear-gradient(135deg, #33b633 0%, #2ca52c 100%);
+            background: var(--gradient-admin-edit); /* Usando un gradiente primario fuerte */
             color: white;
+            border-color: var(--color-primary-dark);
         }
         .btn-admin-edit:hover {
-            background: linear-gradient(135deg, #2ca52c 0%, #228b22 100%);
+            background: var(--color-primary-dark);
         }
         .btn-admin-delete {
-            background: linear-gradient(135deg, #ff4d4d 0%, #e03c3c 100%);
+            background: var(--gradient-danger);
             color: white;
+            border-color: var(--color-danger);
         }
         .btn-admin-delete:hover {
-            background: linear-gradient(135deg, #e03c3c 0%, #cc2929 100%);
+            background: var(--color-danger);
         }
 
         /* Estilos para Mensajes */
@@ -272,21 +303,40 @@
             margin-bottom: 1rem;
             border-radius: 8px;
             text-align: center;
+            font-weight: 600;
         }
         .alert-success {
-            background-color: #d4edda;
-            color: #155724;
-            border: 1px solid #c3e6cb;
+            /* Basado en primary */
+            background-color: #d4f5ee;
+            color: #007a63;
+            border: 1px solid #00b894;
         }
         .alert-warning {
-            background-color: #fff3cd;
-            color: #856404;
-            border: 1px solid #ffeeba;
+            /* Basado en accent (Amarillo Dorado) */
+            background-color: #fff8e8;
+            color: #9c6c00;
+            border: 1px solid #fdcb6e;
         }
         .alert-info {
-            background-color: #d1ecf1;
-            color: #0c5460;
-            border: 1px solid #bee5eb;
+            /* Basado en secondary (Azul Brillante) */
+            background-color: #e6f3ff;
+            color: #0764c6;
+            border: 1px solid #0984e3;
+        }
+        .alert-danger {
+            /* Basado en danger (Rojo Ladrillo) */
+            background-color: #f8d7da !important;
+            color: #721c24 !important;
+            border: 1px solid #f5c6cb;
+        }
+        .registration-section > div[th:if*="partido.jugadores) >= 4"] {
+            /* Bloque de partido lleno */
+            padding: 1rem;
+            border-radius: 12px;
+            background-color: var(--color-danger);
+            color: white;
+            text-align: center;
+            font-weight: 700;
         }
     </style>
 </head>
@@ -300,27 +350,27 @@
 
         <div class="info-card-grid">
             <div class="info-card">
-                <h4><i class="fas fa-calendar-alt" style="color: #667eea;"></i> Fecha</h4>
+                <h4><i class="fas fa-calendar-alt"></i> Fecha</h4>
                 <p th:text="${#temporals.format(partido.fecha, 'dd-MM-yyyy')}">2025-09-30</p>
             </div>
             <div class="info-card">
-                <h4><i class="fas fa-clock" style="color: #667eea;"></i> Hora</h4>
+                <h4><i class="fas fa-clock"></i> Hora</h4>
                 <p th:text="${partido.hora}">19:00</p>
             </div>
             <div class="info-card">
-                <h4><i class="fas fa-building" style="color: #667eea;"></i> Club</h4>
+                <h4><i class="fas fa-building"></i> Club</h4>
                 <p th:text="${partido.club}">La Pala</p>
             </div>
             <div class="info-card">
-                <h4><i class="fas fa-map" style="color: #667eea;"></i> Cancha</h4>
+                <h4><i class="fas fa-map"></i> Cancha</h4>
                 <p th:text="${partido.cancha}">Cancha 1</p>
             </div>
             <div class="info-card">
-                <h4><i class="fas fa-star" style="color: #667eea;"></i> Nivel de Juego</h4>
+                <h4><i class="fas fa-star"></i> Nivel de Juego</h4>
                 <p th:text="${partido.nivelJuego}">Intermedio</p>
             </div>
             <div class="info-card">
-                <h4><i class="fas fa-user-tie" style="color: #667eea;"></i> Creador</h4>
+                <h4><i class="fas fa-user-tie"></i> Creador</h4>
                 <p th:text="${partido.creador.nombreUsuario}">usuario_admin</p>
             </div>
         </div>
@@ -337,12 +387,12 @@
                     <li class="player-item" th:each="jugador : ${partido.jugadores}">
                         <div class="player-avatar" th:text="${#strings.substring(jugador.nombreUsuario, 0, 1).toUpperCase()}">J</div>
                         <span class="player-info" th:text="${jugador.nombreUsuario}">Jugador X</span>
-                        <span th:if="${jugador.id_usuario == partido.creador.id_usuario}" style="font-size: 0.8em; color: #33b633; font-weight: bold;">(Creador)</span>
+                        <span th:if="${jugador.id_usuario == partido.creador.id_usuario}" style="font-size: 0.8em; color: var(--color-primary-dark); font-weight: bold;">(Creador)</span>
                     </li>
                 </ul>
 
                 <div th:if="${#lists.isEmpty(partido.jugadores)}" style="text-align: center; padding: 20px;">
-                    <i class="fas fa-user-plus" style="font-size: 2rem; color: #ccc;"></i>
+                    <i class="fas fa-user-plus" style="font-size: 2rem; color: var(--color-text-light);"></i>
                     <p>No hay jugadores inscritos aún. ¡Sé el primero!</p>
                 </div>
             </div>
@@ -354,7 +404,7 @@
                 <div th:if="${mensajeAdvertencia}" class="alert alert-warning">
                     <i class="fas fa-exclamation-triangle"></i> <span th:text="${mensajeAdvertencia}"></span>
                 </div>
-                <div th:if="${mensajeError}" class="alert alert-danger" style="background-color: #f8d7da; color: #721c24;">
+                <div th:if="${mensajeError}" class="alert alert-danger">
                     <i class="fas fa-times-circle"></i> <span th:text="${mensajeError}"></span>
                 </div>
 
@@ -383,12 +433,12 @@
                             <i class="fas fa-plus-circle"></i> Inscribirme al Partido
                         </button>
                     </form>
-                    <p style="margin-top: 10px; font-size: 0.9em; color: #888; text-align: center;">
+                    <p style="margin-top: 10px; font-size: 0.9em; color: var(--color-text-light); text-align: center;">
                         Aún quedan <span th:text="${4 - #lists.size(partido.jugadores)}">3</span> cupos disponibles.
                     </p>
                 </div>
 
-                <div th:if="${#lists.size(partido.jugadores) >= 4 and !usuarioYaInscrito}" style="padding: 1rem; border-radius: 12px; background-color: #ff4d4d; color: white; text-align: center;">
+                <div th:if="${#lists.size(partido.jugadores) >= 4 and !usuarioYaInscrito}">
                     <i class="fas fa-exclamation-triangle"></i> ¡Partido Lleno! Máximo de 4 jugadores alcanzado.
                 </div>
             </div>

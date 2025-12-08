@@ -6,21 +6,27 @@
     <title>PadelApp - Sistema de Gestión Profesional</title>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
     <style>
+        /* Paleta de Colores Solicitada (Verde Azulado Brillante) */
         :root {
-            --color-primary: #667eea;
-            --color-secondary: #764ba2;
-            --color-accent: #33b633;
-            --color-danger: #ff4d4d;
-            --color-text: #333;
-            --color-text-light: #666;
+            --color-primary: #00b894; /* Verde Azulado Brillante */
+            --color-primary-dark: #00a383; /* Variante más oscura del primario */
+            --color-secondary: #0984e3; /* Azul Brillante */
+            --color-accent: #fdcb6e; /* Amarillo Dorado */
+            --color-danger: #d63031; /* Rojo Ladrillo */
+            --color-text: #2d3436; /* Gris Oscuro Casi Negro */
+            --color-text-light: #636e72; /* Gris Medio */
             --color-background: #f8fafc;
             --color-white: #ffffff;
-            --gradient-primary: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            --gradient-accent: linear-gradient(135deg, #33b633 0%, #2ca52c 100%);
-            --gradient-danger: linear-gradient(135deg, #ff4d4d 0%, #e03c3c 100%);
-            --shadow-light: 0 4px 15px rgba(102, 126, 234, 0.1);
-            --shadow-medium: 0 8px 25px rgba(102, 126, 234, 0.15);
-            --shadow-heavy: 0 15px 35px rgba(102, 126, 234, 0.2);
+
+            /* Gradientes Ajustados */
+            --gradient-primary: linear-gradient(135deg, var(--color-primary) 0%, var(--color-primary-dark) 100%);
+            --gradient-accent-menu: linear-gradient(135deg, #2ecc71 0%, #27ae60 100%); /* Verde estándar para Excel */
+            --gradient-danger-menu: linear-gradient(135deg, var(--color-danger) 0%, #e74c3c 100%); /* Rojo Ladrillo para peligro */
+
+            /* Sombras Ajustadas */
+            --shadow-light: 0 4px 15px rgba(0, 184, 148, 0.1);
+            --shadow-medium: 0 8px 25px rgba(0, 184, 148, 0.15);
+            --shadow-heavy: 0 15px 35px rgba(0, 184, 148, 0.2);
         }
 
         * {
@@ -84,17 +90,17 @@
             position: relative;
         }
 
-        /* User Profile Area - NEW */
+        /* User Profile Area */
         .user-profile {
             position: fixed;
             top: 20px;
             right: 20px;
-            background: rgba(255, 255, 255, 0.95);
+            background: var(--color-white);
             backdrop-filter: blur(20px);
             border-radius: 50px;
             padding: 12px 20px;
             box-shadow: var(--shadow-medium);
-            border: 1px solid rgba(255, 255, 255, 0.3);
+            border: 1px solid rgba(0, 184, 148, 0.2);
             z-index: 1000;
             cursor: pointer;
             transition: all 0.3s ease;
@@ -102,7 +108,7 @@
             align-items: center;
             gap: 12px;
             min-width: 200px;
-            text-decoration: none; /* Asegura que el enlace se vea limpio */
+            text-decoration: none;
         }
 
         .user-profile:hover {
@@ -119,7 +125,7 @@
             display: flex;
             align-items: center;
             justify-content: center;
-            color: white;
+            color: var(--color-white);
             font-weight: 700;
             font-size: 16px;
             flex-shrink: 0;
@@ -165,7 +171,7 @@
             left: 20px;
             width: 50px;
             height: 50px;
-            background: rgba(255, 255, 255, 0.9);
+            background: var(--color-white);
             backdrop-filter: blur(10px);
             border: none;
             border-radius: 12px;
@@ -197,7 +203,7 @@
         /* Sidebar */
         .sidebar {
             width: 320px;
-            background: rgba(255, 255, 255, 0.95);
+            background: var(--color-white);
             backdrop-filter: blur(20px);
             padding: 2rem 0;
             position: fixed;
@@ -207,7 +213,7 @@
             transition: left 0.4s cubic-bezier(0.4, 0, 0.2, 1);
             z-index: 999;
             box-shadow: 4px 0 30px rgba(0, 0, 0, 0.1);
-            border-right: 1px solid rgba(102, 126, 234, 0.1);
+            border-right: 1px solid rgba(0, 184, 148, 0.1);
             overflow-y: auto;
         }
 
@@ -218,7 +224,7 @@
         .sidebar-header {
             text-align: center;
             padding: 0 2rem 2rem;
-            border-bottom: 1px solid rgba(102, 126, 234, 0.1);
+            border-bottom: 1px solid rgba(0, 184, 148, 0.1);
             margin-bottom: 2rem;
         }
 
@@ -260,8 +266,9 @@
             font-weight: 500;
         }
 
-        .menu-item:hover {
-            background: linear-gradient(90deg, rgba(102, 126, 234, 0.1) 0%, transparent 100%);
+        .menu-item:hover,
+        .menu-item.active {
+            background: linear-gradient(90deg, rgba(0, 184, 148, 0.1) 0%, transparent 100%);
             color: var(--color-primary);
             border-left-color: var(--color-primary);
             transform: translateX(5px);
@@ -275,26 +282,26 @@
         }
 
         .menu-item.accent {
-            background: var(--gradient-accent);
-            color: white;
+            background: var(--gradient-accent-menu);
+            color: var(--color-white);
             border-radius: 0 25px 25px 0;
             margin: 0.5rem 0;
         }
 
         .menu-item.accent:hover {
-            background: linear-gradient(135deg, #2ca52c 0%, #228b22 100%);
+            background: #27ae60;
             transform: translateX(10px);
         }
 
         .menu-item.danger {
-            background: var(--gradient-danger);
-            color: white;
+            background: var(--gradient-danger-menu);
+            color: var(--color-white);
             border-radius: 0 25px 25px 0;
             margin-top: 2rem;
         }
 
         .menu-item.danger:hover {
-            background: linear-gradient(135deg, #e03c3c 0%, #cc2929 100%);
+            background: var(--color-danger);
             transform: translateX(10px);
         }
 
@@ -304,32 +311,24 @@
             padding: 6rem 3rem 3rem;
             transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
             position: relative;
-            /* Asegura que el contenido principal siempre tenga espacio a la izquierda para desktop */
             margin-left: 0;
         }
 
-        /* Ajuste para que el main-content no se mueva en desktop si el sidebar no está visible permanentemente */
         @media (min-width: 1025px) {
              .main-content {
                 margin-left: 0;
              }
         }
 
-        .sidebar.active ~ .main-content {
-            /* Solo aplica un margen si la sidebar se abre (en móvil) o si la sidebar fuera fija */
-            /* Se comenta la línea original para mejorar el flujo de escritorio/móvil:
-            margin-left: 320px; */
-        }
-
         /* Hero Section */
         .hero-section {
-            background: rgba(255, 255, 255, 0.95);
+            background: var(--color-white);
             backdrop-filter: blur(20px);
             border-radius: 30px;
             padding: 3rem;
             margin-bottom: 3rem;
             box-shadow: var(--shadow-heavy);
-            border: 1px solid rgba(255, 255, 255, 0.2);
+            border: 1px solid rgba(0, 184, 148, 0.2);
             position: relative;
             overflow: hidden;
         }
@@ -378,12 +377,12 @@
         }
 
         .content-card {
-            background: rgba(255, 255, 255, 0.95);
+            background: var(--color-white);
             backdrop-filter: blur(20px);
             border-radius: 25px;
             padding: 2.5rem;
             box-shadow: var(--shadow-medium);
-            border: 1px solid rgba(255, 255, 255, 0.2);
+            border: 1px solid rgba(0, 184, 148, 0.2);
             transition: all 0.3s ease;
         }
 
@@ -413,7 +412,7 @@
 
         .tips-list li {
             padding: 1rem 0;
-            border-bottom: 1px solid rgba(102, 126, 234, 0.1);
+            border-bottom: 1px solid rgba(0, 184, 148, 0.1);
             transition: all 0.3s ease;
         }
 
@@ -422,7 +421,7 @@
         }
 
         .tips-list li:hover {
-            background: rgba(102, 126, 234, 0.05);
+            background: rgba(0, 184, 148, 0.05);
             border-radius: 12px;
             padding-left: 1rem;
         }
@@ -452,15 +451,15 @@
         }
 
         .stat-item {
-            background: rgba(102, 126, 234, 0.1);
+            background: rgba(0, 184, 148, 0.1);
             padding: 1.5rem;
             border-radius: 20px;
-            border: 1px solid rgba(102, 126, 234, 0.2);
+            border: 1px solid rgba(0, 184, 148, 0.2);
             transition: all 0.3s ease;
         }
 
         .stat-item:hover {
-            background: rgba(102, 126, 234, 0.15);
+            background: rgba(0, 184, 148, 0.15);
             transform: scale(1.05);
         }
 
@@ -469,7 +468,7 @@
             font-weight: 800;
             color: var(--color-primary);
             display: block;
-            min-height: 38px; /* Evita el salto durante la animación de conteo */
+            min-height: 38px;
         }
 
         .stat-label {
@@ -482,7 +481,7 @@
 
         .cta-button {
             background: var(--gradient-primary);
-            color: white;
+            color: var(--color-white);
             padding: 1rem 2rem;
             border: none;
             border-radius: 15px;
@@ -504,12 +503,12 @@
 
         /* Footer */
         .footer {
-            background: rgba(255, 255, 255, 0.95);
+            background: var(--color-white);
             backdrop-filter: blur(20px);
             border-radius: 25px;
             padding: 2rem;
             box-shadow: var(--shadow-medium);
-            border: 1px solid rgba(255, 255, 255, 0.2);
+            border: 1px solid rgba(0, 184, 148, 0.2);
             text-align: center;
             position: relative;
             overflow: hidden;
@@ -539,7 +538,7 @@
 
         @media (max-width: 768px) {
             .sidebar {
-                width: 80%; /* Ocupa más espacio en móvil */
+                width: 80%;
                 left: -80%;
             }
 
@@ -577,7 +576,7 @@
             }
 
             .user-role {
-                display: none; /* Oculta el rol para ahorrar espacio */
+                display: none;
             }
 
             /* Mueve el user profile a la derecha para no chocar con el hamburguer */
@@ -726,7 +725,7 @@
     <main class="main-content">
         <div class="hero-section">
             <h1 class="hero-title">
-                <i class="fas fa-table-tennis" style="color: #667eea;"></i>
+                <i class="fas fa-table-tennis" style="color: #00b894;"></i>
                 Bienvenido a PadelApp
             </h1>
             <p class="hero-subtitle" th:text="'¡Hola ' + (${nombreCompleto} != null ? ${nombreCompleto} : 'Usuario') + '! La plataforma profesional para la gestión integral de pádel'">
@@ -746,35 +745,35 @@
                 <ul class="tips-list">
                     <li>
                         <div class="tip-title">
-                            <i class="fas fa-calendar-check" style="color: #667eea; margin-right: 0.5rem;"></i>
+                            <i class="fas fa-calendar-check" style="color: var(--color-primary); margin-right: 0.5rem;"></i>
                             Practica regularmente
                         </div>
                         <div class="tip-description">La constancia mejora reflejos y coordinación.</div>
                     </li>
                     <li>
                         <div class="tip-title">
-                            <i class="fas fa-crosshairs" style="color: #667eea; margin-right: 0.5rem;"></i>
+                            <i class="fas fa-crosshairs" style="color: var(--color-primary); margin-right: 0.5rem;"></i>
                             Trabaja en tu posicionamiento
                         </div>
                         <div class="tip-description">Aprende a moverte en pareja y cubrir espacios.</div>
                     </li>
                     <li>
                         <div class="tip-title">
-                            <i class="fas fa-tennis-ball" style="color: #667eea; margin-right: 0.5rem;"></i>
+                            <i class="fas fa-tennis-ball" style="color: var(--color-primary); margin-right: 0.5rem;"></i>
                             Domina el saque
                         </div>
                         <div class="tip-description">Un buen saque puede darte ventaja desde el inicio.</div>
                     </li>
                     <li>
                         <div class="tip-title">
-                            <i class="fas fa-eye" style="color: #667eea; margin-right: 0.5rem;"></i>
+                            <i class="fas fa-eye" style="color: var(--color-primary); margin-right: 0.5rem;"></i>
                             Observa partidos
                         </div>
                         <div class="tip-description">Analizar a jugadores expertos te da nuevas ideas tácticas.</div>
                     </li>
                     <li>
                         <div class="tip-title">
-                            <i class="fas fa-dumbbell" style="color: #667eea; margin-right: 0.5rem;"></i>
+                            <i class="fas fa-dumbbell" style="color: var(--color-primary); margin-right: 0.5rem;"></i>
                             Entrena tu físico
                         </div>
                         <div class="tip-description">Resistencia y fuerza son clave para mantener el ritmo.</div>

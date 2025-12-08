@@ -6,14 +6,19 @@
     <title>Registro - PadelApp</title>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
     <style>
+        /* Nueva Paleta de Colores (Verde Azulado) */
         :root {
-            /* Definición de colores */
-            --color-fondo: #f5f7fa; /* Fondo general */
-            --color-azul: #3440b4; /* Color primario (Botón, Título) */
-            --color-verde: #33b633; /* Color de hover/éxito */
-            --color-texto: #212529; /* Color de texto oscuro */
-            --color-borde: #ced4da; /* Color de borde de input */
-            --color-secundario: #495057; /* Texto secundario/label */
+            --color-primary: #00b894; /* Verde Azulado Brillante */
+            --color-primary-dark: #00a383; /* Variante oscura */
+            --color-secondary: #0984e3; /* Azul Brillante */
+            --color-accent: #fdcb6e; /* Amarillo Dorado */
+            --color-danger: #d63031; /* Rojo Ladrillo */
+            --color-text: #2d3436; /* Gris Oscuro Casi Negro */
+            --color-text-light: #636e72; /* Gris Medio */
+            --color-background: #f8f9fa; /* Gris Muy Claro */
+            --color-white: #ffffff; /* Blanco Puro */
+            --gradient-primary: linear-gradient(135deg, #00b894 0%, #00cec9 100%);
+            --color-borde: #ced4da; /* Mantener para bordes generales */
         }
 
         body {
@@ -23,55 +28,66 @@
             background-size: cover;
             background-position: center;
             background-repeat: no-repeat;
-            background-attachment: fixed; /* Mantiene la imagen fija al hacer scroll */
+            background-attachment: fixed;
             margin: 0;
             padding: 0;
             display: flex;
             justify-content: center;
             align-items: center;
-            min-height: 100vh; /* Asegura que el body ocupe al menos toda la altura de la vista */
+            min-height: 100vh;
         }
 
         .container {
             max-width: 500px;
-            /* Eliminado el margen superior fijo para centrar en la pantalla */
             padding: 40px;
-            /* CAMBIADO EL FONDO A BLANCO PARA MEJOR LEGIBILIDAD */
+            /* Fondo actualizado a blanco para mejor legibilidad */
             background-color: rgba(255, 255, 255, 0.95);
             border-radius: 20px;
-            box-shadow: 0 10px 40px rgba(0,0,0,0.3); /* Sombra más pronunciada */
-            color: var(--color-secundario);
-            backdrop-filter: blur(2px); /* Pequeño desenfoque si se deja el fondo transparente */
+            box-shadow: 0 15px 50px rgba(0, 184, 148, 0.3); /* Sombra basada en primary */
+            color: var(--color-text-light);
+            backdrop-filter: blur(5px); /* Desenfoque incrementado */
+            border: 1px solid rgba(0, 184, 148, 0.1);
         }
 
         h2 {
             text-align: center;
             margin-bottom: 30px;
-            color: var(--color-azul);
-            font-size: 28px;
+            color: var(--color-primary); /* Usando primary */
+            font-size: 32px; /* Título ligeramente más grande */
+            font-weight: 800;
+            letter-spacing: -0.5px;
         }
 
         label {
-            font-weight: 600; /* Más peso para mejor visibilidad */
+            font-weight: 700; /* Más peso para mejor visibilidad */
             display: block;
             margin-top: 15px;
             margin-bottom: 5px;
-            color: var(--color-texto);
+            color: var(--color-text); /* Color de texto oscuro */
+            font-size: 15px;
+        }
+
+        label i {
+            color: var(--color-primary); /* Iconos resaltados */
+            margin-right: 5px;
         }
 
         input, select {
             width: 100%;
-            padding: 12px; /* Ligeramente más padding */
-            border-radius: 8px; /* Bordes más suaves */
-            border: 1px solid var(--color-borde);
+            padding: 12px;
+            border-radius: 10px; /* Bordes más suaves */
+            border: 2px solid rgba(0, 184, 148, 0.2); /* Borde basado en primary */
             font-size: 16px;
-            transition: border-color 0.3s ease;
+            transition: all 0.3s ease;
+            background-color: var(--color-white);
+            color: var(--color-text);
         }
 
         input:focus, select:focus {
             outline: none;
-            border-color: var(--color-azul); /* Resalta el borde al enfocar */
-            box-shadow: 0 0 5px rgba(52, 64, 180, 0.3);
+            border-color: var(--color-primary); /* Resalta el borde al enfocar */
+            box-shadow: 0 0 0 4px rgba(0, 184, 148, 0.1); /* Sombra de enfoque suave */
+            transform: translateY(-1px);
         }
 
         select {
@@ -81,27 +97,32 @@
         button {
             margin-top: 30px;
             width: 100%;
-            padding: 12px;
-            background-color: var(--color-azul);
+            padding: 14px; /* Botón más alto */
+            background: var(--gradient-primary); /* Degradado primary */
             border: none;
             color: white;
-            font-size: 18px; /* Texto más grande en el botón */
-            font-weight: bold;
-            border-radius: 8px;
+            font-size: 18px;
+            font-weight: 700;
+            border-radius: 10px;
             cursor: pointer;
-            transition: background-color 0.3s ease, transform 0.2s ease;
-            box-shadow: 0 4px 10px rgba(52, 64, 180, 0.3);
+            transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+            box-shadow: 0 8px 25px rgba(0, 184, 148, 0.4); /* Sombra de botón más fuerte */
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
         }
 
         button:hover {
-            background-color: var(--color-verde);
-            transform: translateY(-1px); /* Efecto 3D sutil */
+            background: linear-gradient(135deg, var(--color-primary-dark) 0%, var(--color-primary) 100%);
+            transform: translateY(-3px); /* Efecto 3D sutil */
+            box-shadow: 0 12px 30px rgba(0, 184, 148, 0.5);
         }
 
         hr {
             margin: 25px 0;
             border: none;
-            border-top: 2px solid rgba(52, 64, 180, 0.1); /* Línea más visible y estilizada */
+            border-top: 2px solid rgba(0, 184, 148, 0.3); /* Línea basada en primary */
         }
 
         .input-group {
@@ -113,7 +134,7 @@
             right: 15px;
             top: 50%;
             transform: translateY(-50%);
-            color: var(--color-borde);
+            color: var(--color-text-light); /* Color de icono más discreto */
         }
 
         @media (max-width: 768px) {

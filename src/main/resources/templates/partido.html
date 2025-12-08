@@ -6,7 +6,24 @@
     <title th:text="${partido.id_match} ? 'Editar Partido de Pádel' : 'Crear Partido de Pádel'"></title>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
     <style>
-        /* MANTENEMOS EL MISMO CSS */
+        /* Paleta de Colores Solicitada (Verde Azulado) */
+        :root {
+            --color-primary: #00b894; /* Verde Azulado Brillante */
+            --color-primary-dark: #00a383; /* Variante más oscura del primario */
+            --color-secondary: #0984e3; /* Azul Brillante */
+            --color-accent: #fdcb6e; /* Amarillo Dorado */
+            --color-danger: #d63031; /* Rojo Ladrillo */
+            --color-text: #2d3436; /* Gris Oscuro Casi Negro */
+            --color-text-light: #636e72; /* Gris Medio */
+            --color-background: #f8f9fa; /* Gris Muy Claro */
+            --color-white: #ffffff; /* Blanco Puro */
+
+            --gradient-primary: linear-gradient(135deg, var(--color-primary) 0%, #00cec9 100%);
+            --gradient-sidebar-active: linear-gradient(90deg, rgba(0, 184, 148, 0.1) 0%, rgba(0, 163, 131, 0.05) 100%);
+            --gradient-accent: linear-gradient(135deg, var(--color-secondary) 0%, #74b9ff 100%);
+            --gradient-danger: linear-gradient(135deg, var(--color-danger) 0%, #ff7675 100%);
+        }
+
         * {
             margin: 0;
             padding: 0;
@@ -15,9 +32,10 @@
 
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            /* Fondo actualizado a Primary Gradient */
+            background: var(--gradient-primary);
             min-height: 100vh;
-            color: #333;
+            color: var(--color-text);
         }
 
         .container {
@@ -28,22 +46,21 @@
         /* Sidebar */
         .sidebar {
             width: 280px;
-            background: rgba(255, 255, 255, 0.95);
-            backdrop-filter: blur(10px);
+            background: var(--color-white);
             padding: 2rem 0;
             box-shadow: 4px 0 20px rgba(0, 0, 0, 0.1);
-            border-right: 1px solid rgba(255, 255, 255, 0.2);
+            border-right: 1px solid rgba(0, 184, 148, 0.2);
         }
 
         .logo {
             text-align: center;
             padding: 0 2rem 2rem;
-            border-bottom: 1px solid rgba(102, 126, 234, 0.2);
+            border-bottom: 1px solid rgba(0, 184, 148, 0.2);
             margin-bottom: 2rem;
         }
 
         .logo h2 {
-            color: #667eea;
+            color: var(--color-primary);
             font-size: 1.5rem;
             font-weight: 700;
         }
@@ -51,7 +68,7 @@
         /* Menu sections */
         .menu-section-title {
             padding: 0 2rem 0.5rem;
-            color: #888;
+            color: var(--color-text-light);
             font-size: 0.75rem;
             text-transform: uppercase;
             letter-spacing: 1px;
@@ -62,7 +79,7 @@
             display: block;
             padding: 1rem 2rem;
             text-decoration: none;
-            color: #555;
+            color: var(--color-text-light);
             transition: all 0.3s ease;
             border-left: 4px solid transparent;
             position: relative;
@@ -70,9 +87,9 @@
 
         .menu-item:hover,
         .menu-item.active {
-            background: linear-gradient(90deg, rgba(102, 126, 234, 0.1) 0%, rgba(118, 75, 162, 0.05) 100%);
-            color: #667eea;
-            border-left-color: #667eea;
+            background: var(--gradient-sidebar-active);
+            color: var(--color-primary);
+            border-left-color: var(--color-primary);
             transform: translateX(5px);
         }
 
@@ -83,26 +100,28 @@
         }
 
         .menu-item.accent {
-            background: linear-gradient(135deg, #33b633 0%, #2ca52c 100%);
+            /* Exportar Excel usando color Secondary (Azul Brillante) o Accent (Amarillo Dorado) */
+            background: var(--gradient-accent);
             color: white;
             border-radius: 0 25px 25px 0;
             margin: 0.5rem 0;
         }
 
         .menu-item.accent:hover {
-            background: linear-gradient(135deg, #2ca52c 0%, #228b22 100%);
+            background: var(--color-secondary);
             transform: translateX(10px);
         }
 
         .menu-item.danger {
-            background: linear-gradient(135deg, #ff4d4d 0%, #e03c3c 100%);
+            /* Cerrar Sesión usando Danger (Rojo Ladrillo) */
+            background: var(--gradient-danger);
             color: white;
             border-radius: 0 25px 25px 0;
             margin-top: 1rem;
         }
 
         .menu-item.danger:hover {
-            background: linear-gradient(135deg, #e03c3c 0%, #cc2929 100%);
+            background: var(--color-danger);
             transform: translateX(10px);
         }
 
@@ -118,12 +137,11 @@
 
         /* Form Container */
         .form-container {
-            background: rgba(255, 255, 255, 0.95);
-            backdrop-filter: blur(20px);
+            background: var(--color-white);
             border-radius: 25px;
             padding: 3rem;
             box-shadow: 0 15px 35px rgba(0, 0, 0, 0.1);
-            border: 1px solid rgba(255, 255, 255, 0.2);
+            border: 1px solid rgba(0, 184, 148, 0.1);
             width: 100%;
             max-width: 700px;
             position: relative;
@@ -137,7 +155,7 @@
             left: 0;
             right: 0;
             height: 5px;
-            background: linear-gradient(90deg, #667eea 0%, #764ba2 100%);
+            background: var(--gradient-primary);
         }
 
         .form-header {
@@ -148,7 +166,7 @@
         .form-title {
             font-size: 2.5rem;
             font-weight: 700;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            background: var(--gradient-primary);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
             background-clip: text;
@@ -160,7 +178,7 @@
         }
 
         .form-subtitle {
-            color: #666;
+            color: var(--color-text-light);
             font-size: 1.1rem;
         }
 
@@ -184,7 +202,7 @@
             display: block;
             margin-bottom: 0.8rem;
             font-weight: 600;
-            color: #667eea;
+            color: var(--color-primary-dark);
             font-size: 1rem;
             text-transform: uppercase;
             letter-spacing: 0.5px;
@@ -198,33 +216,28 @@
         .form-textarea {
             width: 100%;
             padding: 1.2rem 1.5rem;
-            border: 2px solid rgba(102, 126, 234, 0.2);
+            border: 2px solid rgba(0, 184, 148, 0.2);
             border-radius: 15px;
             font-size: 1rem;
             transition: all 0.3s ease;
-            background: rgba(255, 255, 255, 0.8);
-            color: #333;
+            background: var(--color-background);
+            color: var(--color-text);
         }
 
         .form-input:focus,
         .form-select:focus,
         .form-textarea:focus {
             outline: none;
-            border-color: #667eea;
-            background: white;
-            box-shadow: 0 0 20px rgba(102, 126, 234, 0.2);
+            border-color: var(--color-primary);
+            background: var(--color-white);
+            box-shadow: 0 0 20px rgba(0, 184, 148, 0.2);
             transform: translateY(-2px);
-        }
-
-        .form-input:valid,
-        .form-select:valid {
-            /* Mantener el feedback visual solo en campos llenados */
         }
 
         .form-select {
             cursor: pointer;
             appearance: none;
-            background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23667eea' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6,9 12,15 18,9'%3e%3c/polyline%3e%3c/svg%3e");
+            background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%2300b894' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6,9 12,15 18,9'%3e%3c/polyline%3e%3c/svg%3e");
             background-repeat: no-repeat;
             background-position: right 1.5rem center;
             background-size: 1rem;
@@ -235,34 +248,9 @@
             min-height: 100px;
         }
 
-        /* Special styling for date and time inputs */
-        .form-input[type="date"],
-        .form-input[type="time"] {
-            position: relative;
-        }
-
-        /* Level badges - No usados directamente en input, pero útiles en options */
-        .level-option {
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
-        }
-
-        .level-badge {
-            padding: 0.2rem 0.6rem;
-            border-radius: 10px;
-            font-size: 0.8rem;
-            font-weight: 600;
-        }
-
-        .level-iniciacion { background: #e3f2fd; color: #1976d2; }
-        .level-intermedio { background: #f3e5f5; color: #7b1fa2; }
-        .level-alto { background: #fff3e0; color: #f57c00; }
-        .level-avanzado { background: #ffebee; color: #d32f2f; }
-
         /* Validation Messages */
         .validation-message {
-            color: #ff4d4d;
+            color: var(--color-danger);
             font-size: 0.85rem;
             margin-top: 0.5rem;
             display: flex;
@@ -304,43 +292,28 @@
         }
 
         .btn-primary {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            background: var(--gradient-primary);
             color: white;
-            box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);
+            box-shadow: 0 4px 15px rgba(0, 184, 148, 0.4);
         }
 
         .btn-primary:hover {
             transform: translateY(-3px);
-            box-shadow: 0 8px 25px rgba(102, 126, 234, 0.6);
+            box-shadow: 0 8px 25px rgba(0, 184, 148, 0.6);
         }
 
         .btn-secondary {
-            background: rgba(255, 255, 255, 0.9);
-            color: #667eea;
-            border: 2px solid #667eea;
-            box-shadow: 0 4px 15px rgba(102, 126, 234, 0.1);
+            background: var(--color-white);
+            color: var(--color-primary);
+            border: 2px solid var(--color-primary);
+            box-shadow: 0 4px 15px rgba(0, 184, 148, 0.1);
         }
 
         .btn-secondary:hover {
-            background: #667eea;
+            background: var(--color-primary);
             color: white;
             transform: translateY(-3px);
-            box-shadow: 0 8px 25px rgba(102, 126, 234, 0.3);
-        }
-
-        /* Loading state */
-        .btn.loading {
-            pointer-events: none;
-            opacity: 0.8;
-        }
-
-        .btn.loading i {
-            animation: spin 1s linear infinite;
-        }
-
-        @keyframes spin {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
+            box-shadow: 0 8px 25px rgba(0, 184, 148, 0.3);
         }
 
         /* Info Cards */
@@ -352,34 +325,44 @@
         }
 
         .info-card {
-            background: rgba(102, 126, 234, 0.1);
+            background: rgba(0, 184, 148, 0.1);
             padding: 1.5rem;
             border-radius: 15px;
-            border: 1px solid rgba(102, 126, 234, 0.2);
+            border: 1px solid rgba(0, 184, 148, 0.2);
             text-align: center;
             transition: all 0.3s ease;
         }
 
         .info-card:hover {
-            background: rgba(102, 126, 234, 0.15);
+            background: rgba(0, 184, 148, 0.15);
             transform: translateY(-3px);
         }
 
         .info-card i {
             font-size: 2rem;
-            color: #667eea;
+            color: var(--color-primary);
             margin-bottom: 1rem;
         }
 
         .info-card h4 {
-            color: #667eea;
+            color: var(--color-primary-dark);
             margin-bottom: 0.5rem;
             font-weight: 600;
         }
 
         .info-card p {
-            color: #666;
+            color: var(--color-text-light);
             font-size: 0.9rem;
+        }
+
+        /* Alerts */
+        .alert-success {
+            background-color: #d4f5ee !important;
+            color: #007a63 !important;
+        }
+        .alert-danger {
+            background-color: #f8d7da !important;
+            color: #721c24 !important;
         }
 
         /* Responsive Design */
@@ -427,7 +410,7 @@
             }
         }
 
-        /* Animations */
+        /* Animations (Mantenidas) */
         @keyframes fadeInUp {
             from {
                 opacity: 0;
@@ -478,6 +461,15 @@
         .form-group:nth-child(6) {
             animation: fadeInUp 0.8s ease 0.6s both;
         }
+
+        .btn.loading i {
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
     </style>
 </head>
 <body>
@@ -525,10 +517,10 @@
 
     <main class="main-content">
         <div class="form-container">
-            <div th:if="${mensajeExito}" class="alert alert-success" style="padding: 1rem; margin-bottom: 1rem; background-color: #d4edda; color: #155724; border-radius: 10px;">
+            <div th:if="${mensajeExito}" class="alert alert-success" style="border-radius: 10px;">
                 <i class="fas fa-check-circle"></i> <span th:text="${mensajeExito}"></span>
             </div>
-            <div th:if="${mensajeError}" class="alert alert-danger" style="padding: 1rem; margin-bottom: 1rem; background-color: #f8d7da; color: #721c24; border-radius: 10px;">
+            <div th:if="${mensajeError}" class="alert alert-danger" style="border-radius: 10px;">
                 <i class="fas fa-times-circle"></i> <span th:text="${mensajeError}"></span>
             </div>
 

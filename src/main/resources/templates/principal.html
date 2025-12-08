@@ -6,15 +6,25 @@
     <title>Tu Club PadelApp | La Pasión por el Padel</title>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
     <style>
-        /* Variables de color adaptadas a la paleta de gestión (Lavanda/Púrpura) */
+        /* Paleta de Colores Solicitada (Verde Azulado) */
         :root {
-            --color-primary: #667eea; /* Lavanda */
-            --color-secondary: #764ba2; /* Púrpura */
-            --color-accent: #33b633; /* Verde de acción */
-            --color-texto: #212529;
-            --color-white: #ffffff;
-            --gradient-primary: linear-gradient(135deg, var(--color-primary) 0%, var(--color-secondary) 100%);
-            --gradient-accent: linear-gradient(135deg, var(--color-accent) 0%, #2ca52c 100%);
+            --color-primary: #00b894; /* Verde Azulado Brillante */
+            --color-primary-dark: #00a383; /* Variante más oscura del primario */
+            --color-secondary: #0984e3; /* Azul Brillante */
+            --color-accent: #fdcb6e; /* Amarillo Dorado */
+            --color-danger: #d63031; /* Rojo Ladrillo */
+            --color-text: #2d3436; /* Gris Oscuro Casi Negro */
+            --color-text-light: #636e72; /* Gris Medio */
+            --color-background: #f8f9fa; /* Gris Muy Claro */
+            --color-white: #ffffff; /* Blanco Puro */
+            --color-court: #3498db; /* Azul Claro Vívido */
+            --color-court-line: #ecf0f1; /* Gris Muy Claro/Blanco Suave */
+
+            /* Degradados actualizados */
+            --gradient-primary: linear-gradient(135deg, var(--color-primary) 0%, #00cec9 100%);
+            /* Uso del color secundario para el hover de los botones de auth */
+            --gradient-accent: linear-gradient(135deg, var(--color-secondary) 0%, #74b9ff 100%);
+            --color-texto: var(--color-text); /* Alias */
         }
 
         * {
@@ -38,8 +48,8 @@
         }
 
         header {
-            /* Fondo ahora basado en Lavanda/Púrpura */
-            background-color: rgba(102, 126, 234, 0.95);
+            /* Fondo ahora basado en Primary */
+            background-color: rgba(0, 184, 148, 0.95);
             color: white;
             padding: 15px 40px;
             box-shadow: 0 4px 8px rgba(0,0,0,0.2);
@@ -75,9 +85,10 @@
         }
 
         .auth-buttons a:hover {
-            background: var(--gradient-accent); /* Verde de acción */
+            background: var(--gradient-accent); /* Ahora usa Secondary (Azul Brillante) */
             color: white;
             transform: translateY(-2px);
+            box-shadow: 0 4px 10px rgba(9, 132, 227, 0.4);
         }
 
         main {
@@ -86,7 +97,7 @@
         }
 
         .hero-section {
-            /* Fondo ahora Lavanda/Púrpura con transparencia */
+            /* Fondo ahora basado en Primary Gradient */
             background-image: var(--gradient-primary);
             color: white;
             padding: 60px 40px;
@@ -94,7 +105,7 @@
             max-width: 1200px;
             margin: 0 auto 40px;
             text-align: center;
-            box-shadow: 0 0 40px rgba(0,0,0,0.3);
+            box-shadow: 0 0 40px rgba(0, 184, 148, 0.5); /* Sombra basada en primary */
             border: 1px solid rgba(255, 255, 255, 0.3);
         }
 
@@ -117,10 +128,10 @@
         }
 
         .video-section h2 {
-            color: var(--color-primary); /* Títulos en Lavanda */
+            color: var(--color-primary); /* Títulos en Primary */
             font-size: 32px;
             margin-bottom: 30px;
-            text-shadow: 2px 2px 4px rgba(255,255,255,0.8);
+            text-shadow: 2px 2px 4px rgba(0, 184, 148, 0.2); /* Sombra de texto suave */
             font-weight: 600;
         }
 
@@ -167,11 +178,11 @@
 
         .side-card:hover {
             transform: translateY(-5px);
-            box-shadow: 0 6px 20px rgba(0,0,0,0.15);
+            box-shadow: 0 6px 20px rgba(0, 184, 148, 0.15); /* Sombra de hover basada en primary */
         }
 
         .side-card h3 {
-            color: var(--color-primary); /* Títulos de tarjeta en Lavanda */
+            color: var(--color-primary); /* Títulos de tarjeta en Primary */
             font-size: 22px;
             margin-bottom: 15px;
             font-weight: 600;
@@ -204,11 +215,11 @@
 
         .info-card:hover {
             transform: translateY(-5px);
-            box-shadow: 0 6px 20px rgba(0,0,0,0.15);
+            box-shadow: 0 6px 20px rgba(0, 184, 148, 0.15); /* Sombra de hover basada en primary */
         }
 
         .info-card h3 {
-            color: var(--color-primary); /* Títulos de info-card en Lavanda */
+            color: var(--color-primary); /* Títulos de info-card en Primary */
             font-size: 24px;
             margin-bottom: 15px;
             font-weight: 600;
@@ -235,7 +246,7 @@
         }
 
         .about-section h2 {
-            color: var(--color-primary); /* Título de 'About' en Lavanda */
+            color: var(--color-primary); /* Título de 'About' en Primary */
             font-size: 32px;
             margin-bottom: 20px;
             text-align: center;
@@ -253,13 +264,13 @@
             text-align: center;
             margin-top: 30px;
             font-weight: bold;
-            color: var(--color-primary); /* Texto CTA en Lavanda */
+            color: var(--color-primary); /* Texto CTA en Primary */
             font-size: 18px;
         }
 
         footer {
-            /* Fondo del footer en Lavanda/Púrpura */
-            background-color: rgba(102, 126, 234, 0.95);
+            /* Fondo del footer en Primary */
+            background-color: rgba(0, 184, 148, 0.95);
             color: white;
             text-align: center;
             padding: 20px;

@@ -6,24 +6,28 @@
     <title>Jugadores Registrados - Sistema de Gestión</title>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
     <style>
-        /* CSS se mantiene sin cambios importantes, ya que está optimizado y contiene el estilo del modal */
-
-        /* Variables de color para consistencia */
+        /* Paleta de Colores Solicitada (Verde Azulado Brillante) */
         :root {
-            --color-primary: #667eea;
-            --color-secondary: #764ba2;
-            --color-accent: #33b633;
-            --color-danger: #ff4d4d;
-            --color-text: #333;
-            --color-text-light: #666;
-            --color-background: #f8fafc;
-            --color-white: #ffffff;
-            --gradient-primary: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            --gradient-accent: linear-gradient(135deg, #33b633 0%, #2ca52c 100%);
-            --gradient-danger: linear-gradient(135deg, #ff4d4d 0%, #e03c3c 100%);
-            --shadow-light: 0 4px 15px rgba(102, 126, 234, 0.1);
-            --shadow-medium: 0 8px 25px rgba(102, 126, 234, 0.15);
-            --shadow-heavy: 0 15px 35px rgba(102, 126, 234, 0.2);
+            --color-primary: #00b894; /* Verde Azulado Brillante */
+            --color-primary-dark: #00a383; /* Variante más oscura del primario */
+            --color-secondary: #0984e3; /* Azul Brillante, usado para acento secundario */
+            --color-accent: #fdcb6e; /* Amarillo Dorado, usado para elementos especiales/advertencias (no aplicado directamente aquí) */
+            --color-danger: #d63031; /* Rojo Ladrillo */
+            --color-text: #2d3436; /* Gris Oscuro Casi Negro */
+            --color-text-light: #636e72; /* Gris Medio */
+            --color-background: #f8f9fa; /* Gris Muy Claro */
+            --color-white: #ffffff; /* Blanco Puro */
+
+            /* Gradientes Ajustados */
+            --gradient-primary: linear-gradient(135deg, var(--color-primary) 0%, var(--color-primary-dark) 100%);
+            --gradient-accent-menu: linear-gradient(135deg, #2ecc71 0%, #27ae60 100%); /* Verde estándar para Excel */
+            --gradient-edit: linear-gradient(135deg, #2ecc71 0%, #27ae60 100%); /* Verde estándar para botón Editar */
+            --gradient-danger: linear-gradient(135deg, var(--color-danger) 0%, #e74c3c 100%); /* Rojo Ladrillo para peligro */
+
+            /* Sombras Ajustadas */
+            --shadow-light: 0 4px 15px rgba(0, 184, 148, 0.1);
+            --shadow-medium: 0 8px 25px rgba(0, 184, 148, 0.15);
+            --shadow-heavy: 0 15px 35px rgba(0, 184, 148, 0.2);
         }
 
         * {
@@ -47,17 +51,16 @@
         /* Sidebar */
         .sidebar {
             width: 280px;
-            background: rgba(255, 255, 255, 0.95);
-            backdrop-filter: blur(10px);
+            background: var(--color-white);
             padding: 2rem 0;
             box-shadow: 4px 0 20px rgba(0, 0, 0, 0.1);
-            border-right: 1px solid rgba(255, 255, 255, 0.2);
+            border-right: 1px solid rgba(0, 184, 148, 0.2);
         }
 
         .logo {
             text-align: center;
             padding: 0 2rem 2rem;
-            border-bottom: 1px solid rgba(102, 126, 234, 0.2);
+            border-bottom: 1px solid rgba(0, 184, 148, 0.2);
             margin-bottom: 2rem;
         }
 
@@ -89,7 +92,7 @@
 
         .menu-item:hover,
         .menu-item.active {
-            background: linear-gradient(90deg, rgba(102, 126, 234, 0.1) 0%, rgba(118, 75, 162, 0.05) 100%);
+            background: linear-gradient(90deg, rgba(0, 184, 148, 0.1) 0%, rgba(0, 163, 131, 0.05) 100%);
             color: var(--color-primary);
             border-left-color: var(--color-primary);
             transform: translateX(5px);
@@ -102,26 +105,27 @@
         }
 
         .menu-item.accent {
-            background: var(--gradient-accent);
-            color: white;
+            /* Usando Verde estándar para Excel */
+            background: var(--gradient-accent-menu);
+            color: var(--color-white);
             border-radius: 0 25px 25px 0;
             margin: 0.5rem 0;
         }
 
         .menu-item.accent:hover {
-            background: linear-gradient(135deg, #2ca52c 0%, #228b22 100%);
+            background: #27ae60;
             transform: translateX(10px);
         }
 
         .menu-item.danger {
             background: var(--gradient-danger);
-            color: white;
+            color: var(--color-white);
             border-radius: 0 25px 25px 0;
             margin-top: 1rem;
         }
 
         .menu-item.danger:hover {
-            background: linear-gradient(135deg, #e03c3c 0%, #cc2929 100%);
+            background: var(--color-danger);
             transform: translateX(10px);
         }
 
@@ -133,13 +137,12 @@
         }
 
         .content-header {
-            background: rgba(255, 255, 255, 0.95);
-            backdrop-filter: blur(10px);
+            background: var(--color-white);
             padding: 2rem;
             border-radius: 20px;
             margin-bottom: 2rem;
             box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
-            border: 1px solid rgba(255, 255, 255, 0.2);
+            border: 1px solid rgba(0, 184, 148, 0.2);
         }
 
         .content-header h1 {
@@ -159,13 +162,12 @@
 
         /* Action Bar (New) */
         .action-bar {
-            background: rgba(255, 255, 255, 0.95);
-            backdrop-filter: blur(10px);
+            background: var(--color-white);
             padding: 1.5rem 2rem;
             border-radius: 15px;
             margin-bottom: 2rem;
             box-shadow: 0 5px 20px rgba(0, 0, 0, 0.1);
-            border: 1px solid rgba(255, 255, 255, 0.2);
+            border: 1px solid rgba(0, 184, 148, 0.2);
             display: flex;
             justify-content: space-between;
             align-items: center;
@@ -175,7 +177,7 @@
 
         .btn-email {
             background: var(--gradient-primary);
-            color: white;
+            color: var(--color-white);
             padding: 0.8rem 1.5rem;
             border: none;
             border-radius: 10px;
@@ -190,7 +192,7 @@
 
         .btn-email:hover {
             transform: translateY(-2px);
-            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+            box-shadow: 0 5px 15px rgba(0, 184, 148, 0.4);
         }
 
         /* Stats Row */
@@ -202,19 +204,18 @@
         }
 
         .stat-card {
-            background: rgba(255, 255, 255, 0.95);
-            backdrop-filter: blur(10px);
+            background: var(--color-white);
             padding: 1.5rem;
             border-radius: 15px;
-            box-shadow: 0 4px 15px rgba(102, 126, 234, 0.1);
-            border: 1px solid rgba(255, 255, 255, 0.2);
+            box-shadow: 0 4px 15px rgba(0, 184, 148, 0.1);
+            border: 1px solid rgba(0, 184, 148, 0.2);
             text-align: center;
             transition: all 0.3s ease;
         }
 
         .stat-card:hover {
             transform: translateY(-3px);
-            box-shadow: 0 8px 25px rgba(102, 126, 234, 0.15);
+            box-shadow: 0 8px 25px rgba(0, 184, 148, 0.15);
         }
 
         .stat-number {
@@ -234,12 +235,11 @@
 
         /* Table Container */
         .table-container {
-            background: rgba(255, 255, 255, 0.95);
-            backdrop-filter: blur(10px);
+            background: var(--color-white);
             border-radius: 20px;
             padding: 2rem;
             box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
-            border: 1px solid rgba(255, 255, 255, 0.2);
+            border: 1px solid rgba(0, 184, 148, 0.2);
             overflow-x: auto;
         }
 
@@ -270,7 +270,7 @@
         .search-input {
             width: 100%;
             padding: 0.8rem 1rem 0.8rem 3rem;
-            border: 2px solid rgba(102, 126, 234, 0.2);
+            border: 2px solid rgba(0, 184, 148, 0.2);
             border-radius: 25px;
             font-size: 0.9rem;
             transition: all 0.3s ease;
@@ -280,8 +280,8 @@
         .search-input:focus {
             outline: none;
             border-color: var(--color-primary);
-            background: white;
-            box-shadow: 0 0 15px rgba(102, 126, 234, 0.2);
+            background: var(--color-white);
+            box-shadow: 0 0 15px rgba(0, 184, 148, 0.2);
         }
 
         .search-icon {
@@ -302,14 +302,14 @@
 
         .jugadores-table thead tr {
             background: var(--gradient-primary);
-            color: white;
+            color: var(--color-white);
         }
 
         .jugadores-table th,
         .jugadores-table td {
             padding: 1rem 0.8rem;
             text-align: left;
-            border-bottom: 1px solid rgba(102, 126, 234, 0.1);
+            border-bottom: 1px solid rgba(0, 184, 148, 0.1);
             font-size: 0.9rem;
         }
 
@@ -328,7 +328,7 @@
         }
 
         .jugadores-table tbody tr:hover {
-            background: rgba(102, 126, 234, 0.05);
+            background: rgba(0, 184, 148, 0.05);
             transform: scale(1.01);
         }
 
@@ -351,7 +351,7 @@
             display: flex;
             align-items: center;
             justify-content: center;
-            color: white;
+            color: var(--color-white);
             font-weight: 600;
             font-size: 1.1rem;
         }
@@ -387,25 +387,25 @@
         }
 
         .btn-edit {
-            background: var(--gradient-accent);
-            color: white;
-            box-shadow: 0 2px 8px rgba(51, 182, 51, 0.3);
+            background: var(--gradient-edit);
+            color: var(--color-white);
+            box-shadow: 0 2px 8px rgba(46, 204, 113, 0.3);
         }
 
         .btn-edit:hover {
             transform: translateY(-2px);
-            box-shadow: 0 4px 15px rgba(51, 182, 51, 0.5);
+            box-shadow: 0 4px 15px rgba(46, 204, 113, 0.5);
         }
 
         .btn-delete {
             background: var(--gradient-danger);
-            color: white;
-            box-shadow: 0 2px 8px rgba(255, 77, 77, 0.3);
+            color: var(--color-white);
+            box-shadow: 0 2px 8px rgba(214, 48, 49, 0.3);
         }
 
         .btn-delete:hover {
             transform: translateY(-2px);
-            box-shadow: 0 4px 15px rgba(255, 77, 77, 0.5);
+            box-shadow: 0 4px 15px rgba(214, 48, 49, 0.5);
         }
 
         /* Contact Info */
@@ -423,13 +423,13 @@
 
         /* Age Badge */
         .age-badge {
-            background: rgba(102, 126, 234, 0.1);
+            background: rgba(0, 184, 148, 0.1);
             color: var(--color-primary);
             padding: 0.3rem 0.8rem;
             border-radius: 15px;
             font-weight: 600;
             font-size: 0.85rem;
-            border: 1px solid rgba(102, 126, 234, 0.2);
+            border: 1px solid rgba(0, 184, 148, 0.2);
         }
 
         /* Empty State */
@@ -465,7 +465,7 @@
         }
 
         .modal-content {
-            background: #fff;
+            background: var(--color-white);
             margin: 10% auto; /* 10% desde arriba y centrado */
             padding: 30px;
             border-radius: 15px;
@@ -535,7 +535,7 @@
         .form-input:focus {
             border-color: var(--color-primary);
             outline: none;
-            box-shadow: 0 0 5px rgba(102, 126, 234, 0.5);
+            box-shadow: 0 0 5px rgba(0, 184, 148, 0.5);
         }
 
         .form-textarea {
@@ -547,7 +547,7 @@
         .row-loading {
             opacity: 0.5;
             pointer-events: none;
-            background: rgba(102, 126, 234, 0.1);
+            background: rgba(0, 184, 148, 0.1);
         }
 
         /* Responsive Design */
