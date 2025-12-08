@@ -37,8 +37,6 @@ public class ControladorREST {
     @Autowired
     private CorreoServicio correoServicio;
 
-// --- MÉTODOS DE CORREO MASIVO ---
-
     @PostMapping("/enviar-correo-masivo")
     public String enviarCorreoMasivo(
             @RequestParam("asunto") String asunto,
