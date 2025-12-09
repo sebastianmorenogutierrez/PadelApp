@@ -10,6 +10,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors; // Importación necesaria para el nuevo método
 
 @Service
 public class EquipoServicio {
@@ -46,6 +47,39 @@ public class EquipoServicio {
         return equipoDao.findByEstado(estado);
     }
 
+    // ----------------------------------------------------------------------
+    // 🟢 NUEVO MÉTODO AÑADIDO: Filtra IDs de jugadores ya emparejados
+    // ----------------------------------------------------------------------
+    @Transactional(readOnly = true)
+    /**
+     * Obtiene una lista de IDs (Integer) de todos los usuarios que actualmente
+     * están registrados como Jugador1 o Jugador2 en CUALQUIER equipo.
+     * Se utiliza para filtrar a los jugadores que ya tienen pareja.
+     * @return Lista de IDs de usuarios que ya están en un equipo.
+     */
+    public List<Integer> obtenerIdsJugadoresConEquipoActivo() {
+        // Podrías usar findByEstado("ACTIVO") si quieres filtrar solo equipos activos.
+        // Usamos findAll() para obtener todos los equipos y luego filtrar por nulo.
+        List<Equipo> equipos = equipoDao.findAll();
+
+        return equipos.stream()
+                // Combina los IDs de Jugador1 y Jugador2 en un solo stream
+                .flatMap(equipo -> {
+                    Usuario jugador1 = equipo.getJugador1();
+                    Usuario jugador2 = equipo.getJugador2();
+                    // Retorna un stream de IDs (Integer)
+                    return java.util.stream.Stream.of(
+                            jugador1 != null ? jugador1.getId_usuario() : null,
+                            jugador2 != null ? jugador2.getId_usuario() : null
+                    );
+                })
+                // Filtra los nulos (si existieran) y los IDs duplicados
+                .filter(java.util.Objects::nonNull)
+                .distinct()
+                .collect(Collectors.toList());
+    }
+    // ----------------------------------------------------------------------
+
     // --- Métodos de Escritura (Transactional) ---
 
     @Transactional
@@ -75,13 +109,10 @@ public class EquipoServicio {
             }
 
             // Nota: Asumiendo que la entidad Equipo maneja la fechaCreacion en su constructor o @PrePersist.
-            // Si no es así, descomenta: equipo.setFechaCreacion(LocalDateTime.now());
         }
 
         return equipoDao.save(equipo);
     }
-
-    // ... dentro de EquipoServicio.java
 
     @Transactional
     public Equipo crearEquipo(String nombreEquipo, Usuario jugador1, Usuario jugador2) {
@@ -95,17 +126,10 @@ public class EquipoServicio {
             throw new IllegalStateException("Ya existe un equipo activo entre estos jugadores");
         }
 
-        // ⬅️ CORRECCIÓN: Se elimina el cuarto parámetro ("ACTIVO")
         Equipo equipo = new Equipo(nombreEquipo, jugador1, jugador2);
-
-        // La línea equipo.setFechaCreacion(LocalDateTime.now()); es redundante,
-        // ya que el constructor de 3 parámetros en Equipo.java ya lo hace.
-        // Si la quieres mantener por seguridad, no hay problema, pero la he comentado aquí:
-        // equipo.setFechaCreacion(LocalDateTime.now());
 
         return equipoDao.save(equipo);
     }
-// ...
 
     @Transactional(readOnly = true)
     // Usamos Integer para los IDs de Usuario
@@ -133,7 +157,7 @@ public class EquipoServicio {
                 .orElseThrow(() -> new IllegalArgumentException("Equipo no encontrado"));
 
         equipo.setEstado("DISUELTO");
-        // Nota: Asume que la entidad Equipo tiene setFechaDisolucion
+        // Asume que la entidad Equipo tiene setFechaDisolucion
         // equipo.setFechaDisolucion(LocalDateTime.now());
         equipoDao.save(equipo);
     }
@@ -158,7 +182,7 @@ public class EquipoServicio {
         }
 
         equipo.setEstado("ACTIVO");
-        // Nota: Asume que la entidad Equipo tiene setFechaDisolucion
+        // Asume que la entidad Equipo tiene setFechaDisolucion
         // equipo.setFechaDisolucion(null);
         equipoDao.save(equipo);
     }
