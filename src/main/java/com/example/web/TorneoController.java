@@ -65,7 +65,12 @@ public class TorneoController {
         Torneo torneo = torneoService.buscarPorId(id).orElseThrow(
                 () -> new NoSuchElementException("Torneo no encontrado con ID: " + id)
         );
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+        String fechaInicioFormateada = torneo.getFechaInicio().format(formatter);
+        String fechaFinFormateada = torneo.getFechaFin().format(formatter);
         model.addAttribute("torneo", torneo);
+        model.addAttribute("fechaInicioFormateada", fechaInicioFormateada);
+        model.addAttribute("fechaFinFormateada", fechaFinFormateada);
         return "torneo_detalle";
     }
     @PostMapping("/{id}/eliminar")
@@ -87,12 +92,15 @@ public class TorneoController {
     public String verTorneo(@PathVariable Long id, Model model) {
         Torneo torneo = torneoService.buscarPorId(id).orElseThrow();
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+        // Formateo de fechas
         String fechaInicioFormateada = torneo.getFechaInicio().format(formatter);
         String fechaFinFormateada = torneo.getFechaFin().format(formatter);
+
         model.addAttribute("torneo", torneo);
+        // Adición de fechas formateadas
         model.addAttribute("fechaInicioFormateada", fechaInicioFormateada);
         model.addAttribute("fechaFinFormateada", fechaFinFormateada);
-        return "torneo_detalle";
+        return "torneo_detalle"; // <-- Aquí también usas la vista
     }
 
     @PostMapping("/{id}/inscribir")
