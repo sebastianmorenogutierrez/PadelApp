@@ -1,7 +1,6 @@
 package com.example.servicio;
 
 import com.example.dao.SolicitudEquipoDao;
-import com.example.dao.EquipoDao; // Necesario para crear el equipo al aceptar la solicitud
 import com.example.domain.Equipo;
 import com.example.domain.SolicitudEquipo;
 import com.example.domain.usuario.Usuario;
@@ -19,13 +18,16 @@ public class SolicitudEquipoServicio {
     @Autowired
     private SolicitudEquipoDao solicitudEquipoDao;
 
-    @Autowired
-    private EquipoDao equipoDao; // Inyectamos el DAO de Equipo para la creación
+    // 🔴 Eliminamos la inyección directa de EquipoDao (ya que usamos EquipoServicio)
+    // @Autowired
+    // private EquipoDao equipoDao;
 
     @Autowired
-    private EquipoServicio equipoServicio; // Para usar la lógica de verificación de equipo activo
+    private EquipoServicio equipoServicio; // Para la lógica de Equipo
 
     // --- Métodos de Lectura (Transactional ReadOnly) ---
+
+    // ... (Todos los métodos de lectura se mantienen sin cambios)
 
     @Transactional(readOnly = true)
     public List<SolicitudEquipo> obtenerTodasLasSolicitudes() {
@@ -57,6 +59,7 @@ public class SolicitudEquipoServicio {
         return solicitudEquipoDao.existeSolicitudPendienteEntreJugadores(idJugador1, idJugador2);
     }
 
+
     // --- Métodos de Escritura (Transactional) ---
 
     @Transactional
@@ -79,13 +82,12 @@ public class SolicitudEquipoServicio {
         }
 
         // 2. Verificar si ya existe un equipo ACTIVO entre ellos
-        // ⬅️ CORRECCIÓN: Quitamos .longValue() para pasar Integer a EquipoServicio
         boolean existeEquipoActivo = equipoServicio.existeEquipoActivoEntreJugadores(idJugador1, idJugador2);
         if (existeEquipoActivo) {
             throw new IllegalStateException("Ya existe un equipo activo entre estos jugadores.");
         }
 
-        // 3. Establecer estados y fechas iniciales (aunque @PrePersist ya lo hace)
+        // 3. Establecer estados y fechas iniciales
         solicitud.setEstado("PENDIENTE");
         solicitud.setFechaSolicitud(LocalDateTime.now());
 
@@ -104,35 +106,31 @@ public class SolicitudEquipoServicio {
         Usuario jugador1 = solicitud.getJugador1();
         Usuario jugador2 = solicitud.getJugador2();
 
-        // 1. Verificar nuevamente que no exista equipo activo
-        // ⬅️ CORRECCIÓN: Quitamos .longValue() para pasar Integer a EquipoServicio
+        // 1. Verificar nuevamente que no exista equipo activo (Doble chequeo antes de crear)
         boolean existeEquipoActivo = equipoServicio.existeEquipoActivoEntreJugadores(
                 jugador1.getId_usuario(),
                 jugador2.getId_usuario()
         );
 
         if (existeEquipoActivo) {
-            // Si ya existe un equipo, rechazamos la solicitud
+            // Si ya existe un equipo, rechazamos la solicitud y lanzamos excepción
             solicitud.rechazar();
             solicitud.setMensaje("Rechazada automáticamente: Ya se creó un equipo activo previamente.");
             solicitudEquipoDao.save(solicitud);
             throw new IllegalStateException("No se puede aceptar la solicitud, ya existe un equipo activo entre los jugadores.");
         }
 
-        // 2. Marcar la solicitud como ACEPTADA
+        // 2. Crear el nuevo equipo
+        Equipo nuevoEquipo = new Equipo(solicitud.getNombreEquipo(), jugador1, jugador2);
+
+        // Usamos EquipoServicio para persistir (garantizando todas sus validaciones)
+        Equipo equipoPersistido = equipoServicio.guardarEquipo(nuevoEquipo);
+
+        // 3. Marcar la solicitud como ACEPTADA después de la creación exitosa del equipo
         solicitud.aceptar();
         solicitudEquipoDao.save(solicitud);
 
-        // 3. Crear el nuevo equipo
-        // ⬅️ CORRECCIÓN: Se usa el constructor de 3 parámetros. El estado "ACTIVO" se establece dentro del constructor de Equipo.
-        Equipo nuevoEquipo = new Equipo(solicitud.getNombreEquipo(), jugador1, jugador2);
-
-        // Ya que el constructor de 3 parámetros ya establece fechaCreacion, esta línea es redundante,
-        // pero la dejamos comentada por si la quieres eliminar:
-        // nuevoEquipo.setFechaCreacion(LocalDateTime.now());
-
-        // Asumimos que EquipoServicio.guardarEquipo maneja la persistencia y validaciones finales.
-        return equipoServicio.guardarEquipo(nuevoEquipo);
+        return equipoPersistido;
     }
 
     @Transactional
