@@ -492,50 +492,21 @@
     document.addEventListener('DOMContentLoaded', function() {
         const form = document.getElementById('profileForm');
         const submitBtn = document.getElementById('submitBtn');
-        const resultMessage = document.getElementById('resultMessage');
 
-        form.addEventListener('submit', function(e) {
-            e.preventDefault();
-
-            // Simulación de validación simple
-            const nombre = document.getElementById('nombre').value.trim();
-            const correo = document.getElementById('correo').value.trim();
-
-            if (nombre === "" || correo === "") {
-                resultMessage.className = 'message error';
-                resultMessage.innerHTML = '<i class="fas fa-exclamation-triangle"></i> Por favor, completa los campos Nombre y Correo.';
-                resultMessage.style.display = 'block';
-                return;
-            }
-
-            // Iniciar estado de carga
+        // 1. Habilitamos el estado de carga justo antes de enviar el formulario.
+        form.addEventListener('submit', function() {
+            // Se activa el estado de carga y se deshabilita el botón
             submitBtn.classList.add('loading');
             submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Guardando...';
             submitBtn.disabled = true;
 
-            // Simular el envío de datos al servidor (reemplazar con lógica real de envío)
-            setTimeout(() => {
-                // Aquí deberías recibir la respuesta del servidor (éxito o error)
+            // NO se usa e.preventDefault(), permitiendo que el formulario se envíe realmente al servidor.
 
-                // Simulación de éxito
-                resultMessage.className = 'message success';
-                resultMessage.innerHTML = '<i class="fas fa-check-circle"></i> ¡Tu perfil ha sido actualizado con éxito!';
-                resultMessage.style.display = 'block';
-
-                // Restaurar botón (o redirigir, si el proceso es exitoso y completo)
-                submitBtn.classList.remove('loading');
-                submitBtn.innerHTML = '<i class="fas fa-save"></i> Guardar Cambios';
-                submitBtn.disabled = false;
-
-                // Si quieres redirigir después de un tiempo:
-                /* setTimeout(() => {
-                    window.location.href = '/indice'; // Redirige al índice
-                }, 1500); */
-
-            }, 1500); // 1.5 segundos de simulación de carga
+            // Nota: Si hay errores de validación de Spring (Errores), el controlador recargará
+            // la página 'formulariomodificar' y el botón se restaurará.
         });
 
-        // Enfocar el primer campo
+        // 2. Enfocar el primer campo
         document.getElementById('nombre').focus();
     });
 </script>

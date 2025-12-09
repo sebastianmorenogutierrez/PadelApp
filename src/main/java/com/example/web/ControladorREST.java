@@ -27,6 +27,7 @@ import java.util.concurrent.CompletableFuture;
 
 @Controller
 public class ControladorREST {
+    // Inyección de servicios (Autowired es correcto en Spring)
     @Autowired
     private IndividuoServicio individuoServicio;
 
@@ -41,6 +42,7 @@ public class ControladorREST {
 
 
     // 🔑 MÉTODOS DE AUTENTICACIÓN Y REGISTRO
+    // ---------------------------------------------------
 
     @GetMapping("/login")
     public String mostrarLogin() {
@@ -52,7 +54,7 @@ public class ControladorREST {
         return "login";
     }
 
-    // 1. Muestra el formulario de registro (Movido de UsuarioController)
+    // Muestra el formulario de registro
     @GetMapping("/registro")
     public String mostrarFormularioRegistro(Model model) {
         Usuario usuario = new Usuario();
@@ -70,11 +72,14 @@ public class ControladorREST {
 
         if (errors.hasErrors()) {
             System.out.println("Errores de validación en el registro: " + errors.getAllErrors());
-            // ... (Redirección de error de validación) ...
+            // Si hay errores, volvemos a /registro (GET) para mostrar los mensajes de error
+            redirectAttributes.addFlashAttribute("org.springframework.validation.BindingResult.usuario", errors);
+            redirectAttributes.addFlashAttribute("usuario", usuario); // Mantener datos
             return "redirect:/registro";
         }
 
         try {
+            // Asigna el perfil JUGADOR por defecto (ID 2, asumiendo esta convención)
             usuario.setPerfil(perfilServicio.buscarPorId(2));
 
             usuario.getIndividuo().setEliminado(false);
@@ -98,26 +103,28 @@ public class ControladorREST {
 
         String username = auth.getName();
         Usuario usuario = usuarioServicio.localizarPorNombreUsuario(username);
+        // Guardar el usuario completo en sesión es opcional, pero ayuda a acceder a datos sin consultas repetidas
         session.setAttribute("usuarioActual", usuario);
         String rol = auth.getAuthorities().iterator().next().getAuthority();
+
         switch (rol) {
             case "ROLE_ADMINISTRADOR":
                 return "redirect:/indice"; // Dashboard Admin
             case "ROLE_JUGADOR":
                 return "redirect:/indicejugador"; // Dashboard Jugador
             default:
-                return "redirect:/error";
+                return "redirect:/error"; // Mejor redirigir a una página de error genérica o login
         }
     }
 
-    @GetMapping("/indicejugador") // ¡La ruta que faltaba!
+    @GetMapping("/indicejugador")
     public String mostrarDashboardJugador(Model model, Authentication authentication) {
+        // Podrías cargar datos específicos del jugador aquí si es necesario.
         return "indicejugador";
     }
 
     @GetMapping("/indice")
     public String mostrarIndice(Model model, Authentication authentication) {
-        // Muestra el dashboard del administrador, cargando el nombre completo del usuario.
         String nombreUsuario = authentication.getName();
         Usuario usuarioAutenticado = usuarioServicio.obtenerUsuarioActual(nombreUsuario);
 
@@ -134,44 +141,64 @@ public class ControladorREST {
         }
     }
 
+    // 🔄 MÉTODOS DE PERFIL DE USUARIO
+    // ---------------------------------------------------
+
     @GetMapping("/datos")
     public String mostrarDatos(Model model, Authentication authentication) {
-        // Muestra la vista con la información detallada del perfil del usuario logueado.
         String nombreUsuario = authentication.getName();
         Usuario usuario = usuarioServicio.localizarPorNombreUsuario(nombreUsuario);
-        if (usuario != null && usuario.getIndividuo() != null && !usuario.isEliminado()) {
+
+        if (usuario != null && usuario.getIndividuo() != null && !usuario.isEliminado() && !usuario.getIndividuo().isEliminado()) {
             model.addAttribute("usuario", usuario);
+            // El mensaje de éxito de RedirectAttributes (si existe) se añade automáticamente al Model aquí.
             return "datos";
         } else {
             return "redirect:/login?error";
         }
     }
+
     @GetMapping("/modificar")
     public String mostrarFormularioDeEdicion(Model model, Authentication auth) {
-        // Carga el formulario para que el usuario logueado modifique su propio perfil.
         String nombreUsuario = auth.getName();
         Usuario usuario = usuarioServicio.obtenerUsuarioActual(nombreUsuario);
+
         if (usuario != null && usuario.getIndividuo() != null) {
-            model.addAttribute("usuario", usuario);
+            // Asegura que el modelo esté limpio o que se use el objeto existente para la edición
+            if (!model.containsAttribute("usuario")) {
+                model.addAttribute("usuario", usuario);
+            }
             return "formulariomodificar";
         } else {
             return "redirect:/login?error";
         }
     }
 
+    /**
+     * Procesa la modificación del perfil de usuario.
+     * Implementa el patrón Post/Redirect/Get (PRG).
+     * @param usuario Objeto Usuario con los datos del Individuo actualizados.
+     * @param errors Errores de validación de Jakarta Validation.
+     * @param redirectAttributes Para pasar mensajes flash al GET de /datos.
+     * @return Redirección al perfil si tiene éxito, o al formulario si hay errores.
+     */
     @PostMapping("/modificar")
     public String procesarModificacion(@Valid @ModelAttribute("usuario") Usuario usuario, Errors errors, RedirectAttributes redirectAttributes, Authentication auth) {
         if (errors.hasErrors()) {
             System.err.println("Errores de validación al modificar el perfil: " + errors.getAllErrors());
+            // Si hay errores, retornamos al formulario (Thymeleaf maneja los mensajes)
             return "formulariomodificar";
         }
 
         try {
+            // 1. Obtener y actualizar el Individuo
             Individuo individuo = usuario.getIndividuo();
-            individuo.setEliminado(false);
-            individuoServicio.salvar(individuo);
+            individuo.setEliminado(false); // Asegura que no se marque como eliminado
+            individuoServicio.salvar(individuo); // Actualiza los datos en la DB
+
+            // 2. Mensaje de éxito y Redirección
             redirectAttributes.addFlashAttribute("mensajeExito", "¡Tu perfil ha sido actualizado con éxito!");
-            return "redirect:/datos";
+            return "redirect:/datos"; // <-- Redirige para recargar datos actualizados
 
         } catch (Exception e) {
             System.err.println("Error al actualizar el individuo: " + e.getMessage());
@@ -185,21 +212,29 @@ public class ControladorREST {
         // Realiza la eliminación lógica del Individuo y del Usuario, e invalida la sesión.
         String nombreUsuario = auth.getName();
         Usuario usuario = usuarioServicio.localizarPorNombreUsuario(nombreUsuario);
+
         if (usuario != null) {
+            // Eliminación lógica del Individuo (Datos personales)
             Individuo individuo = usuario.getIndividuo();
             if (individuo != null) {
-                individuo.setEliminado(true); // Eliminación lógica del Individuo.
+                individuo.setEliminado(true);
                 individuoServicio.salvar(individuo);
             }
-            usuarioServicio.eliminarCuentaPorId(Long.valueOf(usuario.getId_usuario())); // Eliminación del Usuario.
+            // Eliminación del Usuario (Cuenta)
+            // Es más seguro hacer eliminación lógica del Usuario también, o usar un servicio transaccional.
+            usuarioServicio.eliminarCuentaPorId(Long.valueOf(usuario.getId_usuario()));
             session.invalidate(); // Desloguea al usuario.
         }
         return "redirect:/login?cuentaEliminada";
     }
 
+    // 🌐 MÉTODOS DE GESTIÓN ADMINISTRATIVA
+    // ---------------------------------------------------
+
     @GetMapping("/")
     public String comienzo(Model model) {
-        // Muestra la vista principal (inicio), listando todos los individuos.
+        // Podrías redirigir a /indice o /indicejugador si hay una sesión activa,
+        // o mostrar una página de inicio pública.
         List<Individuo> individuos = individuoServicio.listaIndividuos();
         model.addAttribute("individuos", individuos);
         return "principal";
@@ -208,6 +243,7 @@ public class ControladorREST {
     @GetMapping("/jugadores")
     public String verJugadores(Model model) {
         try {
+            // Filtra solo usuarios activos (no eliminados) y con individuo activo
             List<Usuario> jugadores = usuarioServicio.listarTodos()
                     .stream()
                     .filter(usuario -> !usuario.isEliminado() && usuario.getIndividuo() != null && !usuario.getIndividuo().isEliminado())
@@ -219,6 +255,8 @@ public class ControladorREST {
         }
         return "jugadores";
     }
+
+    // (Mantengo /jugadores-registrados por si se usa en otra parte, aunque /jugadores es mejor)
     @GetMapping("/jugadores-registrados")
     public String mostrarJugadoresRegistrados(Model model) {
         model.addAttribute("jugadores", usuarioServicio.listarTodos());
@@ -227,13 +265,11 @@ public class ControladorREST {
 
     @GetMapping("/anexar")
     public String anexar(Individuo individuo) {
-        // Muestra el formulario para agregar un nuevo Individuo.
         return "agregar";
     }
 
     @PostMapping("/salvar")
     public String salvar(@Valid Individuo individuo, Errors errors) {
-        // Procesa el formulario para guardar un nuevo Individuo (Administrativo).
         if (errors.hasErrors()) {
             return "agregar";
         }
@@ -243,7 +279,6 @@ public class ControladorREST {
 
     @GetMapping("/jugadores/editar/{idIndividuo}")
     public String editarJugador(@PathVariable("idIndividuo") Long idIndividuo, Model model) {
-        // Muestra el formulario para editar un Individuo por su ID.
         Individuo individuo = individuoServicio.localizarIndividuo(idIndividuo);
         if (individuo != null) {
             model.addAttribute("individuo", individuo);
@@ -252,6 +287,7 @@ public class ControladorREST {
             return "redirect:/jugadores";
         }
     }
+
     @PostMapping("/cambiar/guardar")
     public String guardarCambios(@Valid @ModelAttribute("individuo") Individuo individuo, Errors errors, Model model) {
         if (errors.hasErrors()) {
@@ -260,9 +296,9 @@ public class ControladorREST {
         individuoServicio.salvar(individuo);
         return "redirect:/jugadores";
     }
+
     @GetMapping("/borrar/{idIndividuo}")
     public String eliminarJugador(@PathVariable("idIndividuo") Long idIndividuo, RedirectAttributes redirectAttributes) {
-        // Realiza la eliminación lógica de un Individuo (Administrativo).
         Individuo individuo = individuoServicio.localizarIndividuo(idIndividuo);
         if (individuo != null) {
             individuo.setEliminado(true); // Marca como eliminado.
@@ -273,6 +309,10 @@ public class ControladorREST {
         }
         return "redirect:/jugadores";
     }
+
+    // 📧 MÉTODOS DE CORREO Y OTROS
+    // ---------------------------------------------------
+
     @PostMapping("/enviar-correo-masivo")
     public String enviarCorreoMasivo(
             @RequestParam("asunto") String asunto,
@@ -280,7 +320,6 @@ public class ControladorREST {
             @RequestParam(value = "tipoEvento", defaultValue = "NOTIFICACIÓN GENERAL") String tipoEvento,
             RedirectAttributes redirectAttributes) {
 
-        // Filtra y obtiene la lista de jugadores activos.
         List<Usuario> jugadoresActivos = usuarioServicio.listarTodos()
                 .stream()
                 .filter(usuario -> !usuario.isEliminado() && usuario.getIndividuo() != null && !usuario.getIndividuo().isEliminado())
@@ -314,9 +353,9 @@ public class ControladorREST {
     public String mostrarTorneo() {
         return "torneo";
     }
+
     @GetMapping("/exportarExcel")
     public void exportarExcel(HttpServletResponse response) throws IOException {
-        // Genera y descarga un archivo Excel (XLSX) con los datos de todos los Individuos.
         response.setContentType("application/vnd.openxmlformats-officedocument.spreadsheetml.sheet");
         response.setHeader("Content-Disposition", "attachment; filename=individuos.xlsx");
 
@@ -343,7 +382,6 @@ public class ControladorREST {
             row.createCell(4).setCellValue(ind.getTelefono());
         }
 
-        // Escribir el archivo en la respuesta HTTP
         workbook.write(response.getOutputStream());
         workbook.close();
     }

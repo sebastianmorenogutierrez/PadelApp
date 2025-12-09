@@ -22,6 +22,7 @@
         --color-text: #2d3436; /* Gris Oscuro Casi Negro */
         --color-text-light: #636e72; /* Gris Medio */
         --color-white: #ffffff;
+        --color-shadow: rgba(0, 0, 0, 0.1);
 
         /* Gradientes Ajustados */
         --gradient-primary: linear-gradient(135deg, var(--color-primary) 0%, var(--color-primary-dark) 100%);
@@ -145,6 +146,45 @@
         align-items: center;
         justify-content: center;
     }
+
+    /* MENSAJE FLASH STYLE (AÑADIDO PARA LA CORRECCIÓN) */
+    .flash-message {
+        width: 100%;
+        max-width: 800px;
+        padding: 1rem 1.5rem;
+        margin-bottom: 2rem;
+        border-radius: 15px;
+        font-weight: 600;
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+        animation: fadeInDown 0.5s ease-out;
+    }
+
+    .flash-message.success {
+        background-color: #e6ffec; /* Verde muy claro */
+        color: #008037; /* Verde oscuro */
+        border: 2px solid var(--color-primary-dark);
+    }
+
+    .flash-message.error {
+        background-color: #ffe6e6; /* Rojo muy claro */
+        color: var(--color-danger); /* Rojo oscuro */
+        border: 2px solid var(--color-danger);
+    }
+
+    @keyframes fadeInDown {
+        from {
+            opacity: 0;
+            transform: translateY(-20px);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
 
     /* Profile Container */
     .profile-container {
@@ -577,6 +617,16 @@
   </nav>
 
   <main class="main-content">
+
+    <div th:if="${mensajeExito}" class="flash-message success">
+      <i class="fas fa-check-circle"></i>
+      <span th:text="${mensajeExito}">Mensaje de éxito genérico.</span>
+    </div>
+
+    <div th:if="${mensajeError}" class="flash-message error">
+      <i class="fas fa-exclamation-triangle"></i>
+      <span th:text="${mensajeError}">Mensaje de error genérico.</span>
+    </div>
     <div class="profile-container">
       <div class="profile-header">
         <div class="profile-avatar">
@@ -838,6 +888,30 @@
           hideDeleteConfirmation();
       }
   });
+
+  // Función para ocultar automáticamente los mensajes de éxito/error después de 5 segundos
+  function setupFlashMessageHiding() {
+      const successMessage = document.querySelector('.flash-message.success');
+      const errorMessage = document.querySelector('.flash-message.error');
+
+      if (successMessage) {
+          setTimeout(() => {
+              successMessage.style.opacity = '0';
+              setTimeout(() => successMessage.remove(), 500); // 500ms para la transición
+          }, 5000); // Ocultar después de 5 segundos
+      }
+
+      if (errorMessage) {
+          setTimeout(() => {
+              errorMessage.style.opacity = '0';
+              setTimeout(() => errorMessage.remove(), 500);
+          }, 7000); // Dar un poco más de tiempo a los errores
+      }
+  }
+
+  // Llamar a la función al cargar el DOM
+  setupFlashMessageHiding();
+
 </script>
 </body>
 </html>
