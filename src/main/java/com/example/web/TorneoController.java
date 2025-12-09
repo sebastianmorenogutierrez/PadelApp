@@ -68,7 +68,6 @@ public class TorneoController {
         model.addAttribute("torneo", torneo);
         return "torneo_detalle";
     }
-
     @PostMapping("/{id}/eliminar")
     public String eliminarTorneo(@PathVariable Long id) {
         torneoService.eliminar(id);
