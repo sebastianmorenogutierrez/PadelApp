@@ -256,7 +256,6 @@ public class ControladorREST {
         individuoServicio.salvar(individuo);
         return "redirect:/jugadores";
     }
-
     @GetMapping("/borrar/{idIndividuo}")
     public String eliminarJugador(@PathVariable("idIndividuo") Long idIndividuo, RedirectAttributes redirectAttributes) {
         // Realiza la eliminación lógica de un Individuo (Administrativo).
