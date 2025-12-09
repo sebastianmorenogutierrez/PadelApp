@@ -1,3 +1,4 @@
+
 package com.example.dao;
 
 import com.example.domain.usuario.Usuario;
@@ -6,6 +7,8 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
+import java.util.List; // Necesitas importar List
+
 @Repository
 public interface UsuarioDao extends JpaRepository<Usuario, Integer> {
 
@@ -13,4 +16,6 @@ public interface UsuarioDao extends JpaRepository<Usuario, Integer> {
         Usuario buscarPorNombre(@Param("nombreUsuario") String nombreUsuario);
 
         Usuario findByNombreUsuario(String nombreUsuario);
+
+        List<Usuario> findByEliminadoFalse();
 }
