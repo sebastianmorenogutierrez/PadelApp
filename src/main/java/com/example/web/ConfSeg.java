@@ -46,7 +46,7 @@ public class ConfSeg {
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers(
                                 "/css/**", "/js/**", "/images/**",
-                                "/", "/principal", "/login", "/login/**" ,"/registro", "/API/registro",
+                                "/", "/principal", "/login", "/login/?logout=true" ,"/registro", "/API/registro",
                                 "/login?rolDesconocido"
                         ).permitAll()
                         .requestMatchers("/api/**").authenticated()
