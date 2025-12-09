@@ -203,7 +203,6 @@ public class ControladorREST {
 
     @GetMapping("/jugadores")
     public String verJugadores(Model model) {
-        // Muestra una lista de todos los usuarios y sus individuos, filtrando solo los activos.
         try {
             List<Usuario> jugadores = usuarioServicio.listarTodos()
                     .stream()
@@ -216,8 +215,6 @@ public class ControladorREST {
         }
         return "jugadores";
     }
-
-    // 💡 Nuevo método para listar todos los jugadores (desde UsuarioController)
     @GetMapping("/jugadores-registrados")
     public String mostrarJugadoresRegistrados(Model model) {
         model.addAttribute("jugadores", usuarioServicio.listarTodos());
@@ -240,7 +237,7 @@ public class ControladorREST {
         return "redirect:/jugadores";
     }
 
-    @GetMapping("/cambiar/{idIndividuo}")
+    @GetMapping("/jugadores/editar/{idIndividuo}")
     public String editarJugador(@PathVariable("idIndividuo") Long idIndividuo, Model model) {
         // Muestra el formulario para editar un Individuo por su ID.
         Individuo individuo = individuoServicio.localizarIndividuo(idIndividuo);

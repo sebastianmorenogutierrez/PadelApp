@@ -850,21 +850,21 @@
 
     function editPlayer(button) {
         const playerId = button.getAttribute('data-id');
-        alert(`Simulando la acción de EDITAR al jugador con ID: ${playerId}`);
-        // Aquí se colocaría la lógica para redirigir a la página de edición.
-        // window.location.href = `/jugadores/editar/${playerId}`;
+        // alert(`Simulando la acción de EDITAR al jugador con ID: ${playerId}`); // COMENTAR O ELIMINAR
+
+        // **LÍNEA CORREGIDA:** Redirigimos a la nueva URL mapeada en el controlador
+        window.location.href = `/jugadores/editar/${playerId}`;
     }
 
     function deletePlayer(button) {
         const playerId = button.getAttribute('data-id');
         const playerName = button.getAttribute('data-name');
         if (confirm(`¿Estás seguro de ELIMINAR al jugador "${playerName}" (ID: ${playerId})? Esta acción es irreversible.`)) {
-            alert(`Simulando la acción de ELIMINAR al jugador con ID: ${playerId}`);
-            // Aquí se colocaría la lógica para enviar la solicitud de eliminación.
-            // window.location.href = `/jugadores/eliminar/${playerId}`;
+            // alert(`Simulando la acción de ELIMINAR al jugador con ID: ${playerId}`); // COMENTAR O ELIMINAR
+            // **LÍNEA CORREGIDA (asumiendo que quieres usar la ruta administrativa /borrar)**
+            window.location.href = `/borrar/${playerId}`;
         }
     }
-
 
     document.addEventListener('DOMContentLoaded', function() {
         // ====================================================================
