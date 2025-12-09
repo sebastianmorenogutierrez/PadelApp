@@ -140,23 +140,23 @@ public class PadelMatchController {
     // ⭐️ CAMBIO 3: Eliminada la inyección incompleta @Autowired private
 
     @PostMapping("/{matchId}/inscribir")
-    public String inscribirJugadorPorNombre(
-            @PathVariable Long matchId,
-            @RequestParam("nombreJugador") String nombre,
-            RedirectAttributes redirectAttributes) {
-        try {
-            Usuario jugadorAInscribir = usuarioServicio.localizarPorNombreUsuario(nombre);
+    public String inscribirJugador( // Cambiado el nombre del método
+                                    @PathVariable Long matchId,
+                                    Authentication auth, // <-- Ahora recibe la autenticación
+                                    RedirectAttributes redirectAttributes) {
+        String nombreUsuarioLogueado = auth.getName();
 
-            if (jugadorAInscribir == null) {
-                redirectAttributes.addFlashAttribute("mensajeError", "⚠️ Jugador con nombre '" + nombre + "' no encontrado.");
+        try {
+            Usuario jugadorAInscribir = usuarioServicio.localizarPorNombreUsuario(nombreUsuarioLogueado);
+
+            if (jugadorAInscribir == null || jugadorAInscribir.getId_usuario() == null) {
+                redirectAttributes.addFlashAttribute("mensajeError", "⚠️ Error de autenticación: El usuario logueado no pudo ser encontrado.");
                 return "redirect:/partido/" + matchId;
             }
-
             padelMatchService.inscribirJugador(matchId, jugadorAInscribir.getId_usuario());
-
-            redirectAttributes.addFlashAttribute("mensajeExito", "✅ Jugador '" + nombre + "' inscrito exitosamente.");
+            redirectAttributes.addFlashAttribute("mensajeExito", " ¡Inscrito con éxito! Eres parte del partido.");
         } catch (RuntimeException e) {
-            redirectAttributes.addFlashAttribute("mensajeAdvertencia", "❌ Error de inscripción: " + e.getMessage());
+            redirectAttributes.addFlashAttribute("mensajeAdvertencia", " Error de inscripción: " + e.getMessage());
         }
         return "redirect:/partido/" + matchId;
     }
