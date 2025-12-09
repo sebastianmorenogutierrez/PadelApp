@@ -160,16 +160,24 @@ public class ControladorREST {
     }
 
     @PostMapping("/modificar")
-    public String procesarModificacion(@Valid Usuario usuario, Errors errors, Model model) {
-        // Procesa el guardado de los cambios realizados en el perfil propio.
+    public String procesarModificacion(@Valid @ModelAttribute("usuario") Usuario usuario, Errors errors, RedirectAttributes redirectAttributes, Authentication auth) {
         if (errors.hasErrors()) {
+            System.err.println("Errores de validación al modificar el perfil: " + errors.getAllErrors());
             return "formulariomodificar";
         }
-        Individuo individuo = usuario.getIndividuo();
-        individuo.setEliminado(false); // Asegura que el individuo siga activo.
-        individuoServicio.salvar(individuo);
-        model.addAttribute("mensajeExito", "Cambios guardados correctamente.");
-        return "indice";
+
+        try {
+            Individuo individuo = usuario.getIndividuo();
+            individuo.setEliminado(false);
+            individuoServicio.salvar(individuo);
+            redirectAttributes.addFlashAttribute("mensajeExito", "¡Tu perfil ha sido actualizado con éxito!");
+            return "redirect:/datos";
+
+        } catch (Exception e) {
+            System.err.println("Error al actualizar el individuo: " + e.getMessage());
+            redirectAttributes.addFlashAttribute("mensajeError", "Error al guardar los cambios: " + e.getMessage());
+            return "redirect:/modificar";
+        }
     }
 
     @GetMapping("/eliminarCuenta")
@@ -188,10 +196,6 @@ public class ControladorREST {
         }
         return "redirect:/login?cuentaEliminada";
     }
-
-    // --------------------------------------------------
-
-    // 👥 MÉTODOS DE ADMINISTRACIÓN DE JUGADORES (CRUD)
 
     @GetMapping("/")
     public String comienzo(Model model) {
@@ -269,11 +273,6 @@ public class ControladorREST {
         }
         return "redirect:/jugadores";
     }
-
-    // --------------------------------------------------
-
-    // 📧 MÉTODOS DE COMUNICACIÓN Y VISTAS ESTÁTICAS
-
     @PostMapping("/enviar-correo-masivo")
     public String enviarCorreoMasivo(
             @RequestParam("asunto") String asunto,
@@ -315,11 +314,6 @@ public class ControladorREST {
     public String mostrarTorneo() {
         return "torneo";
     }
-
-    // --------------------------------------------------
-
-    // 📊 EXPORTACIÓN DE DATOS
-
     @GetMapping("/exportarExcel")
     public void exportarExcel(HttpServletResponse response) throws IOException {
         // Genera y descarga un archivo Excel (XLSX) con los datos de todos los Individuos.
