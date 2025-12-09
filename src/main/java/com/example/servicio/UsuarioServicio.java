@@ -11,7 +11,6 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
 
-// Importaciones necesarias para obtener el usuario de Spring Security
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 
@@ -29,6 +28,9 @@ public class UsuarioServicio {
 
     @Autowired
     private PasswordEncoder passwordEncoder;
+
+    // --- Métodos de Localización y Obtención de Usuario ---
+
     public Usuario obtenerUsuarioActual() {
         Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 
@@ -40,8 +42,9 @@ public class UsuarioServicio {
                 return usuario;
             }
         }
-        return null; // Retorna null si no hay sesión o el usuario no se encuentra/está eliminado
+        return null;
     }
+
     public boolean esAdministrador(Usuario usuario) {
         if (usuario == null || usuario.getPerfil() == null) {
             return false;
@@ -49,6 +52,43 @@ public class UsuarioServicio {
         String nombrePerfil = usuario.getPerfil().getDescripcion_perfil();
         return "ROLE_ADMINISTRADOR".equalsIgnoreCase(nombrePerfil);
     }
+
+    /** * 🟢 NUEVO: Localiza un usuario por su ID, aceptando Long (para el controlador)
+     * y convirtiendo a Integer (para el DAO).
+     */
+    public Usuario obtenerUsuarioPorId(Long idUsuario) {
+        if (idUsuario == null) {
+            return null;
+        }
+        // Conversión de Long a Integer para que coincida con la firma del DAO
+        Integer idInt = idUsuario.intValue();
+        return usuarioDao.findById(idInt).orElse(null);
+    }
+
+    // El método encontrarPorId que acepta Integer es redundante si se usa el anterior, pero lo dejamos si quieres mantenerlo.
+    public Usuario encontrarPorId(Integer idUsuario) {
+        return usuarioDao.findById(idUsuario).orElse(null);
+    }
+
+    public Usuario localizarPorNombreUsuario(String nombreUsuario) {
+        return usuarioDao.buscarPorNombre(nombreUsuario);
+    }
+
+    public Usuario obtenerUsuarioActual(String nombreUsuario) {
+        Usuario usuario = usuarioDao.buscarPorNombre(nombreUsuario);
+        if (usuario != null && !usuario.isEliminado()) {
+            return usuario;
+        } else {
+            return null;
+        }
+    }
+
+    public List<Usuario> listarTodos() {
+        return usuarioDao.findAll();
+    }
+
+    // --- Métodos Transaccionales de Escritura ---
+
     @Transactional
     public void registrarNuevoUsuario(Usuario usuario) {
         guardarUsuario(usuario);
@@ -61,6 +101,8 @@ public class UsuarioServicio {
         usuarioDao.save(usuario);
     }
 
+    /** * 🟡 REVERTIDO: Acepta Long, como indicaste, manteniendo la lógica interna de conversión.
+     */
     @Transactional
     public void eliminarCuentaPorId(Long idUsuario) {
         if (idUsuario == null) {
@@ -80,25 +122,5 @@ public class UsuarioServicio {
         } else {
             System.out.println("No se encontró el usuario con ID: " + idInt);
         }
-    }
-
-    public Usuario encontrarPorId(Integer idUsuario) {
-        return usuarioDao.findById(idUsuario).orElse(null);
-    }
-
-    public Usuario localizarPorNombreUsuario(String nombreUsuario) {
-        return usuarioDao.buscarPorNombre(nombreUsuario);
-    }
-    public Usuario obtenerUsuarioActual(String nombreUsuario) {
-        Usuario usuario = usuarioDao.buscarPorNombre(nombreUsuario);
-        if (usuario != null && !usuario.isEliminado()) {
-            return usuario;
-        } else {
-            return null;
-        }
-    }
-
-    public List<Usuario> listarTodos() {
-        return usuarioDao.findAll();
     }
 }
