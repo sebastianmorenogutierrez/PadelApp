@@ -6,7 +6,6 @@
     <title>Crear Nuevo Torneo - PadelApp</title>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
     <style>
-        /* [Incluye el bloque <style> completo de tu código original aquí] */
         /* Nueva Paleta de Colores (Verde Azulado) */
         :root {
             /* Colores Principales de la Marca */
@@ -42,7 +41,6 @@
 
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            /* CAMBIO CLAVE: Usando el color sólido y suave para el fondo */
             background-color: var(--color-bg-soft);
             min-height: 100vh;
             color: var(--color-text);
@@ -170,7 +168,7 @@
             gap: 1rem;
         }
 
-        /* Contenedor del Formulario - Usaremos .registration-section para el estilo de tarjeta */
+        /* Contenedor del Formulario */
         .form-container-card {
             background: var(--color-white);
             backdrop-filter: blur(10px);
@@ -475,7 +473,6 @@
     </main>
 </div>
 <script>
-    // Tu script de animación y fix de logo...
     document.addEventListener('DOMContentLoaded', function() {
         const logo = document.querySelector('.logo h2');
         if (logo) {
@@ -487,8 +484,11 @@
         if (form) {
             form.addEventListener('submit', function() {
                 const button = this.querySelector('.btn-primary');
-                button.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Procesando...';
-                button.disabled = true;
+                // Verificar que el botón existe antes de cambiar su contenido
+                if (button) {
+                    button.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Procesando...';
+                    button.disabled = true;
+                }
             });
         }
     });
