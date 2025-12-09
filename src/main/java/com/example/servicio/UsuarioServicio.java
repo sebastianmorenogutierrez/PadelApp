@@ -8,9 +8,12 @@ import com.example.dao.PerfilDao;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.security.crypto.password.PasswordEncoder;
-// 💡 CAMBIO CLAVE: Usamos la anotación transaccional de Spring
 import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
+
+// Importaciones necesarias para obtener el usuario de Spring Security
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
 
 @Service
 public class UsuarioServicio {
@@ -26,7 +29,26 @@ public class UsuarioServicio {
 
     @Autowired
     private PasswordEncoder passwordEncoder;
+    public Usuario obtenerUsuarioActual() {
+        Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 
+        if (principal instanceof UserDetails) {
+            String nombreUsuario = ((UserDetails) principal).getUsername();
+            Usuario usuario = usuarioDao.buscarPorNombre(nombreUsuario);
+
+            if (usuario != null && !usuario.isEliminado()) {
+                return usuario;
+            }
+        }
+        return null; // Retorna null si no hay sesión o el usuario no se encuentra/está eliminado
+    }
+    public boolean esAdministrador(Usuario usuario) {
+        if (usuario == null || usuario.getPerfil() == null) {
+            return false;
+        }
+        String nombrePerfil = usuario.getPerfil().getDescripcion_perfil();
+        return "ROLE_ADMINISTRADOR".equalsIgnoreCase(nombrePerfil);
+    }
     @Transactional
     public void registrarNuevoUsuario(Usuario usuario) {
         guardarUsuario(usuario);
@@ -67,7 +89,6 @@ public class UsuarioServicio {
     public Usuario localizarPorNombreUsuario(String nombreUsuario) {
         return usuarioDao.buscarPorNombre(nombreUsuario);
     }
-
     public Usuario obtenerUsuarioActual(String nombreUsuario) {
         Usuario usuario = usuarioDao.buscarPorNombre(nombreUsuario);
         if (usuario != null && !usuario.isEliminado()) {
@@ -76,6 +97,7 @@ public class UsuarioServicio {
             return null;
         }
     }
+
     public List<Usuario> listarTodos() {
         return usuarioDao.findAll();
     }

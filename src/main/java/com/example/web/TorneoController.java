@@ -60,30 +60,40 @@ public class TorneoController {
         model.addAttribute("torneo", new Torneo());
         return "formulario_torneo";
     }
+
+    // 🏆 MÉTODO CORREGIDO: AÑADIDA LÓGICA DE SEGURIDAD
     @GetMapping("/editar/{id}")
     public String editarTorneo(@PathVariable Long id, Model model) {
         Torneo torneo = torneoService.buscarPorId(id).orElseThrow(
                 () -> new NoSuchElementException("Torneo no encontrado con ID: " + id)
         );
 
-        // 💡 APLICANDO LA SOLUCIÓN: Formatear las fechas igual que en verTorneo
+        // 1. Obtener usuario actual y estado de administración (NECESARIO PARA EL TH:IF EN LA VISTA)
+        Usuario usuarioActual = usuarioServicio.obtenerUsuarioActual();
+        boolean esAdministrador = usuarioServicio.esAdministrador(usuarioActual);
+
+        // 2. Formatear las fechas
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
         String fechaInicioFormateada = torneo.getFechaInicio().format(formatter);
         String fechaFinFormateada = torneo.getFechaFin().format(formatter);
 
+        // 3. Añadir todo al modelo
         model.addAttribute("torneo", torneo);
-        // 💡 Añadir las fechas formateadas al modelo
         model.addAttribute("fechaInicioFormateada", fechaInicioFormateada);
         model.addAttribute("fechaFinFormateada", fechaFinFormateada);
+        model.addAttribute("usuarioActual", usuarioActual); // <--- AÑADIDO
+        model.addAttribute("esAdministrador", esAdministrador); // <--- AÑADIDO
 
-        // El problema de la vista 'dañada' se soluciona al tener todos los datos.
+        // Esto debería resolver el error de la vista si Torneo.java está corregido con EAGER.
         return "torneo_detalle";
     }
+
     @PostMapping("/{id}/eliminar")
     public String eliminarTorneo(@PathVariable Long id) {
         torneoService.eliminar(id);
         return "redirect:/torneo";
     }
+
     @PostMapping("/guardar")
     public String guardar(@Valid @ModelAttribute Torneo torneo, BindingResult result, Model model) {
         if (result.hasErrors()) {
@@ -93,9 +103,15 @@ public class TorneoController {
         return "redirect:/torneo";
     }
 
+    // 🏆 MÉTODO CORREGIDO: AÑADIDA LÓGICA DE SEGURIDAD
     @GetMapping("/{id}")
     public String verTorneo(@PathVariable Long id, Model model) {
         Torneo torneo = torneoService.buscarPorId(id).orElseThrow();
+
+        // 1. Obtener usuario actual y estado de administración (NECESARIO PARA EL TH:IF EN LA VISTA)
+        Usuario usuarioActual = usuarioServicio.obtenerUsuarioActual();
+        boolean esAdministrador = usuarioServicio.esAdministrador(usuarioActual);
+
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
         // Formateo de fechas
         String fechaInicioFormateada = torneo.getFechaInicio().format(formatter);
@@ -105,7 +121,10 @@ public class TorneoController {
         // Adición de fechas formateadas
         model.addAttribute("fechaInicioFormateada", fechaInicioFormateada);
         model.addAttribute("fechaFinFormateada", fechaFinFormateada);
-        return "torneo_detalle"; // <-- Aquí también usas la vista
+        model.addAttribute("usuarioActual", usuarioActual); // <--- AÑADIDO
+        model.addAttribute("esAdministrador", esAdministrador); // <--- AÑADIDO
+
+        return "torneo_detalle";
     }
 
     @PostMapping("/{id}/inscribir")
@@ -142,7 +161,7 @@ public class TorneoController {
             Paragraph titulo = new Paragraph("INFORMACIÓN DEL TORNEO")
                     .setFont(helveticaBold)
                     .setFontSize(24)
-                    .setFontColor(ColorConstants.BLUE) // ✅ Usamos ColorConstants
+                    .setFontColor(ColorConstants.BLUE)
                     .setTextAlignment(TextAlignment.CENTER)
                     .setMarginBottom(30f);
             document.add(titulo);
@@ -175,7 +194,7 @@ public class TorneoController {
             Paragraph subtitulo = new Paragraph("JUGADORES REGISTRADOS EN EL SISTEMA")
                     .setFont(helveticaBold)
                     .setFontSize(16)
-                    .setFontColor(ColorConstants.DARK_GRAY) // ✅ Usamos ColorConstants
+                    .setFontColor(ColorConstants.DARK_GRAY)
                     .setMarginTop(20f)
                     .setMarginBottom(15f);
             document.add(subtitulo);
@@ -189,11 +208,11 @@ public class TorneoController {
             String[] headers = {"Nombre", "Apellido", "Edad", "Correo", "Teléfono"};
             for (String header : headers) {
                 Cell headerCell = new Cell().add(new Paragraph(header).setFont(helveticaBold)
-                                .setFontColor(ColorConstants.WHITE) // ✅ Usamos ColorConstants
+                                .setFontColor(ColorConstants.WHITE)
                                 .setTextAlignment(TextAlignment.CENTER))
-                        .setBackgroundColor(ColorConstants.GRAY) // ✅ Usamos ColorConstants
+                        .setBackgroundColor(ColorConstants.GRAY)
                         .setPadding(8)
-                        .setBorder(new SolidBorder(ColorConstants.GRAY, 1)); // ✅ Usamos ColorConstants
+                        .setBorder(new SolidBorder(ColorConstants.GRAY, 1));
                 tabla.addHeaderCell(headerCell);
             }
 
@@ -215,7 +234,7 @@ public class TorneoController {
             Paragraph footer = new Paragraph(footerText)
                     .setFont(helveticaBoldItalic)
                     .setFontSize(10)
-                    .setFontColor(ColorConstants.GRAY) // ✅ Usamos ColorConstants
+                    .setFontColor(ColorConstants.GRAY)
                     .setTextAlignment(TextAlignment.CENTER)
                     .setMarginTop(30f);
             document.add(footer);

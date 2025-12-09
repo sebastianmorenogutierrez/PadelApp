@@ -1,5 +1,6 @@
 package com.example.domain.torneo;
 
+import com.example.domain.usuario.Usuario;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
@@ -36,7 +37,12 @@ public class Torneo implements Serializable {
 
     private LocalDateTime fechaCreacion;
 
-    // 🏆 CAMBIO APLICADO AQUÍ: Agregamos fetch = FetchType.EAGER
+    // 🏆 CORRECCIÓN 2: CREADOR con EAGER
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "creador_id")
+    private Usuario creador;
+
+    // 🏆 CORRECCIÓN 1: Participantes con EAGER
     @OneToMany(mappedBy = "torneo", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.EAGER)
     private List<Participante> participantes = new ArrayList<>();
 
@@ -44,7 +50,6 @@ public class Torneo implements Serializable {
     public Torneo() {
         this.fechaCreacion = LocalDateTime.now();
     }
-    // ... (El resto de constructores y métodos quedan igual)
 
     // Getters y Setters
     public Long getId() {
@@ -109,6 +114,14 @@ public class Torneo implements Serializable {
 
     public void setFechaCreacion(LocalDateTime fechaCreacion) {
         this.fechaCreacion = fechaCreacion;
+    }
+
+    public Usuario getCreador() {
+        return creador;
+    }
+
+    public void setCreador(Usuario creador) {
+        this.creador = creador;
     }
 
     public List<Participante> getParticipantes() {
