@@ -65,12 +65,18 @@ public class TorneoController {
         Torneo torneo = torneoService.buscarPorId(id).orElseThrow(
                 () -> new NoSuchElementException("Torneo no encontrado con ID: " + id)
         );
+
+        // 💡 APLICANDO LA SOLUCIÓN: Formatear las fechas igual que en verTorneo
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
         String fechaInicioFormateada = torneo.getFechaInicio().format(formatter);
         String fechaFinFormateada = torneo.getFechaFin().format(formatter);
+
         model.addAttribute("torneo", torneo);
+        // 💡 Añadir las fechas formateadas al modelo
         model.addAttribute("fechaInicioFormateada", fechaInicioFormateada);
         model.addAttribute("fechaFinFormateada", fechaFinFormateada);
+
+        // El problema de la vista 'dañada' se soluciona al tener todos los datos.
         return "torneo_detalle";
     }
     @PostMapping("/{id}/eliminar")
