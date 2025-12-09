@@ -6,19 +6,16 @@
     <title>Iniciar Sesión - PadelApp</title>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
     <style>
-        /* Paleta de Colores PadelApp */
         :root {
-            --color-primary: #00b894; /* Verde Azulado Brillante */
+            --color-primary: #00b894;
             --color-primary-dark: #00a383;
-            --color-secondary: #0984e3; /* Azul Brillante */
+            --color-secondary: #0984e3;
             --color-accent: #fdcb6e;
             --color-danger: #d63031;
             --color-text: #2d3436;
             --color-text-light: #636e72;
             --color-white: #ffffff;
-            --color-bg-soft: #F4FFF8; /* Definido, pero no aplicado al body */
-
-            /* Degradados y Colores del Fondo de Bienvenida (Adaptado al Azul/Verde PadelApp) */
+            --color-bg-soft: #F4FFF8;
             --gradient-sidebar: linear-gradient(135deg, var(--color-primary-dark) 0%, var(--color-secondary) 100%);
             --cloud-color: var(--color-white);
         }
@@ -31,7 +28,6 @@
 
         body {
             font-family: 'Inter', 'Segoe UI', -apple-system, BlinkMacSystemFont, sans-serif;
-            /* CORREGIDO: Usamos Blanco Puro (var(--color-white)) como se ve en la imagen */
             background-color: var(--color-white);
             display: flex;
             justify-content: center;
@@ -41,12 +37,11 @@
             overflow: hidden;
         }
 
-        /* Contenedor Principal con el diseño de 2 columnas */
         .main-wrapper {
             width: 100%;
             height: 100vh;
             display: grid;
-            grid-template-columns: 1fr 1.2fr; /* Columna izquierda más estrecha */
+            grid-template-columns: 1fr 1.2fr;
             max-width: 1400px;
             max-height: 900px;
             border-radius: 20px;
@@ -55,7 +50,6 @@
             position: relative;
         }
 
-        /* --- Columna de Bienvenida (Izquierda) --- */
         .welcome-sidebar {
             background: var(--gradient-sidebar);
             color: var(--color-white);
@@ -109,19 +103,16 @@
             max-width: 80%;
         }
 
-        /* --- Efecto Nube (Corte irregular) --- */
         .cloud-divider {
             position: absolute;
             top: 0;
-            right: -120px; /* Desplazado para cubrir bien el borde */
+            right: -120px;
             width: 150px;
             height: 100%;
             background-color: var(--cloud-color);
             z-index: 1;
-
-            /* Creación de formas de nube con box-shadows circulares */
             box-shadow:
-                -20px 0 0 0 var(--cloud-color), /* Base */
+                -20px 0 0 0 var(--cloud-color),
                 -60px 50px 0 0 var(--cloud-color),
                 -80px 150px 0 0 var(--cloud-color),
                 -70px 250px 0 0 var(--cloud-color),
@@ -133,7 +124,6 @@
                 -40px 850px 0 0 var(--cloud-color);
         }
 
-        /* --- Columna del Formulario (Derecha) --- */
         .form-section {
             background-color: var(--color-white);
             padding: 50px 80px;
@@ -178,16 +168,6 @@
             outline: none;
         }
 
-        /* Estilo de línea de verificación (check-mark) */
-        .input-check {
-            position: absolute;
-            right: 0;
-            bottom: 15px;
-            color: var(--color-primary);
-            font-size: 1.2rem;
-        }
-
-        /* Mensajes de Estado */
         .message {
             padding: 12px;
             border-radius: 10px;
@@ -210,7 +190,6 @@
             border-color: rgba(214, 48, 49, 0.3);
         }
 
-        /* --- Botones --- */
         .action-buttons {
             display: flex;
             gap: 20px;
@@ -220,7 +199,7 @@
         .btn {
             padding: 14px 30px;
             border: none;
-            border-radius: 30px; /* Botones más redondeados */
+            border-radius: 30px;
             font-size: 16px;
             font-weight: 700;
             cursor: pointer;
@@ -232,19 +211,12 @@
             box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
         }
 
-        /* Botón Primario: Ingresar */
         .btn-primary {
             background: linear-gradient(90deg, var(--color-primary) 0%, var(--color-primary-dark) 100%);
             color: white;
             box-shadow: 0 6px 20px rgba(0, 184, 148, 0.4);
         }
 
-        .btn-primary:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 8px 25px rgba(0, 184, 148, 0.55);
-        }
-
-        /* Botón Secundario: Registrarse */
         .btn-secondary {
             background-color: var(--color-white);
             color: var(--color-text-light);
@@ -252,26 +224,11 @@
             box-shadow: none;
         }
 
-        .btn-secondary:hover {
-            background-color: #f5f5f5;
-            color: var(--color-primary);
-            transform: translateY(-1px);
-        }
-
-        /* Enlace de Olvidé Contraseña */
         .forgot-password {
             text-align: right;
             margin-top: 15px;
         }
 
-        .forgot-password a {
-            color: var(--color-primary);
-            text-decoration: none;
-            font-size: 0.9rem;
-            font-weight: 600;
-        }
-
-        /* Media Queries para diseño responsive */
         @media (max-width: 1000px) {
             .main-wrapper {
                 grid-template-columns: 1fr;
@@ -280,7 +237,7 @@
             }
 
             .welcome-sidebar {
-                display: none; /* Ocultar la sidebar en móviles para priorizar el formulario */
+                display: none;
             }
 
             .form-section {
@@ -304,13 +261,13 @@
         <h1>Bienvenido a</h1>
         <div class="logo-box">
             <div class="logo-icon">
-                <i class="fas fa-grip-lines"></i> </div>
+                <i class="fas fa-grip-lines"></i>
+            </div>
             <div class="logo-text">PadelApp</div>
         </div>
         <p>
             Tu plataforma centralizada para gestionar reservas de pistas, organizar partidos y mejorar tu nivel de pádel en la mejor comunidad deportiva.
         </p>
-
         <div class="cloud-divider"></div>
     </div>
 
@@ -322,6 +279,7 @@
         <div th:if="${param.cuentaEliminada}" class="message message-success">
             <i class="fas fa-check-circle"></i> Tu cuenta ha sido eliminada exitosamente.
         </div>
+
         <div th:if="${param.error}" class="message message-error">
             <i class="fas fa-exclamation-triangle"></i> Usuario o contraseña inválidos.
         </div>
@@ -346,6 +304,12 @@
 
                 <a th:href="@{/registro}" class="btn btn-secondary">
                     <i class="fas fa-user-plus"></i> Registrarse
+                </a>
+            </div>
+
+            <div style="margin-top: 20px; text-align: center;">
+                <a th:href="@{/principal}" class="btn btn-secondary" style="width: 100%; max-width: 250px;">
+                    <i class="fas fa-home"></i> Volver al Inicio
                 </a>
             </div>
         </form>
