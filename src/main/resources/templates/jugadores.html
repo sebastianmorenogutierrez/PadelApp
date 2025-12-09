@@ -849,12 +849,9 @@
     // ====================================================================
 
     function editPlayer(button) {
-        const playerId = button.getAttribute('data-id');
-        // alert(`Simulando la acción de EDITAR al jugador con ID: ${playerId}`); // COMENTAR O ELIMINAR
-
-        // **LÍNEA CORREGIDA:** Redirigimos a la nueva URL mapeada en el controlador
-        window.location.href = `/jugadores/editar/${playerId}`;
-    }
+    const playerId = button.getAttribute('data-id');
+    window.location.href = `/jugadores/editar/${playerId}`;
+}
 
     function deletePlayer(button) {
         const playerId = button.getAttribute('data-id');

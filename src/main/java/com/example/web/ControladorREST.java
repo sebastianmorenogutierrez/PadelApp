@@ -248,10 +248,8 @@ public class ControladorREST {
             return "redirect:/jugadores";
         }
     }
-
     @PostMapping("/cambiar/guardar")
     public String guardarCambios(@Valid @ModelAttribute("individuo") Individuo individuo, Errors errors, Model model) {
-        // Guarda los cambios del Individuo editado.
         if (errors.hasErrors()) {
             return "cambiar";
         }
