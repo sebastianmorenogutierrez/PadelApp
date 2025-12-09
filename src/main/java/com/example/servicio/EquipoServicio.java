@@ -10,7 +10,8 @@ import org.springframework.transaction.annotation.Transactional;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors; // Importación necesaria para el nuevo método
+import java.util.stream.Collectors;
+import java.util.Objects; // Necesario para el filtro Objects::nonNull
 
 @Service
 public class EquipoServicio {
@@ -48,7 +49,7 @@ public class EquipoServicio {
     }
 
     // ----------------------------------------------------------------------
-    // 🟢 NUEVO MÉTODO AÑADIDO: Filtra IDs de jugadores ya emparejados
+    // 🟢 MÉTODO CORREGIDO: Filtra IDs de jugadores ya emparejados (Manejo de Lazy Load)
     // ----------------------------------------------------------------------
     @Transactional(readOnly = true)
     /**
@@ -58,10 +59,21 @@ public class EquipoServicio {
      * @return Lista de IDs de usuarios que ya están en un equipo.
      */
     public List<Integer> obtenerIdsJugadoresConEquipoActivo() {
-        // Podrías usar findByEstado("ACTIVO") si quieres filtrar solo equipos activos.
-        // Usamos findAll() para obtener todos los equipos y luego filtrar por nulo.
+        // Paso 1: Obtener todos los equipos dentro de la transacción
         List<Equipo> equipos = equipoDao.findAll();
 
+        // 💡 CORRECCIÓN APLICADA: Forzar la inicialización de las entidades LAZY
+        // Esto asegura que getJugador1() y getJugador2() no fallen fuera de la transacción.
+        equipos.forEach(equipo -> {
+            if (equipo.getJugador1() != null) {
+                equipo.getJugador1().getId_usuario(); // Forzar carga
+            }
+            if (equipo.getJugador2() != null) {
+                equipo.getJugador2().getId_usuario(); // Forzar carga
+            }
+        });
+
+        // Paso 2: Procesar la lista de equipos (ahora con los jugadores cargados)
         return equipos.stream()
                 // Combina los IDs de Jugador1 y Jugador2 en un solo stream
                 .flatMap(equipo -> {
@@ -74,7 +86,7 @@ public class EquipoServicio {
                     );
                 })
                 // Filtra los nulos (si existieran) y los IDs duplicados
-                .filter(java.util.Objects::nonNull)
+                .filter(Objects::nonNull) // Uso de java.util.Objects para filtrar nulos
                 .distinct()
                 .collect(Collectors.toList());
     }
