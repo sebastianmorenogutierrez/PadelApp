@@ -89,44 +89,42 @@
             gap: 1rem;
         }
 
-        /* Contenedor de la primera fila (5 campos) */
+        /* 1. CONTENEDOR DE LA PRIMERA FILA (5 CAMPOS) */
         .field-container {
             margin-top: 2rem;
             display: grid;
-            /* 5 columnas como se ve en la imagen */
+            /* 5 columnas iguales */
             grid-template-columns: repeat(5, 1fr);
-            gap: 1rem; /* Espacio reducido para que quepan */
+            gap: 1rem;
             border-top: 1px solid rgba(0, 184, 148, 0.1);
             padding-top: 1.5rem;
         }
 
-        /* Contenedor para los campos de abajo y botones */
-        .secondary-fields-container {
-            padding-top: 1rem;
+        /* 2. CONTENEDOR DE LA SEGUNDA FILA (Máx. Participantes, Descripción, Botones) */
+        .field-container-bottom {
+            padding-top: 1.5rem;
             margin-top: 1.5rem;
             border-top: 1px solid rgba(0, 184, 148, 0.1);
             display: grid;
-            grid-template-columns: repeat(2, 1fr); /* 2 columnas para Máx Participantes y otro posible campo */
-            gap: 1.5rem;
+            grid-template-columns: repeat(4, 1fr); /* Utilizamos 4 columnas para mejor control de Máx Participantes */
+            gap: 1rem;
         }
 
         .form-group {
             display: flex;
             flex-direction: column;
             gap: 0.5rem;
-            /* Todos los form-group en el field-container principal ocupan 1 columna */
+            grid-column: span 1; /* Por defecto ocupa 1 columna */
+        }
+
+        /* Ajuste para Máx Participantes (Queremos que sea pequeño, 1 columna de 4) */
+        .form-group.small-field {
             grid-column: span 1;
         }
 
-        /* Ajuste para Máx Participantes (solo una columna en el grid secundario) */
-        .form-group.half-width {
-            grid-column: span 1;
-        }
-
-        /* Ajuste para campos o botones que deben ser de ancho completo */
+        /* Ajuste para campos de ancho completo (Descripción y Botones) */
         .form-group-full {
-            grid-column: 1 / -1; /* Ocupa todo el ancho */
-            margin-top: 1rem;
+            grid-column: 1 / -1; /* Ocupa todo el ancho del grid (4 columnas en este caso) */
         }
 
         .form-label {
@@ -168,6 +166,8 @@
             justify-content: flex-end;
             gap: 1rem;
             padding-top: 1rem;
+            margin-top: 1rem;
+            border-top: 1px solid rgba(0, 184, 148, 0.1); /* Separador visual */
         }
 
         .btn {
@@ -195,20 +195,26 @@
             .field-container {
                 grid-template-columns: repeat(3, 1fr);
             }
+            .field-container-bottom {
+                grid-template-columns: repeat(2, 1fr);
+            }
+            .form-group.small-field {
+                 grid-column: span 1;
+            }
         }
         @media (max-width: 900px) {
             .field-container {
                 grid-template-columns: repeat(2, 1fr);
             }
-            .secondary-fields-container {
+            .field-container-bottom {
                 grid-template-columns: 1fr;
             }
-            .form-group.half-width {
-                grid-column: span 1;
+            .form-group.small-field {
+                 grid-column: span 1;
             }
         }
         @media (max-width: 600px) {
-            .field-container {
+            .field-container, .field-container-bottom {
                 grid-template-columns: 1fr;
             }
         }
@@ -316,15 +322,15 @@
                     </div>
                 </div>
 
-                <div class="secondary-fields-container">
+                <div class="field-container-bottom">
 
-                    <div class="form-group half-width">
+                    <div class="form-group small-field">
                         <label for="maxParticipantes" class="form-label">Máx. Participantes <i class="fas fa-users"></i></label>
                         <input type="number" id="maxParticipantes" class="form-input" th:field="*{maxParticipantes}" min="4" max="100" required placeholder="Mínimo 4" />
                         <span th:if="${#fields.hasErrors('maxParticipantes')}" th:errors="*{maxParticipantes}" class="text-danger"></span>
                     </div>
 
-                    <div class="form-group half-width" style="visibility: hidden;">
+                    <div class="form-group form-group-full" style="grid-column: span 3; margin: 0; padding: 0;">
                     </div>
 
                     <div class="form-group form-group-full">
