@@ -1,44 +1,48 @@
 <!DOCTYPE html>
 <html lang="es" xmlns:th="http://www.thymeleaf.org">
 <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-    <title>Gestión de Torneos - PadelApp</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Crear Nuevo Torneo - PadelApp</title>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
     <style>
-        /* Paleta de Colores PadelApp */
+        /* [Incluye el bloque <style> completo de tu código original aquí] */
+        /* Nueva Paleta de Colores (Verde Azulado) */
         :root {
             /* Colores Principales de la Marca */
-            --color-primary: #00b894; /* Verde Azulado Brillante (Para acentos, botones, barra lateral activa) */
-            --color-primary-dark: #00a383;
+            --color-primary: #00b894; /* Verde Azulado Brillante */
+            --color-primary-dark: #00a383; /* Variante oscura */
 
-            /* Color Clave del Fondo (¡ACTUALIZADO!) */
-            --color-bg-soft: #F4FFF8; /* Blanco ligeramente verdoso, muy suave */
+            /* Color Clave del Fondo */
+            --color-bg-soft: #F4FFF8; /* <-- NUEVO FONDO SUAVE */
 
-            /* Otros Colores (Opcionales) */
-            --color-secondary: #0984e3; /* Azul Brillante (Para botones de Editar/Secundarios) */
-            --color-danger: #d63031; /* Rojo Ladrillo (Para botones de Eliminar/Cerrar Sesión) */
-            --color-text: #2d3436; /* Gris Oscuro */
+            /* Otros Colores */
+            --color-secondary: #0984e3; /* Azul Brillante */
+            --color-accent: #fdcb6e; /* Amarillo Dorado */
+            --color-danger: #d63031; /* Rojo Ladrillo */
+            --color-text: #2d3436; /* Gris Oscuro Casi Negro */
             --color-text-light: #636e72; /* Gris Medio */
-            --color-white: #ffffff;
+            --color-background: #f8f9fa; /* Gris Muy Claro (ya no se usa en body) */
+            --color-white: #ffffff; /* Blanco Puro */
 
-            /* Gradientes Ajustados */
+            /* Gradientes */
             --gradient-primary: linear-gradient(135deg, var(--color-primary) 0%, var(--color-primary-dark) 100%);
-            --gradient-accent-menu: linear-gradient(135deg, #2ecc71 0%, #27ae60 100%);
-            --gradient-danger-menu: linear-gradient(135deg, var(--color-danger) 0%, #e74c3c 100%);
+            --gradient-danger: linear-gradient(135deg, var(--color-danger) 0%, #ff7675 100%);
+
+            /* Sombras */
+            --shadow-soft: 0 2px 20px rgba(0, 184, 148, 0.08);
+            --shadow-medium: 0 8px 30px rgba(0, 184, 148, 0.12);
         }
 
-        /* --- Base CSS --- */
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
         }
 
-        /* Aplicación del Fondo (¡ACTUALIZADO!) */
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            /* Reemplazar el degradado por el color sólido y suave */
+            /* CAMBIO CLAVE: Usando el color sólido y suave para el fondo */
             background-color: var(--color-bg-soft);
             min-height: 100vh;
             color: var(--color-text);
@@ -49,14 +53,16 @@
             min-height: 100vh;
         }
 
-        /* --- Sidebar --- */
+        /* Sidebar */
         .sidebar {
             width: 280px;
             background: var(--color-white);
             backdrop-filter: blur(10px);
             padding: 2rem 0;
             box-shadow: 4px 0 20px rgba(0, 0, 0, 0.1);
-            border-right: 1px solid rgba(0, 184, 148, 0.2);
+            border-right: 1px solid rgba(0, 184, 148, 0.1);
+            position: sticky;
+            top: 0;
         }
 
         .logo {
@@ -72,16 +78,6 @@
             font-weight: 700;
         }
 
-        /* --- Menu sections --- */
-        .menu-section-title {
-            padding: 0 2rem 0.5rem;
-            color: var(--color-text-light);
-            font-size: 0.75rem;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-            font-weight: 600;
-        }
-
         .menu-item {
             display: block;
             padding: 1rem 2rem;
@@ -94,119 +90,166 @@
 
         .menu-item:hover,
         .menu-item.active {
-            background: linear-gradient(90deg, rgba(0, 184, 148, 0.1) 0%, rgba(0, 163, 131, 0.05) 100%);
+            background: linear-gradient(90deg, rgba(0, 184, 148, 0.1) 0%, rgba(0, 184, 148, 0.05) 100%);
             color: var(--color-primary);
             border-left-color: var(--color-primary);
             transform: translateX(5px);
         }
 
-        .menu-item i {
-            margin-right: 0.8rem;
-            width: 20px;
-            text-align: center;
+        /* Menu sections */
+        .menu-section-title {
+            padding: 0 2rem 0.5rem;
+            color: var(--color-text-light);
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            font-weight: 600;
         }
 
         .menu-item.accent {
-            background: var(--gradient-accent-menu);
-            color: var(--color-white);
+            background: linear-gradient(135deg, #33b633 0%, #2ca52c 100%);
+            color: white;
             border-radius: 0 25px 25px 0;
             margin: 0.5rem 0;
         }
 
         .menu-item.accent:hover {
-            background: #27ae60;
+            background: linear-gradient(135deg, #2ca52c 0%, #228b22 100%);
             transform: translateX(10px);
         }
 
         .menu-item.danger {
-            background: var(--gradient-danger-menu);
-            color: var(--color-white);
+            background: var(--gradient-danger);
+            color: white;
             border-radius: 0 25px 25px 0;
             margin-top: 1rem;
         }
 
         .menu-item.danger:hover {
-            background: var(--color-danger);
+            background: linear-gradient(135deg, #e03c3c 0%, #cc2929 100%);
             transform: translateX(10px);
         }
 
-        /* --- Main Content & Layout --- */
+        /* Main Content */
         .main-content {
             flex: 1;
             padding: 2rem;
             overflow-y: auto;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: flex-start;
         }
 
-        /* Contenedores y Tablas (¡ACTUALIZADO!) */
-        .list-container {
-            /* Asegurar que estos elementos interiores sean completamente blancos para el contraste */
+        /* Tournament Header (Usado para el título del formulario) */
+        .tournament-header {
             background: var(--color-white);
-            backdrop-filter: blur(20px);
-            border-radius: 25px;
-            padding: 3rem;
-            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.1);
-            border: 1px solid rgba(0, 184, 148, 0.2);
-            width: 100%;
-            max-width: 1000px;
+            backdrop-filter: blur(10px);
+            padding: 2rem;
+            border-radius: 20px;
+            margin-bottom: 2rem;
+            box-shadow: var(--shadow-medium);
+            border: 1px solid rgba(0, 184, 148, 0.1);
             position: relative;
             overflow: hidden;
-            margin-top: 2rem;
-            animation: fadeInUp 0.8s ease 0.1s both;
         }
 
-        /* El selector .form-container no estaba presente en este archivo, pero lo incluimos por si acaso */
-        .form-container {
-            background: var(--color-white);
-        }
-
-        .list-container::before {
+        .tournament-header::before {
             content: '';
             position: absolute;
             top: 0;
             left: 0;
             right: 0;
-            height: 5px;
+            height: 4px;
             background: var(--gradient-primary);
         }
 
-        /* --- Content Header --- */
-        .content-header {
-            width: 100%;
-            max-width: 1000px;
-            margin-bottom: 2rem;
-            padding: 1.5rem 0;
-            text-align: center;
-        }
-
-        .content-header h1 {
+        .tournament-title {
+            color: var(--color-primary);
             font-size: 2.5rem;
-            font-weight: 700;
-            background: var(--gradient-primary);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
             margin-bottom: 0.5rem;
+            font-weight: 700;
             display: flex;
             align-items: center;
-            justify-content: center;
             gap: 1rem;
         }
 
-        .content-header p {
-            color: var(--color-text-light);
-            font-size: 1.1rem;
-            margin-bottom: 1.5rem;
+        /* Contenedor del Formulario - Usaremos .registration-section para el estilo de tarjeta */
+        .form-container-card {
+            background: var(--color-white);
+            backdrop-filter: blur(10px);
+            padding: 2rem;
+            border-radius: 20px;
+            box-shadow: var(--shadow-medium);
+            border: 1px solid rgba(0, 184, 148, 0.1);
+            animation: fadeInUp 0.8s ease 0.4s;
         }
 
-        /* --- Buttons --- */
+        .form-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+        }
+
+        .section-header {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+            padding-bottom: 1rem;
+            border-bottom: 2px solid rgba(0, 184, 148, 0.1);
+        }
+
+        .section-header h3 {
+            color: var(--color-primary);
+            font-size: 1.5rem;
+            font-weight: 600;
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+
+        .form-label {
+            color: var(--color-primary-dark);
+            font-weight: 600;
+            font-size: 0.95rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .form-input, .form-select, .form-textarea {
+            padding: 1rem 1.5rem;
+            border: 2px solid rgba(0, 184, 148, 0.2);
+            border-radius: 12px;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+            background: rgba(255, 255, 255, 0.8);
+            width: 100%;
+        }
+
+        .form-textarea {
+            min-height: 120px;
+            resize: vertical;
+        }
+
+        .form-input:focus, .form-select:focus, .form-textarea:focus {
+            outline: none;
+            border-color: var(--color-primary);
+            background: var(--color-white);
+            box-shadow: 0 0 20px rgba(0, 184, 148, 0.2);
+        }
+
+        .button-group {
+            grid-column: 1 / -1; /* Ocupa todo el ancho en el grid */
+            display: flex;
+            justify-content: flex-end;
+            gap: 1rem;
+            padding-top: 1rem;
+        }
+
         .btn {
             padding: 1rem 2rem;
             border: none;
-            border-radius: 15px;
+            border-radius: 12px;
             font-weight: 600;
             font-size: 1rem;
             cursor: pointer;
@@ -215,129 +258,59 @@
             display: inline-flex;
             align-items: center;
             justify-content: center;
-            gap: 0.8rem;
-            min-width: 160px;
+            gap: 0.5rem;
         }
 
-        .btn-create {
-            /* Usando el color primario como color principal para crear */
+        .btn-primary {
             background: var(--gradient-primary);
-            color: var(--color-white);
+            color: white;
             box-shadow: 0 4px 15px rgba(0, 184, 148, 0.4);
         }
-        .btn-create:hover {
-            transform: translateY(-3px);
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
             box-shadow: 0 8px 25px rgba(0, 184, 148, 0.6);
         }
 
-        .btn-table {
-            padding: 0.6rem 1rem;
-            font-size: 0.85rem;
-            border-radius: 10px;
-            border: none;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            text-decoration: none;
-        }
-
-        .btn-table.edit {
-            background: var(--color-secondary); /* Azul para Editar */
-            color: var(--color-white);
-        }
-        .btn-table.edit:hover {
-            background: #0077c2;
-            transform: translateY(-1px);
-        }
-        .btn-table.delete {
-            background: var(--color-danger); /* Rojo para Eliminar */
-            color: var(--color-white);
-        }
-        .btn-table.delete:hover {
-            background: #b82c2c;
-            transform: translateY(-1px);
-        }
-        .btn-table.view {
-            background: var(--color-primary); /* Verde Azulado para Ver/Resultados */
-            color: var(--color-white);
-        }
-        .btn-table.view:hover {
-            background: var(--color-primary-dark);
-            transform: translateY(-1px);
-        }
-
-        /* --- Table Styling --- */
-        .table-title {
-            font-size: 1.8rem;
-            font-weight: 700;
-            color: var(--color-text);
-            margin-bottom: 2rem;
-            border-bottom: 2px solid rgba(0, 184, 148, 0.2);
-            padding-bottom: 1rem;
-            display: flex;
-            align-items: center;
-            gap: 0.8rem;
-        }
-
-        .table-title i {
+        .btn-secondary {
+            background: var(--color-white);
             color: var(--color-primary);
+            border: 2px solid var(--color-primary);
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
         }
 
-        .data-table {
-            width: 100%;
-            border-collapse: separate;
-            border-spacing: 0;
-            font-size: 0.95rem;
-            margin-top: 1.5rem;
-            overflow: hidden;
-        }
-
-        .data-table th, .data-table td {
-            padding: 1.2rem 1.5rem;
-            text-align: left;
-            border-bottom: 1px solid rgba(0, 184, 148, 0.1);
-            transition: all 0.3s ease;
-        }
-
-        .data-table th {
-            background: var(--gradient-primary); /* Encabezado de la tabla con gradiente */
+        .btn-secondary:hover {
+            background: var(--color-primary);
             color: white;
-            font-weight: 700;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-            position: sticky;
-            top: 0;
-        }
-
-        .data-table tr:nth-child(even) {
-            background-color: rgba(0, 184, 148, 0.03);
-        }
-
-        .data-table tr:hover {
-            background-color: rgba(0, 184, 148, 0.1);
             transform: translateY(-2px);
-            box-shadow: 0 5px 15px rgba(0, 184, 148, 0.1);
         }
 
-        /* Bordes redondeados para la cabecera */
-        .data-table th:first-child {
-            border-top-left-radius: 15px;
-        }
-
-        .data-table th:last-child {
-            border-top-right-radius: 15px;
-        }
-
-        .data-table td:last-child {
+        /* Alert Messages */
+        .alert {
+            padding: 1rem;
+            margin-bottom: 1.5rem;
+            border-radius: 10px;
+            font-weight: 600;
             text-align: center;
         }
-
-        .table-actions {
-            display: flex;
-            gap: 0.5rem;
-            justify-content: center;
+        .alert-success {
+            background-color: #d4f5ee;
+            color: #007a63;
+            border: 1px solid #00b894;
+        }
+        .alert-error {
+            background-color: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
         }
 
-        /* --- Responsive Design --- */
+        /* Responsive Design */
+        @media (max-width: 1024px) {
+             .form-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
         @media (max-width: 768px) {
             .container {
                 flex-direction: column;
@@ -346,72 +319,19 @@
             .sidebar {
                 width: 100%;
                 padding: 1rem 0;
-                height: auto;
+                position: relative;
             }
 
             .main-content {
                 padding: 1rem;
-                padding-top: 2rem;
             }
 
-            .content-header h1 {
+            .tournament-title {
                 font-size: 2rem;
-            }
-
-            .list-container {
-                padding: 2rem 1rem;
-                margin-top: 1rem;
-            }
-
-            .table-title {
-                font-size: 1.5rem;
-            }
-
-            .data-table {
-                display: block;
-                overflow-x: auto;
-                white-space: nowrap;
-            }
-
-            .data-table thead, .data-table tbody, .data-table th, .data-table td, .data-table tr {
-                display: block;
-            }
-
-            .data-table thead {
-                display: none;
-            }
-
-            .data-table tr {
-                margin-bottom: 1rem;
-                border-radius: 15px;
-                box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-                border: 1px solid rgba(0, 184, 148, 0.1);
-            }
-
-            .data-table td {
-                display: flex;
-                justify-content: space-between;
-                align-items: center;
-                padding: 1rem;
-                border-bottom: 1px solid rgba(0, 184, 148, 0.1);
-            }
-
-            .data-table td:before {
-                content: attr(data-label);
-                font-weight: 700;
-                color: var(--color-primary);
-                text-transform: uppercase;
-                font-size: 0.85rem;
-            }
-
-            .data-table td:last-child {
-                border-bottom: none;
-                justify-content: center;
-                padding-top: 1.5rem;
             }
         }
 
-        /* --- Animations --- */
+        /* Animations */
         @keyframes fadeInUp {
             from {
                 opacity: 0;
@@ -422,19 +342,8 @@
                 transform: translateY(0);
             }
         }
-
-        .btn.loading {
-            pointer-events: none;
-            opacity: 0.8;
-        }
-
-        .btn.loading i {
-            animation: spin 1s linear infinite;
-        }
-
-        @keyframes spin {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
+        .tournament-header {
+            animation: fadeInUp 0.8s ease;
         }
     </style>
 </head>
@@ -473,128 +382,116 @@
         </a>
 
         <form th:action="@{/logout}" method="post" style="margin: 2rem 0 0 0;">
-            <a href="#" onclick="this.parentNode.submit()" class="menu-item danger">
-                <i class="fas fa-sign-out-alt"></i> Cerrar Sesión
-            </a>
+            <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
+            <button type="submit" style="all: unset; cursor: pointer; display: block; width: 100%;">
+                <span class="menu-item danger">
+                    <i class="fas fa-sign-out-alt"></i> Cerrar Sesión
+                </span>
+            </button>
         </form>
     </nav>
 
     <main class="main-content">
-
-        <div class="content-header">
-            <h1><i class="fas fa-trophy"></i> Gestión de Torneos</h1>
-            <p>Visualiza, edita o crea nuevos torneos de pádel.</p>
-            <a th:href="@{/torneo/crear}" class="btn btn-create" onclick="addLoadingState(this)">
-                <i class="fas fa-plus-circle"></i> Crear Nuevo Torneo
-            </a>
+        <div class="tournament-header">
+            <h2 class="tournament-title">
+                <i class="fas fa-plus-circle"></i>
+                Crear Nuevo Torneo
+            </h2>
+            <p style="color: var(--color-text-light);">Define los detalles de tu próximo gran evento de pádel.</p>
         </div>
 
-        <div class="list-container">
-            <h3 class="table-title">
-                <i class="fas fa-list-alt"></i> Torneos Activos
-            </h3>
+        <div th:if="${mensajeExito}" class="alert alert-success">
+            <i class="fas fa-check-circle"></i> <span th:text="${mensajeExito}"></span>
+        </div>
+        <div th:if="${mensajeError}" class="alert alert-error">
+            <i class="fas fa-exclamation-triangle"></i> <span th:text="${mensajeError}"></span>
+        </div>
 
-            <div style="overflow-x: auto;">
-                <table class="data-table">
-                    <thead>
-                    <tr>
-                        <th>ID</th>
-                        <th>Nombre del Torneo</th>
-                        <th>Fecha Inicio</th>
-                        <th>Estado</th>
-                        <th>N° Participantes</th>
-                        <th style="text-align: center;">Acciones</th>
-                    </tr>
-                    </thead>
-                    <tbody>
-                    <tr>
-                        <td data-label="ID">1</td>
-                        <td data-label="Torneo">Open de Primavera - Dobles</td>
-                        <td data-label="Fecha Inicio">2024-05-10</td>
-                        <td data-label="Estado">En curso</td>
-                        <td data-label="Participantes">16</td>
-                        <td class="table-actions" data-label="Acciones">
-                            <a th:href="@{/torneo/editar/1}" class="btn-table edit" onclick="addLoadingState(this)">
-                                <i class="fas fa-edit"></i> Editar
-                            </a>
-                            <a th:href="@{/torneo/ver/1}" class="btn-table view">
-                                <i class="fas fa-eye"></i> Ver
-                            </a>
-                            <form th:action="@{/torneo/eliminar/1}" method="post" onsubmit="return confirm('¿Estás seguro de eliminar este torneo?')" style="display: inline;">
-                                <button type="submit" class="btn-table delete" onclick="addLoadingState(this)">
-                                    <i class="fas fa-trash-alt"></i>
-                                </button>
-                            </form>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td data-label="ID">2</td>
-                        <td data-label="Torneo">Copa de Verano - Mixto</td>
-                        <td data-label="Fecha Inicio">2024-07-20</td>
-                        <td data-label="Estado">Próximo</td>
-                        <td data-label="Participantes">32</td>
-                        <td class="table-actions" data-label="Acciones">
-                            <a th:href="@{/torneo/editar/2}" class="btn-table edit" onclick="addLoadingState(this)">
-                                <i class="fas fa-edit"></i> Editar
-                            </a>
-                            <a th:href="@{/torneo/ver/2}" class="btn-table view">
-                                <i class="fas fa-eye"></i> Ver
-                            </a>
-                            <form th:action="@{/torneo/eliminar/2}" method="post" onsubmit="return confirm('¿Estás seguro de eliminar este torneo?')" style="display: inline;">
-                                <button type="submit" class="btn-table delete" onclick="addLoadingState(this)">
-                                    <i class="fas fa-trash-alt"></i>
-                                </button>
-                            </form>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td data-label="ID">3</td>
-                        <td data-label="Torneo">Master Otoño - Individual</td>
-                        <td data-label="Fecha Inicio">2023-11-01</td>
-                        <td data-label="Estado">Finalizado</td>
-                        <td data-label="Participantes">8</td>
-                        <td class="table-actions" data-label="Acciones">
-                            <a th:href="@{/torneo/ver/3}" class="btn-table view" style="width: 100%;">
-                                <i class="fas fa-poll"></i> Ver Resultados
-                            </a>
-                        </td>
-                    </tr>
-                    </tbody>
-                </table>
-            </div>
+        <div class="form-container-card">
+            <form th:action="@{/torneo/crear}" method="post" th:object="${torneo}">
+                <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
+
+                <div class="form-grid">
+
+                    <div class="form-group">
+                        <label for="nombre" class="form-label">Nombre del Torneo <i class="fas fa-pencil-alt"></i></label>
+                        <input type="text" id="nombre" class="form-input" th:field="*{nombre}" required placeholder="Ej: Torneo de Primavera 2025" />
+                        <span th:if="${#fields.hasErrors('nombre')}" th:errors="*{nombre}" class="text-danger"></span>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="ubicacion" class="form-label">Ubicación (Club o Ciudad) <i class="fas fa-map-marker-alt"></i></label>
+                        <input type="text" id="ubicacion" class="form-input" th:field="*{ubicacion}" required placeholder="Ej: Club Padel Pro, Madrid" />
+                        <span th:if="${#fields.hasErrors('ubicacion')}" th:errors="*{ubicacion}" class="text-danger"></span>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="fechaInicio" class="form-label">Fecha de Inicio <i class="fas fa-calendar-alt"></i></label>
+                        <input type="date" id="fechaInicio" class="form-input" th:field="*{fechaInicio}" required />
+                        <span th:if="${#fields.hasErrors('fechaInicio')}" th:errors="*{fechaInicio}" class="text-danger"></span>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="fechaFin" class="form-label">Fecha de Fin <i class="fas fa-calendar-check"></i></label>
+                        <input type="date" id="fechaFin" class="form-input" th:field="*{fechaFin}" required />
+                        <span th:if="${#fields.hasErrors('fechaFin')}" th:errors="*{fechaFin}" class="text-danger"></span>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="nivel" class="form-label">Nivel de Juego <i class="fas fa-star"></i></label>
+                        <select id="nivel" class="form-select" th:field="*{nivel}" required>
+                            <option value="">-- Seleccione un Nivel --</option>
+                            <option value="Principiante">Principiante (1.0 - 2.5)</option>
+                            <option value="Intermedio">Intermedio (3.0 - 4.0)</option>
+                            <option value="Avanzado">Avanzado (4.5 - 5.5)</option>
+                            <option value="Profesional">Profesional (6.0+)</option>
+                        </select>
+                        <span th:if="${#fields.hasErrors('nivel')}" th:errors="*{nivel}" class="text-danger"></span>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="maxParticipantes" class="form-label">Máx. Participantes <i class="fas fa-users"></i></label>
+                        <input type="number" id="maxParticipantes" class="form-input" th:field="*{maxParticipantes}" min="4" max="100" required placeholder="Mínimo 4" />
+                        <span th:if="${#fields.hasErrors('maxParticipantes')}" th:errors="*{maxParticipantes}" class="text-danger"></span>
+                    </div>
+
+                    <div class="form-group" style="grid-column: 1 / -1;">
+                        <label for="descripcion" class="form-label">Descripción del Torneo <i class="fas fa-info-circle"></i></label>
+                        <textarea id="descripcion" class="form-textarea" th:field="*{descripcion}" rows="4" placeholder="Detalles, reglas, premios, costo, etc."></textarea>
+                        <span th:if="${#fields.hasErrors('descripcion')}" th:errors="*{descripcion}" class="text-danger"></span>
+                    </div>
+
+                    <div class="button-group">
+                        <a th:href="@{/torneo}" class="btn btn-secondary">
+                            <i class="fas fa-times-circle"></i> Cancelar
+                        </a>
+                        <button type="submit" class="btn btn-primary">
+                            <i class="fas fa-save"></i> Guardar Torneo
+                        </button>
+                    </div>
+                </div>
+            </form>
         </div>
     </main>
 </div>
-
 <script>
-    // Script para manejar el estado de carga y el nombre del logo (Asegurando PadelApp)
+    // Tu script de animación y fix de logo...
     document.addEventListener('DOMContentLoaded', function() {
         const logo = document.querySelector('.logo h2');
-        logo.innerHTML = '<i class="fas fa-trophy"></i> PadelApp';
-    });
-
-    function addLoadingState(button) {
-        button.classList.add('loading');
-        const originalHTML = button.innerHTML;
-
-        // Determinar el texto de carga según la acción
-        let loadingText = 'Cargando...';
-        if (button.textContent.includes('Editar') || button.textContent.includes('Crear') || button.textContent.includes('Ver')) {
-            loadingText = 'Cargando...';
-        } else if (button.textContent.includes('Eliminar')) {
-            loadingText = 'Eliminando...';
+        if (logo) {
+            logo.innerHTML = '<i class="fas fa-trophy"></i> PadelApp';
         }
 
-        button.innerHTML = '<i class="fas fa-spinner fa-spin"></i> ' + loadingText;
-        button.style.pointerEvents = 'none';
-
-        // Restaurar botón (prevención si la navegación falla)
-        setTimeout(() => {
-            button.innerHTML = originalHTML;
-            button.classList.remove('loading');
-            button.style.pointerEvents = 'auto';
-        }, 5000);
-    }
+        // Agregar estado de carga al botón de envío para evitar doble click
+        const form = document.querySelector('form[th\\:object]');
+        if (form) {
+            form.addEventListener('submit', function() {
+                const button = this.querySelector('.btn-primary');
+                button.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Procesando...';
+                button.disabled = true;
+            });
+        }
+    });
 </script>
 </body>
 </html>
