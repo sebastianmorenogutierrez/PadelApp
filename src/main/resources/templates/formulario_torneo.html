@@ -2,8 +2,7 @@
 <html lang="es" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Nuevo Torneo - PadelApp</title>
+    <title>Crear Torneo - PadelApp</title>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
     <style>
         :root {
@@ -101,7 +100,7 @@
 <div class="container">
     <main class="main-content">
         <div class="form-card">
-            <h2 class="form-title"><i class="fas fa-trophy"></i> Crear Torneo</h2>
+            <h2 class="form-title"><i class="fas fa-trophy"></i> Crear Nuevo Torneo</h2>
 
             <form th:action="@{/torneo/guardar}" method="post" th:object="${torneo}">
 
@@ -109,12 +108,12 @@
 
                 <div class="form-group">
                     <label class="form-label">Nombre del Torneo</label>
-                    <input type="text" class="form-input" th:field="*{nombre}" placeholder="Ej: Open Verano 2024" required />
+                    <input type="text" class="form-input" th:field="*{nombre}" required />
                 </div>
 
                 <div class="form-group">
-                    <label class="form-label">Ubicación / Club</label>
-                    <input type="text" class="form-input" th:field="*{ubicacion}" placeholder="Ej: Padel Club Central" required />
+                    <label class="form-label">Ubicación</label>
+                    <input type="text" class="form-input" th:field="*{ubicacion}" required />
                 </div>
 
                 <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
@@ -129,19 +128,12 @@
                 </div>
 
                 <div class="form-group">
-                    <label class="form-label">Nivel Requerido</label>
+                    <label class="form-label">Nivel de Juego</label>
                     <select class="form-select" th:field="*{estado}" required>
-                        <option value="">Selecciona un nivel</option>
                         <option value="Principiante">Principiante</option>
                         <option value="Intermedio">Intermedio</option>
                         <option value="Avanzado">Avanzado</option>
-                        <option value="Profesional">Profesional</option>
                     </select>
-                </div>
-
-                <div class="form-group">
-                    <label class="form-label">Cupos Máximos</label>
-                    <input type="number" class="form-input" th:field="*{id}" placeholder="Cantidad de parejas" required />
                 </div>
 
                 <div class="form-actions">

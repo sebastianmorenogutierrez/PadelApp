@@ -1,148 +1,543 @@
 <!DOCTYPE html>
 <html lang="es" xmlns:th="http://www.thymeleaf.org">
 <head>
-    <meta charset="UTF-8">
-    <title>Crear Torneo - PadelApp</title>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>Editar Perfil - Sistema de Gestión</title>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
     <style>
+        /* --- Paleta de Colores PadelApp --- */
         :root {
-            --color-primary: #00b894;
+            /* Colores Principales de la Marca */
+            --color-primary: #00b894; /* Verde Azulado Brillante */
             --color-primary-dark: #00a383;
-            --color-bg-soft: #F4FFF8;
-            --color-text: #2d3436;
+            /* Color Clave del Fondo */
+            --color-bg-soft: #F4FFF8; /* Blanco ligeramente verdoso, muy suave */
+            /* Otros Colores */
+            --color-secondary: #0984e3; /* Azul Brillante */
+            --color-danger: #d63031; /* Rojo Ladrillo */
+            --color-text: #2d3436; /* Gris Oscuro */
             --color-white: #ffffff;
-            --shadow-medium: 0 8px 30px rgba(0, 184, 148, 0.12);
+            --color-shadow: rgba(0, 0, 0, 0.1);
         }
 
-        * { box-sizing: border-box; margin: 0; padding: 0; }
+        /* --- Base CSS (Adaptado a la nueva paleta) --- */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
 
         body {
-            font-family: 'Segoe UI', Tahoma, sans-serif;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            /* CAMBIO CLAVE: Nuevo fondo suave */
             background-color: var(--color-bg-soft);
+            min-height: 100vh;
             color: var(--color-text);
-            line-height: 1.6;
         }
 
-        .container { display: flex; min-height: 100vh; }
-
-        .main-content { flex: 1; padding: 2rem; display: flex; justify-content: center; align-items: flex-start; }
-
-        .form-card {
-            background: var(--color-white);
+        .container {
+            display: flex;
+            min-height: 100vh;
             width: 100%;
-            max-width: 600px;
-            padding: 2.5rem;
-            border-radius: 20px;
-            box-shadow: var(--shadow-medium);
-            border-top: 6px solid var(--color-primary);
         }
 
-        .form-title {
+        /* --- Sidebar --- */
+        .sidebar {
+            width: 280px;
+            /* CAMBIO: Sidebar en blanco */
+            background: var(--color-white);
+            backdrop-filter: blur(10px);
+            padding: 2rem 0;
+            box-shadow: 4px 0 20px var(--color-shadow);
+            border-right: 1px solid rgba(0, 0, 0, 0.05); /* Borde más sutil */
+        }
+
+        .logo {
+            text-align: center;
+            padding: 0 2rem 2rem;
+            border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+            margin-bottom: 2rem;
+        }
+
+        .logo h2 {
+            /* CAMBIO: Color de logo principal */
             color: var(--color-primary);
-            margin-bottom: 1.5rem;
-            font-size: 1.8rem;
+            font-size: 1.5rem;
+            font-weight: 700;
+        }
+
+        .menu-section-title {
+            padding: 0 2rem 0.5rem;
+            color: #888;
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            font-weight: 600;
+        }
+
+        .menu-item {
+            display: block;
+            padding: 1rem 2rem;
+            text-decoration: none;
+            color: var(--color-text);
+            transition: all 0.3s ease;
+            border-left: 4px solid transparent;
+            position: relative;
+        }
+
+        .menu-item:hover,
+        .menu-item.active {
+            /* CAMBIO: Colores de hover y activo */
+            background: linear-gradient(90deg, rgba(0, 184, 148, 0.1) 0%, rgba(0, 163, 131, 0.05) 100%);
+            color: var(--color-primary);
+            border-left-color: var(--color-primary);
+            transform: translateX(5px);
+        }
+
+        .menu-item i {
+            margin-right: 0.8rem;
+            width: 20px;
+            text-align: center;
+        }
+
+        .menu-item.accent {
+            /* CAMBIO: Usar color-secondary para el acento positivo (Exportar) */
+            background: linear-gradient(135deg, var(--color-secondary) 0%, #066fb3 100%);
+            color: var(--color-white);
+            border-radius: 0 25px 25px 0;
+            margin: 0.5rem 0;
+            border-left: none;
+        }
+
+        .menu-item.accent:hover {
+            background: linear-gradient(135deg, #066fb3 0%, #044d7e 100%);
+            transform: translateX(10px);
+        }
+
+        .menu-item.danger {
+            /* CAMBIO: Usar color-danger */
+            background: linear-gradient(135deg, var(--color-danger) 0%, #b82728 100%);
+            color: var(--color-white);
+            border-radius: 0 25px 25px 0;
+            margin-top: 1rem;
+            border-left: none;
+        }
+
+        .menu-item.danger:hover {
+            background: linear-gradient(135deg, #b82728 0%, #9c1f20 100%);
+            transform: translateX(10px);
+        }
+
+        /* --- Main Content & Form Styling --- */
+        .main-content {
+            flex: 1;
+            padding: 2rem;
+            overflow-y: auto;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-direction: column;
+        }
+
+        /* Contenedor del Formulario */
+        .form-container {
+            /* CAMBIO CLAVE: Contenedor en blanco */
+            background: var(--color-white);
+            backdrop-filter: blur(20px);
+            padding: 3rem;
+            border-radius: 25px;
+            box-shadow: 0 15px 35px var(--color-shadow);
+            border: 1px solid rgba(0, 0, 0, 0.05);
+            width: 100%;
+            max-width: 500px;
+            position: relative;
+            overflow: hidden;
+            animation: fadeInUp 0.8s ease 0.1s both;
+            margin-top: 1rem;
+        }
+
+        .form-container::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 5px;
+            /* CAMBIO: Línea superior con color primario */
+            background: linear-gradient(90deg, var(--color-primary) 0%, var(--color-primary-dark) 100%);
+        }
+
+        /* Título */
+        .form-header h1 {
+            font-size: 2.5rem;
+            font-weight: 700;
+            /* CAMBIO: Color del título con color primario */
+            background: linear-gradient(135deg, var(--color-primary) 0%, var(--color-primary-dark) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 0.5rem;
             text-align: center;
             display: flex;
             align-items: center;
             justify-content: center;
-            gap: 10px;
+            gap: 0.7rem;
         }
 
-        .form-group { margin-bottom: 1.2rem; display: flex; flex-direction: column; gap: 0.5rem; }
-
-        .form-label {
-            font-weight: 700;
-            font-size: 0.85rem;
-            text-transform: uppercase;
-            color: var(--color-primary-dark);
+        .form-header p {
+            color: #666;
+            font-size: 1.1rem;
+            text-align: center;
+            margin-bottom: 2rem;
         }
 
-        .form-input, .form-select {
-            padding: 0.8rem 1rem;
-            border: 2px solid #eee;
-            border-radius: 12px;
+        /* Etiquetas */
+        label {
+            display: block;
+            margin-bottom: 0.8rem;
+            font-weight: 600;
+            /* CAMBIO: Color de etiqueta con color primario */
+            color: var(--color-primary);
             font-size: 1rem;
-            transition: all 0.3s;
-            width: 100%;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-top: 15px;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
         }
 
-        .form-input:focus { border-color: var(--color-primary); outline: none; box-shadow: 0 0 8px rgba(0, 184, 148, 0.1); }
+        /* Grupo de Input con Icono */
+        .input-group {
+            position: relative;
+            margin-bottom: 1.5rem;
+        }
 
+        input {
+            width: 100%;
+            padding: 1.2rem 1.5rem;
+            padding-right: 3.5rem;
+            /* CAMBIO: Borde del input con color primario, más transparente */
+            border: 2px solid rgba(0, 184, 148, 0.2);
+            border-radius: 15px;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+            background: var(--color-white);
+            color: var(--color-text);
+        }
+
+        input:focus {
+            outline: none;
+            /* CAMBIO: Foco del input con color primario */
+            border-color: var(--color-primary);
+            background: var(--color-white);
+            box-shadow: 0 0 10px rgba(0, 184, 148, 0.2);
+            transform: translateY(-2px);
+        }
+
+        .input-icon {
+            position: absolute;
+            right: 1.5rem;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #aaa;
+            font-size: 1.1rem;
+            pointer-events: none;
+            transition: all 0.3s ease;
+        }
+
+        input:focus + .input-icon {
+            /* CAMBIO: Color del icono al enfocar */
+            color: var(--color-primary-dark);
+            transform: translateY(-50%) scale(1.1);
+        }
+
+        /* Estilo de los Botones de Acción */
         .form-actions {
             display: flex;
-            justify-content: space-between;
             gap: 1rem;
-            margin-top: 2rem;
-            padding-top: 1.5rem;
-            border-top: 1px solid #f0f0f0;
+            margin-top: 30px;
+            justify-content: space-between;
         }
 
         .btn {
-            padding: 0.8rem 2rem;
+            padding: 1rem 2rem;
             border: none;
-            border-radius: 12px;
-            font-weight: 700;
-            cursor: pointer;
+            border-radius: 15px;
+            font-weight: 600;
             font-size: 1rem;
-            flex: 1;
-            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
             text-decoration: none;
-            transition: transform 0.2s;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.8rem;
+            flex-grow: 1;
         }
 
-        .btn:active { transform: scale(0.98); }
+        .btn-primary {
+            /* CAMBIO: Botón primario con color primario */
+            background: linear-gradient(135deg, var(--color-primary) 0%, var(--color-primary-dark) 100%);
+            color: var(--color-white);
+            box-shadow: 0 4px 15px rgba(0, 184, 148, 0.4);
+        }
 
-        .btn-primary { background: var(--color-primary); color: white; }
-        .btn-secondary { background: #f0f0f0; color: #666; }
+        .btn-primary:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 25px rgba(0, 184, 148, 0.6);
+        }
+
+        .btn-secondary {
+            background: var(--color-white);
+            /* CAMBIO: Botón secundario con color primario */
+            color: var(--color-primary);
+            border: 2px solid var(--color-primary);
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
+        }
+
+        .btn-secondary:hover {
+            background: var(--color-primary);
+            color: var(--color-white);
+            transform: translateY(-3px);
+            box-shadow: 0 8px 25px rgba(0, 184, 148, 0.3);
+        }
+
+        /* Estado de carga */
+        .btn.loading {
+            pointer-events: none;
+            opacity: 0.8;
+        }
+
+        .btn.loading i {
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        /* Mensajes */
+        .message {
+            text-align: center;
+            padding: 1rem;
+            border-radius: 10px;
+            margin-top: 1.5rem;
+            font-weight: 600;
+            display: none;
+            animation: fadeInUp 0.5s ease;
+        }
+
+        .message.success {
+            /* Ajuste de colores de mensaje (manteniendo el tono) */
+            background-color: #e6ffec; /* Verde muy claro */
+            color: #008037; /* Verde oscuro */
+            border: 1px solid #00b894;
+        }
+
+        .message.error {
+            /* Ajuste de colores de mensaje (usando danger) */
+            background-color: #ffe6e6;
+            color: var(--color-danger);
+            border: 1px solid #d63031;
+        }
+
+        /* Animación de entrada */
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .container {
+                flex-direction: column;
+            }
+            .sidebar {
+                width: 100%;
+                padding: 1rem 0;
+                height: auto;
+            }
+            .main-content {
+                padding: 1rem;
+                align-items: flex-start;
+                padding-top: 2rem;
+            }
+            .form-container {
+                padding: 2rem;
+                margin-top: 1rem;
+            }
+            .form-header h1 {
+                font-size: 2rem;
+            }
+            .form-actions {
+                flex-direction: column;
+            }
+            .btn {
+                width: 100%;
+            }
+        }
     </style>
 </head>
 <body>
 <div class="container">
-    <main class="main-content">
-        <div class="form-card">
-            <h2 class="form-title"><i class="fas fa-trophy"></i> Crear Nuevo Torneo</h2>
-
-            <form th:action="@{/torneo/guardar}" method="post" th:object="${torneo}">
-
-                <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
-
-                <div class="form-group">
-                    <label class="form-label">Nombre del Torneo</label>
-                    <input type="text" class="form-input" th:field="*{nombre}" required />
-                </div>
-
-                <div class="form-group">
-                    <label class="form-label">Ubicación</label>
-                    <input type="text" class="form-input" th:field="*{ubicacion}" required />
-                </div>
-
-                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
-                    <div class="form-group">
-                        <label class="form-label">Fecha Inicio</label>
-                        <input type="date" class="form-input" th:field="*{fechaInicio}" required />
-                    </div>
-                    <div class="form-group">
-                        <label class="form-label">Fecha Fin</label>
-                        <input type="date" class="form-input" th:field="*{fechaFin}" required />
-                    </div>
-                </div>
-
-                <div class="form-group">
-                    <label class="form-label">Nivel de Juego</label>
-                    <select class="form-select" th:field="*{estado}" required>
-                        <option value="Principiante">Principiante</option>
-                        <option value="Intermedio">Intermedio</option>
-                        <option value="Avanzado">Avanzado</option>
-                    </select>
-                </div>
-
-                <div class="form-actions">
-                    <a th:href="@{/torneo}" class="btn btn-secondary">Cancelar</a>
-                    <button type="submit" class="btn btn-primary">Guardar Torneo</button>
-                </div>
-            </form>
+    <nav class="sidebar">
+        <div class="logo">
+            <h2><i class="fas fa-trophy"></i> Sistema</h2>
         </div>
+
+        <div class="menu-section-title">Navegación Principal</div>
+        <a th:href="@{/indice}" class="menu-item">
+            <i class="fas fa-home"></i> Inicio
+        </a>
+
+        <div class="menu-section-title" style="margin-top: 2rem;">Gestión Principal</div>
+        <a th:href="@{/partido}" class="menu-item">
+            <i class="fas fa-gamepad"></i> Partidos
+        </a>
+        <a th:href="@{/equipo}" class="menu-item">
+            <i class="fas fa-users"></i> Equipos
+        </a>
+        <a th:href="@{/torneo}" class="menu-item">
+            <i class="fas fa-trophy"></i> Torneos
+        </a>
+        <a th:href="@{/jugadores}" class="menu-item">
+            <i class="fas fa-user-friends"></i> Jugadores
+        </a>
+
+        <div class="menu-section-title" style="margin-top: 2rem;">Usuario & Datos</div>
+        <a th:href="@{/datos}" class="menu-item active">
+            <i class="fas fa-user-cog"></i> Mi Perfil
+        </a>
+        <a th:href="@{/exportarExcel}" class="menu-item accent">
+            <i class="fas fa-file-excel"></i> Exportar Excel
+        </a>
+
+        <form th:action="@{/login}" method="post" style="margin: 2rem 0 0 0;">
+            <a href="#" onclick="this.parentNode.submit()" class="menu-item danger">
+                <i class="fas fa-sign-out-alt"></i> Cerrar Sesión
+            </a>
+        </form>
+    </nav>
+
+    <main class="main-content">
+        <div class="form-header">
+            <h1><i class="fas fa-user-cog"></i> Editar Perfil</h1>
+            <p>Actualiza tu información personal y de contacto.</p>
+        </div>
+
+        <form id="profileForm" th:action="@{/modificar}" method="post" class="form-container" th:object="${usuario}">
+
+            <input type="hidden" th:field="*{individuo.id_individuo}" />
+
+            <label for="nombre"><i class="fas fa-user"></i> Nombre:</label>
+            <div class="input-group">
+                <input id="nombre" th:field="*{individuo.nombre}" type="text" required />
+                <i class="fas fa-user input-icon"></i>
+            </div>
+
+            <label for="apellido"><i class="fas fa-user-tag"></i> Apellido:</label>
+            <div class="input-group">
+                <input id="apellido" th:field="*{individuo.apellido}" type="text" required />
+                <i class="fas fa-user-tag input-icon"></i>
+            </div>
+
+            <label for="correo"><i class="fas fa-envelope"></i> Correo:</label>
+            <div class="input-group">
+                <input id="correo" th:field="*{individuo.correo}" type="email" required />
+                <i class="fas fa-at input-icon"></i>
+            </div>
+
+            <label for="telefono"><i class="fas fa-phone"></i> Teléfono:</label>
+            <div class="input-group">
+                <input id="telefono" th:field="*{individuo.telefono}" type="text" />
+                <i class="fas fa-mobile-alt input-icon"></i>
+            </div>
+
+            <label for="edad"><i class="fas fa-birthday-cake"></i> Edad:</label>
+            <div class="input-group">
+                <input id="edad" th:field="*{individuo.edad}" type="number" min="0" pattern="\d*" title="Solo números" />
+                <i class="fas fa-sort-numeric-up-alt input-icon"></i>
+            </div>
+
+            <label for="cedula"><i class="fas fa-id-card"></i> Cédula:</label>
+            <div class="input-group">
+                <input id="cedula" th:field="*{individuo.cedula}" type="text" pattern="[0-9]*" title="Solo números, sin guiones ni puntos" />
+                <i class="fas fa-fingerprint input-icon"></i>
+            </div>
+
+            <div class="form-actions">
+                <button type="submit" class="btn btn-primary" id="submitBtn">
+                    <i class="fas fa-save"></i> Guardar Cambios
+                </button>
+                <a th:href="@{/indice}" class="btn btn-secondary">
+                    <i class="fas fa-times-circle"></i> Cancelar
+                </a>
+            </div>
+
+            <div id="resultMessage" class="message"></div>
+        </form>
     </main>
 </div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const form = document.getElementById('profileForm');
+        const submitBtn = document.getElementById('submitBtn');
+        const resultMessage = document.getElementById('resultMessage');
+
+        form.addEventListener('submit', function(e) {
+            e.preventDefault();
+
+            // Simulación de validación simple
+            const nombre = document.getElementById('nombre').value.trim();
+            const correo = document.getElementById('correo').value.trim();
+
+            if (nombre === "" || correo === "") {
+                resultMessage.className = 'message error';
+                resultMessage.innerHTML = '<i class="fas fa-exclamation-triangle"></i> Por favor, completa los campos Nombre y Correo.';
+                resultMessage.style.display = 'block';
+                return;
+            }
+
+            // Iniciar estado de carga
+            submitBtn.classList.add('loading');
+            submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Guardando...';
+            submitBtn.disabled = true;
+
+            // Simular el envío de datos al servidor (reemplazar con lógica real de envío)
+            setTimeout(() => {
+                // Aquí deberías recibir la respuesta del servidor (éxito o error)
+
+                // Simulación de éxito
+                resultMessage.className = 'message success';
+                resultMessage.innerHTML = '<i class="fas fa-check-circle"></i> ¡Tu perfil ha sido actualizado con éxito!';
+                resultMessage.style.display = 'block';
+
+                // Restaurar botón (o redirigir, si el proceso es exitoso y completo)
+                submitBtn.classList.remove('loading');
+                submitBtn.innerHTML = '<i class="fas fa-save"></i> Guardar Cambios';
+                submitBtn.disabled = false;
+
+                // Si quieres redirigir después de un tiempo:
+                /* setTimeout(() => {
+                    window.location.href = '/indice'; // Redirige al índice
+                }, 1500); */
+
+            }, 1500); // 1.5 segundos de simulación de carga
+        });
+
+        // Enfocar el primer campo
+        document.getElementById('nombre').focus();
+    });
+</script>
 </body>
 </html>
