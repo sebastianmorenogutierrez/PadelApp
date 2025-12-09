@@ -31,22 +31,22 @@ public class Torneo implements Serializable {
 
     private String ubicacion;
 
+    // 🏆 NUEVO CAMPO: Nivel Requerido
+    private String nivel; // <-- ¡CAMPO AÑADIDO!
+
     private boolean activo = true;
 
     private String estado = "pendiente";
 
     private LocalDateTime fechaCreacion;
 
-    // 🏆 CORRECCIÓN 2: CREADOR con EAGER
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "creador_id")
     private Usuario creador;
 
-    // 🏆 CORRECCIÓN 1: Participantes con EAGER
     @OneToMany(mappedBy = "torneo", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.EAGER)
     private List<Participante> participantes = new ArrayList<>();
 
-    // Constructores
     public Torneo() {
         this.fechaCreacion = LocalDateTime.now();
     }
@@ -90,6 +90,14 @@ public class Torneo implements Serializable {
 
     public void setUbicacion(String ubicacion) {
         this.ubicacion = ubicacion;
+    }
+
+    public String getNivel() {
+        return nivel;
+    }
+
+    public void setNivel(String nivel) {
+        this.nivel = nivel;
     }
 
     public boolean isActivo() {
@@ -140,6 +148,7 @@ public class Torneo implements Serializable {
                 ", fechaInicio=" + fechaInicio +
                 ", fechaFin=" + fechaFin +
                 ", ubicacion='" + ubicacion + '\'' +
+                ", nivel='" + nivel + '\'' + // <-- AÑADIDO AL toString
                 ", activo=" + activo +
                 ", estado='" + estado + '\'' +
                 '}';
