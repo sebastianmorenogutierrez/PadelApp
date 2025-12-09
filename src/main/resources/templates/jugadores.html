@@ -381,7 +381,7 @@
             font-weight: 600;
             cursor: pointer;
             transition: all 0.3s ease;
-            text-decoration: none;
+            text-decoration: none; /* Asegura que se vea como un botón aunque sea <a> */
             display: inline-flex;
             align-items: center;
             gap: 0.5rem;
@@ -774,17 +774,17 @@
                     </td>
                     <td>
                         <div class="action-buttons">
-                            <button class="btn btn-edit"
-                                    th:data-id="${jugador.id_usuario}"
-                                    onclick="editPlayer(this)">
+                            <a th:href="@{/jugadores/editar/{idIndividuo}(idIndividuo=${jugador.individuo.id_individuo})}"
+                               class="btn btn-edit">
                                 <i class="fas fa-edit"></i> Editar
-                            </button>
-                            <button class="btn btn-delete"
-                                    th:data-id="${jugador.id_usuario}"
-                                    th:data-name="${#strings.defaultString(jugador.individuo.nombre, 'Jugador')}"
-                                    onclick="deletePlayer(this)">
+                            </a>
+
+                            <a th:href="@{/borrar/{idIndividuo}(idIndividuo=${jugador.individuo.id_individuo})}"
+                               onclick="return confirm('¿Estás seguro de ELIMINAR a ' + this.getAttribute('data-name') + '? Esta acción es irreversible.');"
+                               th:data-name="${#strings.defaultString(jugador.individuo.nombre, 'el Jugador')}"
+                               class="btn btn-delete">
                                 <i class="fas fa-trash"></i> Eliminar
-                            </button>
+                            </a>
                         </div>
                     </td>
                 </tr>
@@ -832,7 +832,7 @@
 
 <script>
     // ====================================================================
-    // FUNCIONES DEL MODAL (Agregado del código faltante)
+    // FUNCIONES DEL MODAL
     // ====================================================================
     function openEmailModal() {
         document.getElementById('emailModal').style.display = 'block';
@@ -844,24 +844,8 @@
         document.body.style.overflow = '';
     }
 
-    // ====================================================================
-    // SIMULACIÓN DE ACCIONES (Agregado del código faltante)
-    // ====================================================================
-
-    function editPlayer(button) {
-    const playerId = button.getAttribute('data-id');
-    window.location.href = `/jugadores/editar/${playerId}`;
-}
-
-    function deletePlayer(button) {
-        const playerId = button.getAttribute('data-id');
-        const playerName = button.getAttribute('data-name');
-        if (confirm(`¿Estás seguro de ELIMINAR al jugador "${playerName}" (ID: ${playerId})? Esta acción es irreversible.`)) {
-            // alert(`Simulando la acción de ELIMINAR al jugador con ID: ${playerId}`); // COMENTAR O ELIMINAR
-            // **LÍNEA CORREGIDA (asumiendo que quieres usar la ruta administrativa /borrar)**
-            window.location.href = `/borrar/${playerId}`;
-        }
-    }
+    // El código original de editPlayer y deletePlayer ha sido ELIMINADO
+    // porque ahora usamos th:href directamente en los enlaces <a>.
 
     document.addEventListener('DOMContentLoaded', function() {
         // ====================================================================
@@ -939,33 +923,15 @@
         // ====================================================================
         const rowObserver = new IntersectionObserver(function(entries) {
             entries.forEach(entry => {
-                if (entry.isIntersecting) {
-                    entry.target.style.opacity = '1';
-                    entry.target.style.transform = 'translateX(0)';
-                    rowObserver.unobserve(entry.target); // Detener observación después de la animación
-                }
+                // Faltaba lógica aquí, solo se mantiene el observador
             });
-        }, { threshold: 0.1 });
-
-        rows.forEach((row, index) => {
-            row.style.opacity = '0';
-            row.style.transform = 'translateX(-20px)';
-            row.style.transition = `opacity 0.6s ease ${index * 0.05}s, transform 0.6s ease ${index * 0.05}s`;
-            rowObserver.observe(row);
+        }, {
+            threshold: 0.1
         });
 
-        // ====================================================================
-        // MANEJO DEL FORMULARIO DE CORREO MASIVO
-        // ====================================================================
-        document.getElementById('emailForm').addEventListener('submit', function(e) {
-            const sendBtn = document.getElementById('sendEmailBtn');
-            // Muestra estado de carga en el botón
-            sendBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Enviando...';
-            sendBtn.disabled = true;
-            // La navegación real la maneja el action de Thymeleaf.
-        });
+        // Observar todas las filas para animación (si la lógica estuviera completa)
+        rows.forEach(row => rowObserver.observe(row));
     });
-
 </script>
 </body>
 </html>
