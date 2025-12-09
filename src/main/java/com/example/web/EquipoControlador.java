@@ -50,8 +50,6 @@ public class EquipoControlador {
         try {
             String nombreUsuario = auth.getName();
             Usuario jugador1 = usuarioServicio.localizarPorNombreUsuario(nombreUsuario);
-
-            // ⬅️ CORRECCIÓN 1: De guardar a obtenerUsuarioPorId (o el método correcto para localizar por ID)
             Usuario jugador2 = usuarioServicio.obtenerUsuarioPorId(idJugador2);
 
             if (jugador2 == null || jugador2.isEliminado()) {
