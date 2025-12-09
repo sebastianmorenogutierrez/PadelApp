@@ -19,7 +19,6 @@ public interface EquipoDao extends JpaRepository<Equipo, Long> {
     List<Equipo> findEquiposActivosByUsuario(@Param("idUsuario") Integer idUsuario); // ⬅️ CORREGIDO a Integer
 
     List<Equipo> findByEstado(String estado);
-
     @Query("SELECT e FROM Equipo e WHERE " +
             "(e.jugador1.id_usuario = :idJugador1 AND e.jugador2.id_usuario = :idJugador2) OR " +
             "(e.jugador1.id_usuario = :idJugador2 AND e.jugador2.id_usuario = :idJugador1)")
