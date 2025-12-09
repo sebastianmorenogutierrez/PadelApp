@@ -78,7 +78,6 @@ public class TorneoController {
         torneoService.eliminar(id);
         return "redirect:/torneo";
     }
-
     @PostMapping("/guardar")
     public String guardar(@Valid @ModelAttribute Torneo torneo, BindingResult result, Model model) {
         if (result.hasErrors()) {
