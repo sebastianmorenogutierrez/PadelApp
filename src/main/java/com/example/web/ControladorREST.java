@@ -344,16 +344,6 @@ public class ControladorREST {
         return "redirect:/jugadores";
     }
 
-    @GetMapping("/equipo")
-    public String mostrarEquipo() {
-        return "equipo";
-    }
-
-    @GetMapping("/torneos-vista")
-    public String mostrarTorneo() {
-        return "torneo";
-    }
-
     @GetMapping("/exportarExcel")
     public void exportarExcel(HttpServletResponse response) throws IOException {
         response.setContentType("application/vnd.openxmlformats-officedocument.spreadsheetml.sheet");
