@@ -6,9 +6,11 @@ import com.example.servicio.UsuarioServicio;
 import com.example.domain.usuario.Usuario;
 import com.example.domain.Individuo;
 import jakarta.servlet.http.HttpServletResponse;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -66,7 +68,10 @@ public class TorneoController {
     }
 
     @PostMapping("/guardar")
-    public String guardar(@ModelAttribute Torneo torneo) {
+    public String guardar(@Valid @ModelAttribute Torneo torneo, BindingResult result, Model model) {
+        if (result.hasErrors()) {
+            return "formulario_torneo";
+        }
         torneoService.guardar(torneo);
         return "redirect:/torneo";
     }

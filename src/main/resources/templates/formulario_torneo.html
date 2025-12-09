@@ -26,13 +26,12 @@
 
         .container { display: flex; min-height: 100vh; }
 
-        /* Estilo para que el contenido principal respete la sidebar si decides agregarla luego */
         .main-content { flex: 1; padding: 2rem; display: flex; justify-content: center; align-items: flex-start; }
 
         .form-card {
             background: var(--color-white);
             width: 100%;
-            max-width: 600px; /* Ancho controlado para legibilidad vertical */
+            max-width: 600px;
             padding: 2.5rem;
             border-radius: 20px;
             box-shadow: var(--shadow-medium);
@@ -59,7 +58,7 @@
             color: var(--color-primary-dark);
         }
 
-        .form-input, .form-select, .form-textarea {
+        .form-input, .form-select {
             padding: 0.8rem 1rem;
             border: 2px solid #eee;
             border-radius: 12px;
@@ -69,8 +68,6 @@
         }
 
         .form-input:focus { border-color: var(--color-primary); outline: none; box-shadow: 0 0 8px rgba(0, 184, 148, 0.1); }
-
-        .form-textarea { min-height: 100px; resize: vertical; }
 
         .form-actions {
             display: flex;
