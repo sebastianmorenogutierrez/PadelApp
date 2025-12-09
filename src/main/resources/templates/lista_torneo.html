@@ -5,381 +5,83 @@
     <title>Torneos - Sistema de Gestión</title>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
     <style>
-        /* Paleta de Colores Solicitada (Verde Azulado Brillante) */
+        /* [Se omiten los estilos CSS para brevedad, son los mismos que proporcionaste] */
         :root {
-            --color-primary: #00b894; /* Verde Azulado Brillante */
-            --color-primary-dark: #00a383; /* Variante más oscura del primario */
-            --color-secondary: #0984e3; /* Azul Brillante */
-            --color-accent: #fdcb6e; /* Amarillo Dorado */
-            --color-danger: #d63031; /* Rojo Ladrillo */
-            --color-text: #2d3436; /* Gris Oscuro Casi Negro */
-            --color-text-light: #636e72; /* Gris Medio */
-            --color-background: #f8f9fa; /* Gris Muy Claro */
-            --color-white: #ffffff; /* Blanco Puro */
-
-            /* NUEVO COLOR DE FONDO SUAVE */
+            --color-primary: #00b894;
+            --color-primary-dark: #00a383;
+            --color-secondary: #0984e3;
+            --color-accent: #fdcb6e;
+            --color-danger: #d63031;
+            --color-text: #2d3436;
+            --color-text-light: #636e72;
+            --color-background: #f8f9fa;
+            --color-white: #ffffff;
             --color-bg-soft: #F4FFF8;
-
-            /* Gradientes */
             --gradient-primary: linear-gradient(135deg, var(--color-primary) 0%, #00cec9 100%);
             --gradient-primary-btn: linear-gradient(135deg, var(--color-primary) 0%, var(--color-primary-dark) 100%);
             --gradient-sidebar-active: linear-gradient(90deg, rgba(0, 184, 148, 0.1) 0%, rgba(0, 163, 131, 0.05) 100%);
             --gradient-accent-menu: linear-gradient(135deg, var(--color-secondary) 0%, #74b9ff 100%);
             --gradient-danger-menu: linear-gradient(135deg, var(--color-danger) 0%, #ff7675 100%);
-
-            /* Botones Específicos */
-            --gradient-edit: linear-gradient(135deg, #2ecc71 0%, #27ae60 100%); /* Verde más estándar para Editar */
-            --gradient-delete: linear-gradient(135deg, var(--color-danger) 0%, #e74c3c 100%); /* Rojo de la paleta */
-            --gradient-pdf: linear-gradient(135deg, #ffc107 0%, #ff851b 100%); /* Amarillo/Naranja para PDF */
-
+            --gradient-edit: linear-gradient(135deg, #2ecc71 0%, #27ae60 100%);
+            --gradient-delete: linear-gradient(135deg, var(--color-danger) 0%, #e74c3c 100%);
+            --gradient-pdf: linear-gradient(135deg, #ffc107 0%, #ff851b 100%);
         }
-
-        /* Estilos Base */
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-
-        body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            /* CAMBIO: Fondo actualizado a Color Sólido Suave */
-            background-color: var(--color-bg-soft);
-            min-height: 100vh;
-            color: var(--color-text);
-        }
-
-        .container {
-            display: flex;
-            min-height: 100vh;
-        }
-
-        /* Sidebar */
-        .sidebar {
-            /* Mantenido en blanco para contraste */
-            width: 280px;
-            background: var(--color-white);
-            padding: 2rem 0;
-            box-shadow: 4px 0 20px rgba(0, 0, 0, 0.1);
-            border-right: 1px solid rgba(0, 184, 148, 0.2);
-        }
-
-        .logo {
-            text-align: center;
-            padding: 0 2rem 2rem;
-            border-bottom: 1px solid rgba(0, 184, 148, 0.2);
-            margin-bottom: 2rem;
-        }
-
-        .logo h2 {
-            color: var(--color-primary);
-            font-size: 1.5rem;
-            font-weight: 700;
-        }
-
-        .menu-item {
-            display: block;
-            padding: 1rem 2rem;
-            text-decoration: none;
-            color: var(--color-text-light);
-            transition: all 0.3s ease;
-            border-left: 4px solid transparent;
-            position: relative;
-        }
-
-        .menu-item:hover,
-        .menu-item.active {
-            background: var(--gradient-sidebar-active);
-            color: var(--color-primary);
-            border-left-color: var(--color-primary);
-            transform: translateX(5px);
-        }
-
-        /* Menu sections */
-        .menu-section-title {
-            padding: 0 2rem 0.5rem;
-            color: var(--color-text-light);
-            font-size: 0.75rem;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-            font-weight: 600;
-        }
-
-        .menu-item.accent {
-            background: var(--gradient-accent-menu); /* Usamos el azul secundario para acento */
-            color: white;
-            border-radius: 0 25px 25px 0;
-            margin: 0.5rem 0;
-        }
-
-        .menu-item.accent:hover {
-            background: var(--color-secondary);
-            transform: translateX(10px);
-        }
-
-        .menu-item.danger {
-            background: var(--gradient-danger-menu); /* Usamos el rojo ladrillo para peligro */
-            color: white;
-            border-radius: 0 25px 25px 0;
-            margin-top: 1rem;
-        }
-
-        .menu-item.danger:hover {
-            background: var(--color-danger);
-            transform: translateX(10px);
-        }
-
-        /* Main Content */
-        .main-content {
-            flex: 1;
-            padding: 2rem;
-            overflow-y: auto;
-        }
-
-        .content-header {
-            /* Mantenido en blanco para contraste */
-            background: var(--color-white);
-            padding: 2rem;
-            border-radius: 20px;
-            margin-bottom: 2rem;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
-            border: 1px solid rgba(0, 184, 148, 0.2);
-        }
-
-        .content-header h1 {
-            color: var(--color-primary);
-            font-size: 2.5rem;
-            margin-bottom: 0.5rem;
-            font-weight: 700;
-        }
-
-        .content-header p {
-            color: var(--color-text-light);
-            font-size: 1.1rem;
-        }
-
-        /* Action Buttons */
-        .action-buttons {
-            margin-bottom: 2rem;
-            display: flex;
-            gap: 1rem;
-            flex-wrap: wrap;
-        }
-
-        .btn {
-            padding: 0.8rem 1.5rem;
-            border: none;
-            border-radius: 12px;
-            text-decoration: none;
-            font-weight: 600;
-            transition: all 0.3s ease;
-            cursor: pointer;
-            font-size: 0.95rem;
-            display: inline-flex;
-            align-items: center;
-            gap: 0.5rem;
-        }
-
-        .btn-primary {
-            background: var(--gradient-primary-btn);
-            color: white;
-            box-shadow: 0 4px 15px rgba(0, 184, 148, 0.4);
-        }
-
-        .btn-primary:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 8px 25px rgba(0, 184, 148, 0.6);
-        }
-
-        .btn-secondary {
-            background: var(--color-white);
-            color: var(--color-primary);
-            border: 2px solid var(--color-primary);
-        }
-
-        .btn-secondary:hover {
-            background: var(--color-primary);
-            color: white;
-            transform: translateY(-2px);
-        }
-
-        /* Nuevo: Botón de Edición (verde) */
-        .btn-edit {
-            background: var(--gradient-edit);
-            color: white;
-            box-shadow: 0 4px 15px rgba(46, 204, 113, 0.4);
-        }
-
-        .btn-edit:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 8px 25px rgba(46, 204, 113, 0.6);
-        }
-
-        .btn-danger {
-            background: var(--gradient-delete);
-            color: white;
-            box-shadow: 0 4px 15px rgba(214, 48, 49, 0.4);
-        }
-
-        .btn-danger:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 8px 25px rgba(214, 48, 49, 0.6);
-        }
-
-        /* Nuevo estilo para el botón de PDF (usando el color accent) */
-        .btn-pdf {
-            background: var(--gradient-pdf);
-            color: var(--color-text); /* Texto oscuro para contraste */
-            box-shadow: 0 4px 15px rgba(253, 203, 110, 0.4);
-        }
-
-        .btn-pdf:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 8px 25px rgba(253, 203, 110, 0.6);
-        }
-
-        .btn-small {
-            padding: 0.5rem 1rem;
-            font-size: 0.85rem;
-        }
-
-        /* Table Container */
-        .table-container {
-            /* Mantenido en blanco para contraste */
-            background: var(--color-white);
-            border-radius: 20px;
-            padding: 2rem;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
-            border: 1px solid rgba(0, 184, 148, 0.2);
-            overflow-x: auto;
-        }
-
-        /* Table Styles */
-        .torneos-table {
-            width: 100%;
-            border-collapse: collapse;
-            margin-top: 1rem;
-        }
-
-        .torneos-table thead tr {
-            background: var(--gradient-primary-btn); /* Encabezado de tabla con gradiente primario */
-            color: white;
-        }
-
-        .torneos-table th,
-        .torneos-table td {
-            padding: 1rem;
-            text-align: left;
-            border-bottom: 1px solid rgba(0, 184, 148, 0.1);
-        }
-
-        .torneos-table th {
-            font-weight: 600;
-            text-transform: uppercase;
-            font-size: 0.85rem;
-            letter-spacing: 0.5px;
-        }
-
-        .torneos-table tbody tr {
-            transition: all 0.3s ease;
-        }
-
-        .torneos-table tbody tr:hover {
-            background: rgba(0, 184, 148, 0.05);
-            transform: scale(1.01);
-        }
-
-        .torneos-table td {
-            font-size: 0.95rem;
-            color: var(--color-text);
-        }
-
-        /* Status badges (Ajuste de colores a la nueva paleta) */
-        .status-badge {
-            padding: 0.3rem 0.8rem;
-            border-radius: 20px;
-            font-size: 0.8rem;
-            font-weight: 600;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-        }
-
-        .status-activo {
-            background: linear-gradient(135deg, #00b894 0%, #00cec9 100%); /* Primary */
-            color: white;
-        }
-
-        .status-finalizado {
-            background: var(--color-background); /* Finalizado: Fondo claro */
-            color: var(--color-text-light);
-            border: 1px solid #ddd;
-        }
-
-        .status-pendiente {
-            background: linear-gradient(135deg, #ffeaa7 0%, var(--color-accent) 100%); /* Accent */
-            color: var(--color-text);
-        }
-
-        /* Action buttons in table */
-        .action-buttons-table {
-            display: flex;
-            gap: 0.5rem;
-            flex-wrap: wrap;
-        }
-
-        .delete-form {
-            display: inline;
-        }
-
-        /* Empty state */
-        .empty-state {
-            text-align: center;
-            padding: 3rem;
-            color: var(--color-text-light);
-        }
-
-        .empty-state i {
-            font-size: 4rem;
-            color: #ccc;
-            margin-bottom: 1rem;
-        }
-
-        .empty-state h3 {
-            color: var(--color-primary);
-            margin-bottom: 1rem;
-        }
-
-        /* Responsive */
+        /* [Estilos base] */
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background-color: var(--color-bg-soft); min-height: 100vh; color: var(--color-text); }
+        .container { display: flex; min-height: 100vh; }
+        .sidebar { width: 280px; background: var(--color-white); padding: 2rem 0; box-shadow: 4px 0 20px rgba(0, 0, 0, 0.1); border-right: 1px solid rgba(0, 184, 148, 0.2); }
+        .logo { text-align: center; padding: 0 2rem 2rem; border-bottom: 1px solid rgba(0, 184, 148, 0.2); margin-bottom: 2rem; }
+        .logo h2 { color: var(--color-primary); font-size: 1.5rem; font-weight: 700; }
+        .menu-item { display: block; padding: 1rem 2rem; text-decoration: none; color: var(--color-text-light); transition: all 0.3s ease; border-left: 4px solid transparent; position: relative; }
+        .menu-item:hover, .menu-item.active { background: var(--gradient-sidebar-active); color: var(--color-primary); border-left-color: var(--color-primary); transform: translateX(5px); }
+        .menu-section-title { padding: 0 2rem 0.5rem; color: var(--color-text-light); font-size: 0.75rem; text-transform: uppercase; letter-spacing: 1px; font-weight: 600; }
+        .menu-item.accent { background: var(--gradient-accent-menu); color: white; border-radius: 0 25px 25px 0; margin: 0.5rem 0; }
+        .menu-item.accent:hover { background: var(--color-secondary); transform: translateX(10px); }
+        .menu-item.danger { background: var(--gradient-danger-menu); color: white; border-radius: 0 25px 25px 0; margin-top: 1rem; }
+        .menu-item.danger:hover { background: var(--color-danger); transform: translateX(10px); }
+        .main-content { flex: 1; padding: 2rem; overflow-y: auto; }
+        .content-header { background: var(--color-white); padding: 2rem; border-radius: 20px; margin-bottom: 2rem; box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1); border: 1px solid rgba(0, 184, 148, 0.2); }
+        .content-header h1 { color: var(--color-primary); font-size: 2.5rem; margin-bottom: 0.5rem; font-weight: 700; }
+        .content-header p { color: var(--color-text-light); font-size: 1.1rem; }
+        .action-buttons { margin-bottom: 2rem; display: flex; gap: 1rem; flex-wrap: wrap; }
+        .btn { padding: 0.8rem 1.5rem; border: none; border-radius: 12px; text-decoration: none; font-weight: 600; transition: all 0.3s ease; cursor: pointer; font-size: 0.95rem; display: inline-flex; align-items: center; gap: 0.5rem; }
+        .btn-primary { background: var(--gradient-primary-btn); color: white; box-shadow: 0 4px 15px rgba(0, 184, 148, 0.4); }
+        .btn-primary:hover { transform: translateY(-2px); box-shadow: 0 8px 25px rgba(0, 184, 148, 0.6); }
+        .btn-secondary { background: var(--color-white); color: var(--color-primary); border: 2px solid var(--color-primary); }
+        .btn-secondary:hover { background: var(--color-primary); color: white; transform: translateY(-2px); }
+        .btn-edit { background: var(--gradient-edit); color: white; box-shadow: 0 4px 15px rgba(46, 204, 113, 0.4); }
+        .btn-edit:hover { transform: translateY(-2px); box-shadow: 0 8px 25px rgba(46, 204, 113, 0.6); }
+        .btn-danger { background: var(--gradient-delete); color: white; box-shadow: 0 4px 15px rgba(214, 48, 49, 0.4); }
+        .btn-danger:hover { transform: translateY(-2px); box-shadow: 0 8px 25px rgba(214, 48, 49, 0.6); }
+        .btn-pdf { background: var(--gradient-pdf); color: var(--color-text); box-shadow: 0 4px 15px rgba(253, 203, 110, 0.4); }
+        .btn-pdf:hover { transform: translateY(-2px); box-shadow: 0 8px 25px rgba(253, 203, 110, 0.6); }
+        .btn-small { padding: 0.5rem 1rem; font-size: 0.85rem; }
+        .table-container { background: var(--color-white); border-radius: 20px; padding: 2rem; box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1); border: 1px solid rgba(0, 184, 148, 0.2); overflow-x: auto; }
+        .torneos-table { width: 100%; border-collapse: collapse; margin-top: 1rem; }
+        .torneos-table thead tr { background: var(--gradient-primary-btn); color: white; }
+        .torneos-table th, .torneos-table td { padding: 1rem; text-align: left; border-bottom: 1px solid rgba(0, 184, 148, 0.1); }
+        .torneos-table th { font-weight: 600; text-transform: uppercase; font-size: 0.85rem; letter-spacing: 0.5px; }
+        .torneos-table tbody tr { transition: all 0.3s ease; }
+        .torneos-table tbody tr:hover { background: rgba(0, 184, 148, 0.05); transform: scale(1.01); }
+        .torneos-table td { font-size: 0.95rem; color: var(--color-text); }
+        .status-badge { padding: 0.3rem 0.8rem; border-radius: 20px; font-size: 0.8rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px; }
+        .status-activo { background: linear-gradient(135deg, #00b894 0%, #00cec9 100%); color: white; }
+        .status-finalizado { background: var(--color-background); color: var(--color-text-light); border: 1px solid #ddd; }
+        .status-pendiente { background: linear-gradient(135deg, #ffeaa7 0%, var(--color-accent) 100%); color: var(--color-text); }
+        .action-buttons-table { display: flex; gap: 0.5rem; flex-wrap: wrap; }
+        .delete-form { display: inline; }
+        .empty-state { text-align: center; padding: 3rem; color: var(--color-text-light); }
+        .empty-state i { font-size: 4rem; color: #ccc; margin-bottom: 1rem; }
+        .empty-state h3 { color: var(--color-primary); margin-bottom: 1rem; }
         @media (max-width: 768px) {
-            .container {
-                flex-direction: column;
-            }
-
-            .sidebar {
-                width: 100%;
-                padding: 1rem 0;
-            }
-
-            .main-content {
-                padding: 1rem;
-            }
-
-            .content-header h1 {
-                font-size: 2rem;
-            }
-
-            .action-buttons {
-                flex-direction: column;
-            }
-
-            .torneos-table {
-                font-size: 0.8rem;
-            }
-
-            .torneos-table th,
-            .torneos-table td {
-                padding: 0.5rem;
-            }
+            .container { flex-direction: column; }
+            .sidebar { width: 100%; padding: 1rem 0; }
+            .main-content { padding: 1rem; }
+            .content-header h1 { font-size: 2rem; }
+            .action-buttons { flex-direction: column; }
+            .torneos-table { font-size: 0.8rem; }
+            .torneos-table th, .torneos-table td { padding: 0.5rem; }
         }
     </style>
 </head>
@@ -498,9 +200,8 @@
 </div>
 
 <script>
-    // Add some interactivity
+    // [Se omite el script para brevedad, son los mismos que proporcionaste]
     document.addEventListener('DOMContentLoaded', function() {
-        // Smooth animations for table rows
         const tableRows = document.querySelectorAll('.torneos-table tbody tr');
         tableRows.forEach((row, index) => {
             row.style.animationDelay = `${index * 0.1}s`;
@@ -512,7 +213,6 @@
             }, index * 100);
         });
 
-        // Manejo del estado de carga en enlaces del menú (similar al archivo de Partidos)
         document.querySelectorAll('.menu-item').forEach(link => {
             link.addEventListener('click', function(e) {
                 if (this.getAttribute('href') !== '#' && !this.onclick && !this.parentNode.matches('form')) {
@@ -528,7 +228,6 @@
         });
     });
 
-    // CSS Animation
     const style = document.createElement('style');
     style.textContent = `
         @keyframes fadeInUp {
