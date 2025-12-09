@@ -45,7 +45,7 @@ public class Torneo implements Serializable {
     @JoinColumn(name = "creador_id")
     private Usuario creador;
 
-    // Participantes con EAGER
+    // Participantes con EAGER (CONFIRMADO: Esto debe forzar la carga)
     @OneToMany(mappedBy = "torneo", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.EAGER)
     private List<Participante> participantes = new ArrayList<>();
 

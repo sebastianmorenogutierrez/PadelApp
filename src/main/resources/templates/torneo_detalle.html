@@ -616,10 +616,18 @@
                 <form class="registration-form" th:action="@{'/torneo/' + ${torneo.id ?: 0} + '/inscribir'}" method="post">
                     <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
 
-                    <button type="submit" class="btn btn-primary">
-                        <i class="fas fa-sign-in-alt"></i>
-                        Inscribirse al Torneo
-                    </button>
+                    <th:block th:if="${yaInscrito}">
+                        <button type="button" class="btn btn-secondary" disabled>
+                            <i class="fas fa-check"></i> Ya estás Inscrito
+                        </button>
+                    </th:block>
+
+                    <th:block th:unless="${yaInscrito}">
+                        <button type="submit" class="btn btn-primary">
+                            <i class="fas fa-sign-in-alt"></i>
+                            Inscribirse al Torneo
+                        </button>
+                    </th:block>
                 </form>
             </div>
         </div>
@@ -666,8 +674,10 @@
         if (form) {
             form.addEventListener('submit', function() {
                 const button = this.querySelector('.btn-primary');
-                button.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Inscribiendo...';
-                button.disabled = true;
+                if (button) { // Solo si el botón de inscripción existe (no está ya inscrito)
+                    button.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Inscribiendo...';
+                    button.disabled = true;
+                }
             });
         }
 
