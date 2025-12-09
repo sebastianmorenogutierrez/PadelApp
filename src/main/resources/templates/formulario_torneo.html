@@ -8,26 +8,15 @@
     <style>
         /* Nueva Paleta de Colores (Verde Azulado) */
         :root {
-            /* Colores Principales de la Marca */
-            --color-primary: #00b894; /* Verde Azulado Brillante */
-            --color-primary-dark: #00a383; /* Variante oscura */
-
-            /* Color Clave del Fondo */
+            --color-primary: #00b894;
+            --color-primary-dark: #00a383;
             --color-bg-soft: #F4FFF8;
-
-            /* Otros Colores */
-            --color-secondary: #0984e3;
-            --color-accent: #fdcb6e;
             --color-danger: #d63031;
             --color-text: #2d3436;
             --color-text-light: #636e72;
             --color-white: #ffffff;
-
-            /* Gradientes */
             --gradient-primary: linear-gradient(135deg, var(--color-primary) 0%, var(--color-primary-dark) 100%);
             --gradient-danger: linear-gradient(135deg, var(--color-danger) 0%, #ff7675 100%);
-
-            /* Sombras */
             --shadow-medium: 0 8px 30px rgba(0, 184, 148, 0.12);
         }
 
@@ -49,37 +38,25 @@
             min-height: 100vh;
         }
 
-        /* Sidebar (Mantenido) */
+        /* Sidebar & Menú (Mantenido) */
         .sidebar {
-            width: 280px;
-            background: var(--color-white);
-            padding: 2rem 0;
-            box-shadow: 4px 0 20px rgba(0, 0, 0, 0.1);
-            border-right: 1px solid rgba(0, 184, 148, 0.1);
-            position: sticky;
-            top: 0;
+            width: 280px; background: var(--color-white); padding: 2rem 0; box-shadow: 4px 0 20px rgba(0, 0, 0, 0.1); border-right: 1px solid rgba(0, 184, 148, 0.1); position: sticky; top: 0;
         }
-
-        /* ... Estilos de logo, menu-item, etc. (Mantenidos) ... */
         .logo {text-align: center; padding: 0 2rem 2rem; border-bottom: 1px solid rgba(0, 184, 148, 0.2); margin-bottom: 2rem;}
         .logo h2 {color: var(--color-primary); font-size: 1.5rem; font-weight: 700;}
         .menu-item {display: block; padding: 1rem 2rem; text-decoration: none; color: var(--color-text); transition: all 0.3s ease; border-left: 4px solid transparent; position: relative;}
         .menu-item:hover, .menu-item.active {background: linear-gradient(90deg, rgba(0, 184, 148, 0.1) 0%, rgba(0, 184, 148, 0.05) 100%); color: var(--color-primary); border-left-color: var(--color-primary); transform: translateX(5px);}
         .menu-section-title {padding: 0 2rem 0.5rem; color: var(--color-text-light); font-size: 0.75rem; text-transform: uppercase; letter-spacing: 1px; font-weight: 600;}
         .menu-item.accent {background: linear-gradient(135deg, #33b633 0%, #2ca52c 100%); color: white; border-radius: 0 25px 25px 0; margin: 0.5rem 0;}
-        .menu-item.accent:hover {background: linear-gradient(135deg, #2ca52c 0%, #228b22 100%); transform: translateX(10px);}
         .menu-item.danger {background: var(--gradient-danger); color: white; border-radius: 0 25px 25px 0; margin-top: 1rem;}
-        .menu-item.danger:hover {background: linear-gradient(135deg, #e03c3c 0%, #cc2929 100%); transform: translateX(10px);}
 
-
-        /* Main Content */
         .main-content {
             flex: 1;
             padding: 2rem;
             overflow-y: auto;
         }
 
-        /* Header del Formulario Principal - Estilo de Tarjeta */
+        /* Contenedor principal del formulario */
         .form-header-card {
             background: var(--color-white);
             padding: 2rem;
@@ -112,36 +89,50 @@
             gap: 1rem;
         }
 
-        /* CORRECCIÓN CLAVE AQUÍ: Ajuste de Grid para los 6 campos */
+        /* Contenedor de la primera fila (5 campos) */
         .field-container {
             margin-top: 2rem;
             display: grid;
-            /* Seis columnas flexibles, cada una con un ancho mínimo */
-            grid-template-columns: repeat(6, 1fr);
-            gap: 1.5rem;
+            /* 5 columnas como se ve en la imagen */
+            grid-template-columns: repeat(5, 1fr);
+            gap: 1rem; /* Espacio reducido para que quepan */
             border-top: 1px solid rgba(0, 184, 148, 0.1);
             padding-top: 1.5rem;
+        }
+
+        /* Contenedor para los campos de abajo y botones */
+        .secondary-fields-container {
+            padding-top: 1rem;
+            margin-top: 1.5rem;
+            border-top: 1px solid rgba(0, 184, 148, 0.1);
+            display: grid;
+            grid-template-columns: repeat(2, 1fr); /* 2 columnas para Máx Participantes y otro posible campo */
+            gap: 1.5rem;
         }
 
         .form-group {
             display: flex;
             flex-direction: column;
             gap: 0.5rem;
-            /* Estos campos toman 1 columna del grid */
+            /* Todos los form-group en el field-container principal ocupan 1 columna */
             grid-column: span 1;
         }
 
-        /* Ajuste para los campos grandes */
+        /* Ajuste para Máx Participantes (solo una columna en el grid secundario) */
+        .form-group.half-width {
+            grid-column: span 1;
+        }
+
+        /* Ajuste para campos o botones que deben ser de ancho completo */
         .form-group-full {
-            /* Este campo toma todas las columnas disponibles */
-            grid-column: 1 / -1;
+            grid-column: 1 / -1; /* Ocupa todo el ancho */
             margin-top: 1rem;
         }
 
         .form-label {
             color: var(--color-primary-dark);
             font-weight: 600;
-            font-size: 0.8rem; /* Tamaño de fuente más pequeño para caber mejor */
+            font-size: 0.8rem;
             text-transform: uppercase;
             letter-spacing: 0.5px;
             display: flex;
@@ -150,7 +141,7 @@
         }
 
         .form-input, .form-select, .form-textarea {
-            padding: 0.75rem 1rem; /* Padding reducido para hacerlo más compacto */
+            padding: 0.75rem 1rem;
             border: 2px solid rgba(0, 184, 148, 0.2);
             border-radius: 12px;
             font-size: 0.95rem;
@@ -172,84 +163,53 @@
         }
 
         .button-group {
-            /* Ocupa todo el ancho al final del grid */
             grid-column: 1 / -1;
             display: flex;
             justify-content: flex-end;
             gap: 1rem;
-            padding-top: 2rem;
-            border-top: 1px solid rgba(0, 184, 148, 0.1);
-            margin-top: 1rem;
+            padding-top: 1rem;
         }
 
         .btn {
-            padding: 1rem 2rem;
-            border: none;
-            border-radius: 12px;
-            font-weight: 600;
-            font-size: 1rem;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            text-decoration: none;
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            gap: 0.5rem;
+            padding: 1rem 2rem; border: none; border-radius: 12px; font-weight: 600; font-size: 1rem; cursor: pointer; transition: all 0.3s ease; text-decoration: none; display: inline-flex; align-items: center; justify-content: center; gap: 0.5rem;
         }
 
         .btn-primary {
-            background: var(--gradient-primary);
-            color: white;
-            box-shadow: 0 4px 15px rgba(0, 184, 148, 0.4);
+            background: var(--gradient-primary); color: white; box-shadow: 0 4px 15px rgba(0, 184, 148, 0.4);
         }
 
         .btn-primary:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 8px 25px rgba(0, 184, 148, 0.6);
+            transform: translateY(-2px); box-shadow: 0 8px 25px rgba(0, 184, 148, 0.6);
         }
 
         .btn-secondary {
-            background: var(--color-white);
-            color: var(--color-primary);
-            border: 2px solid var(--color-primary);
+            background: var(--color-white); color: var(--color-primary); border: 2px solid var(--color-primary);
         }
 
         .btn-secondary:hover {
-            background: var(--color-primary);
-            color: white;
-            transform: translateY(-2px);
+            background: var(--color-primary); color: white; transform: translateY(-2px);
         }
 
-        /* Responsive Design */
+        /* Responsive Overrides */
         @media (max-width: 1300px) {
             .field-container {
-                grid-template-columns: repeat(3, 1fr); /* 3 columnas en pantallas medianas */
-            }
-            .form-group {
-                grid-column: span 1;
+                grid-template-columns: repeat(3, 1fr);
             }
         }
         @media (max-width: 900px) {
             .field-container {
-                grid-template-columns: repeat(2, 1fr); /* 2 columnas en tablets */
+                grid-template-columns: repeat(2, 1fr);
+            }
+            .secondary-fields-container {
+                grid-template-columns: 1fr;
+            }
+            .form-group.half-width {
+                grid-column: span 1;
             }
         }
         @media (max-width: 600px) {
-            .container {
-                flex-direction: column;
-            }
-            .sidebar {
-                width: 100%;
-                position: relative;
-            }
-            .main-content {
-                padding: 1rem;
-            }
             .field-container {
-                grid-template-columns: 1fr; /* 1 columna en móviles */
-            }
-            .button-group {
-                flex-direction: column;
+                grid-template-columns: 1fr;
             }
         }
     </style>
@@ -354,11 +314,17 @@
                         </select>
                         <span th:if="${#fields.hasErrors('nivel')}" th:errors="*{nivel}" class="text-danger"></span>
                     </div>
+                </div>
 
-                    <div class="form-group">
+                <div class="secondary-fields-container">
+
+                    <div class="form-group half-width">
                         <label for="maxParticipantes" class="form-label">Máx. Participantes <i class="fas fa-users"></i></label>
                         <input type="number" id="maxParticipantes" class="form-input" th:field="*{maxParticipantes}" min="4" max="100" required placeholder="Mínimo 4" />
                         <span th:if="${#fields.hasErrors('maxParticipantes')}" th:errors="*{maxParticipantes}" class="text-danger"></span>
+                    </div>
+
+                    <div class="form-group half-width" style="visibility: hidden;">
                     </div>
 
                     <div class="form-group form-group-full">

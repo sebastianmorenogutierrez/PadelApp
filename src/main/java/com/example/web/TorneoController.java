@@ -55,9 +55,7 @@ public class TorneoController {
 
     @GetMapping("/nuevo")
     public String formularioNuevo(Model model) {
-
         model.addAttribute("torneo", new Torneo());
-
         return "formulario_torneo";
     }
 
