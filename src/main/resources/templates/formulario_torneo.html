@@ -135,8 +135,8 @@
             overflow-y: auto;
         }
 
-        /* Tournament Header (Usado para el título del formulario) */
-        .tournament-header {
+        /* Header del Formulario Principal - Estilo de Tarjeta */
+        .form-header-card {
             background: var(--color-white);
             backdrop-filter: blur(10px);
             padding: 2rem;
@@ -146,9 +146,10 @@
             border: 1px solid rgba(0, 184, 148, 0.1);
             position: relative;
             overflow: hidden;
+            animation: fadeInUp 0.8s ease;
         }
 
-        .tournament-header::before {
+        .form-header-card::before {
             content: '';
             position: absolute;
             top: 0;
@@ -168,43 +169,31 @@
             gap: 1rem;
         }
 
-        /* Contenedor del Formulario */
-        .form-container-card {
-            background: var(--color-white);
-            backdrop-filter: blur(10px);
-            padding: 2rem;
-            border-radius: 20px;
-            box-shadow: var(--shadow-medium);
-            border: 1px solid rgba(0, 184, 148, 0.1);
-            animation: fadeInUp 0.8s ease 0.4s;
-        }
-
-        .form-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-            gap: 2rem;
-        }
-
-        .section-header {
+        /* Contenedor de Campos */
+        .field-container {
+            margin-top: 2rem;
             display: flex;
-            align-items: center;
-            gap: 1rem;
-            margin-bottom: 1.5rem;
-            padding-bottom: 1rem;
-            border-bottom: 2px solid rgba(0, 184, 148, 0.1);
-        }
-
-        .section-header h3 {
-            color: var(--color-primary);
-            font-size: 1.5rem;
-            font-weight: 600;
+            flex-wrap: wrap;
+            gap: 1.5rem; /* Espacio entre los grupos de campos */
+            border-top: 1px solid rgba(0, 184, 148, 0.1);
+            padding-top: 1.5rem;
         }
 
         .form-group {
             display: flex;
             flex-direction: column;
             gap: 0.5rem;
+            /* Controla el ancho de los campos pequeños (Nombre, Ubicación, Fechas, Nivel) */
+            flex: 1 1 calc(20% - 1.5rem);
+            min-width: 180px; /* Ancho mínimo para que no se vean apretados */
         }
+
+        /* Ajuste para los campos grandes (Descripción) */
+        .form-group-full {
+            flex: 1 1 100%;
+            margin-top: 1rem;
+        }
+
 
         .form-label {
             color: var(--color-primary-dark);
@@ -212,6 +201,9 @@
             font-size: 0.95rem;
             text-transform: uppercase;
             letter-spacing: 0.5px;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
         }
 
         .form-input, .form-select, .form-textarea {
@@ -237,11 +229,13 @@
         }
 
         .button-group {
-            grid-column: 1 / -1; /* Ocupa todo el ancho en el grid */
+            /* Mantenemos el estilo de button-group para los botones finales */
             display: flex;
             justify-content: flex-end;
             gap: 1rem;
-            padding-top: 1rem;
+            padding-top: 2rem;
+            border-top: 1px solid rgba(0, 184, 148, 0.1);
+            margin-top: 2rem;
         }
 
         .btn {
@@ -304,8 +298,8 @@
 
         /* Responsive Design */
         @media (max-width: 1024px) {
-             .form-grid {
-                grid-template-columns: 1fr;
+            .form-group {
+                flex: 1 1 calc(50% - 1rem); /* 2 columnas en tablets */
             }
         }
 
@@ -327,6 +321,15 @@
             .tournament-title {
                 font-size: 2rem;
             }
+
+            .form-group {
+                flex: 1 1 100%; /* 1 columna en móviles */
+                min-width: auto;
+            }
+
+            .button-group {
+                flex-direction: column;
+            }
         }
 
         /* Animations */
@@ -339,9 +342,6 @@
                 opacity: 1;
                 transform: translateY(0);
             }
-        }
-        .tournament-header {
-            animation: fadeInUp 0.8s ease;
         }
     </style>
 </head>
@@ -390,13 +390,6 @@
     </nav>
 
     <main class="main-content">
-        <div class="tournament-header">
-            <h2 class="tournament-title">
-                <i class="fas fa-plus-circle"></i>
-                Crear Nuevo Torneo
-            </h2>
-            <p style="color: var(--color-text-light);">Define los detalles de tu próximo gran evento de pádel.</p>
-        </div>
 
         <div th:if="${mensajeExito}" class="alert alert-success">
             <i class="fas fa-check-circle"></i> <span th:text="${mensajeExito}"></span>
@@ -405,11 +398,17 @@
             <i class="fas fa-exclamation-triangle"></i> <span th:text="${mensajeError}"></span>
         </div>
 
-        <div class="form-container-card">
+        <div class="form-header-card">
+            <h2 class="tournament-title">
+                <i class="fas fa-plus-circle"></i>
+                Crear Nuevo Torneo
+            </h2>
+            <p style="color: var(--color-text-light);">Define los detalles de tu próximo gran evento de pádel.</p>
+
             <form th:action="@{/torneo/crear}" method="post" th:object="${torneo}">
                 <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
 
-                <div class="form-grid">
+                <div class="field-container">
 
                     <div class="form-group">
                         <label for="nombre" class="form-label">Nombre del Torneo <i class="fas fa-pencil-alt"></i></label>
@@ -453,11 +452,12 @@
                         <span th:if="${#fields.hasErrors('maxParticipantes')}" th:errors="*{maxParticipantes}" class="text-danger"></span>
                     </div>
 
-                    <div class="form-group" style="grid-column: 1 / -1;">
+                    <div class="form-group form-group-full">
                         <label for="descripcion" class="form-label">Descripción del Torneo <i class="fas fa-info-circle"></i></label>
                         <textarea id="descripcion" class="form-textarea" th:field="*{descripcion}" rows="4" placeholder="Detalles, reglas, premios, costo, etc."></textarea>
                         <span th:if="${#fields.hasErrors('descripcion')}" th:errors="*{descripcion}" class="text-danger"></span>
                     </div>
+
 
                     <div class="button-group">
                         <a th:href="@{/torneo}" class="btn btn-secondary">
@@ -484,7 +484,6 @@
         if (form) {
             form.addEventListener('submit', function() {
                 const button = this.querySelector('.btn-primary');
-                // Verificar que el botón existe antes de cambiar su contenido
                 if (button) {
                     button.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Procesando...';
                     button.disabled = true;
@@ -492,7 +491,6 @@
             });
         }
     });
-
 </script>
 </body>
 </html>
