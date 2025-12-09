@@ -60,6 +60,14 @@ public class TorneoController {
         model.addAttribute("torneo", new Torneo());
         return "formulario_torneo";
     }
+    @GetMapping("/editar/{id}")
+    public String editarTorneo(@PathVariable Long id, Model model) {
+        Torneo torneo = torneoService.buscarPorId(id).orElseThrow(
+                () -> new NoSuchElementException("Torneo no encontrado con ID: " + id)
+        );
+        model.addAttribute("torneo", torneo);
+        return "torneo_detalle";
+    }
 
     @PostMapping("/{id}/eliminar")
     public String eliminarTorneo(@PathVariable Long id) {
@@ -94,7 +102,6 @@ public class TorneoController {
         return "redirect:/torneo/" + id;
     }
 
-    // Mapeo para descargar PDF
     @GetMapping("/{id}/pdf")
     public void generarPDFTorneo(@PathVariable("id") Long id, HttpServletResponse response) throws IOException {
         Torneo torneo = null;
