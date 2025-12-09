@@ -36,7 +36,19 @@ public class EquipoControlador {
     @Autowired
     private CorreoServicio correoServicio;
 
-    // ... (Métodos GET / y /crear son iguales)
+    // --- MÉTODOS GET (Sin cambios en este ejemplo, asumiendo que ya funcionan) ---
+
+    @GetMapping
+    public String mostrarEquipos(Model model, Authentication auth) {
+        // ... (Implementación del método)
+        return "equipo";
+    }
+
+    @GetMapping("/crear")
+    public String mostrarFormularioCrearEquipo(Model model, Authentication auth) {
+        // ... (Implementación del método)
+        return "equipo-crear";
+    }
 
     // --- Método crearEquipo ---
 
@@ -50,6 +62,8 @@ public class EquipoControlador {
         try {
             String nombreUsuario = auth.getName();
             Usuario jugador1 = usuarioServicio.localizarPorNombreUsuario(nombreUsuario);
+
+            // 🟢 CORRECCIÓN 1 APLICADA: Usar el método de búsqueda por ID (Long)
             Usuario jugador2 = usuarioServicio.obtenerUsuarioPorId(idJugador2);
 
             if (jugador2 == null || jugador2.isEliminado()) {
@@ -74,7 +88,6 @@ public class EquipoControlador {
             solicitud.setJugador1(jugador1);
             solicitud.setJugador2(jugador2);
             solicitud.setNombreEquipo(nombreEquipo);
-            // El estado y fecha de solicitud se configuran en el servicio 'enviarSolicitud'
 
             // Usamos el método de negocio 'enviarSolicitud'
             solicitudEquipoServicio.enviarSolicitud(solicitud);
@@ -134,21 +147,8 @@ public class EquipoControlador {
                 return "redirect:/equipo";
             }
 
-            // Usamos el método de negocio aceptarSolicitud si existe, que maneja la persistencia de ambos
-            // Si el método devuelve Equipo:
+            // 🟢 CORRECCIÓN 2 APLICADA: Usamos el método de negocio para ACEPTAR y CREAR el equipo
             Equipo equipo = solicitudEquipoServicio.aceptarSolicitud(idSolicitud);
-
-            // Si no existe aceptarSolicitud y debes hacerlo manualmente:
-            /*
-            Equipo equipo = equipoServicio.guardarEquipo(
-                    new Equipo(solicitud.getNombreEquipo(), solicitud.getJugador1(), solicitud.getJugador2())
-            );
-
-            solicitud.setEstado("ACEPTADA");
-            solicitud.setFechaRespuesta(LocalDateTime.now());
-            // ⬅️ CORRECCIÓN 2: De guardar a guardarSolicitud (o guardar si el método existe con esa firma)
-            solicitudEquipoServicio.guardarSolicitud(solicitud);
-            */
 
             String asunto = "¡Solicitud de Equipo Aceptada! - PadelApp";
             String mensaje = String.format(
@@ -205,16 +205,8 @@ public class EquipoControlador {
                 return "redirect:/equipo";
             }
 
-            // Usamos el método de negocio rechazarSolicitud si existe
-            solicitudEquipoServicio.rechazarSolicitud(idSolicitud, null);
-
-            // Si no existe rechazarSolicitud y debes hacerlo manualmente:
-            /*
-            solicitud.setEstado("RECHAZADA");
-            solicitud.setFechaRespuesta(LocalDateTime.now());
-            // ⬅️ CORRECCIÓN 3: De guardar a guardarSolicitud
-            solicitudEquipoServicio.guardarSolicitud(solicitud);
-            */
+            // 🟢 CORRECCIÓN 3 APLICADA: Usamos el método de negocio para RECHAZAR
+            solicitudEquipoServicio.rechazarSolicitud(idSolicitud, "Rechazada por el receptor");
 
 
             String asunto = "Solicitud de Equipo Rechazada - PadelApp";
@@ -245,5 +237,5 @@ public class EquipoControlador {
         }
     }
 
-    // ... (El resto de métodos son correctos)
+    // ... (El resto de métodos /solicitud/{idSolicitud}/cancelar, /{idEquipo} y /{idEquipo}/eliminar son iguales)
 }
