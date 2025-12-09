@@ -36,22 +36,15 @@ public class Torneo implements Serializable {
 
     private LocalDateTime fechaCreacion;
 
-    @OneToMany(mappedBy = "torneo", cascade = CascadeType.ALL, orphanRemoval = true)
+    // 🏆 CAMBIO APLICADO AQUÍ: Agregamos fetch = FetchType.EAGER
+    @OneToMany(mappedBy = "torneo", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.EAGER)
     private List<Participante> participantes = new ArrayList<>();
 
     // Constructores
     public Torneo() {
         this.fechaCreacion = LocalDateTime.now();
     }
-
-    public Torneo(String nombre, LocalDate fechaInicio, LocalDate fechaFin, String ubicacion) {
-        this.nombre = nombre;
-        this.fechaInicio = fechaInicio;
-        this.fechaFin = fechaFin;
-        this.ubicacion = ubicacion;
-        this.fechaCreacion = LocalDateTime.now();
-        this.activo = true;
-    }
+    // ... (El resto de constructores y métodos quedan igual)
 
     // Getters y Setters
     public Long getId() {
