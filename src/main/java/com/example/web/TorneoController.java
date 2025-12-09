@@ -225,7 +225,6 @@ public class TorneoController {
                 document.add(pUbicacion);
             }
 
-            // Lista de jugadores registrados
             List<Usuario> jugadores = usuarioServicio.listarTodos();
             jugadores.removeIf(u -> u.getIndividuo() == null || u.getIndividuo().isEliminado());
 
