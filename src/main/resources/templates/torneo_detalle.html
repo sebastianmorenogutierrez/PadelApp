@@ -6,7 +6,6 @@
     <title>Detalle del Torneo - PadelApp</title>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
     <style>
-        /* ... (CSS permanece igual) ... */
         :root {
             /* Colores Principales de la Marca */
             --color-primary: #00b894; /* Verde Azulado Brillante */
@@ -171,7 +170,8 @@
 
         .tournament-info {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            /* CAMBIO CLAVE: Cambiado a 1fr para forzar la disposición vertical */
+            grid-template-columns: 1fr;
             gap: 1.5rem;
             margin-top: 1.5rem;
         }
@@ -181,6 +181,9 @@
             padding: 1.5rem;
             border-radius: 15px;
             border: 1px solid rgba(0, 184, 148, 0.2);
+            /* Nuevo: Limita el ancho de las tarjetas */
+            max-width: 500px;
+            width: 100%;
         }
 
         .info-card h4 {
@@ -463,9 +466,7 @@
                 font-size: 2rem;
             }
 
-            .tournament-info {
-                grid-template-columns: 1fr;
-            }
+            /* No es necesario cambiar tournament-info aquí ya que ya es 1fr por defecto arriba */
 
             .action-buttons {
                 flex-direction: column;
