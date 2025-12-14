@@ -61,9 +61,12 @@ public class ConfSeg {
                                 "/anexar", "/salvar", "/cambiar/{idIndividuo}", "/cambiar/guardar",
                                 "/borrar/{idIndividuo}", "/jugadores", "/jugadores-registrados"
                         ).authenticated()
+
+                        .requestMatchers("/equipo", "/equipo/**").authenticated()
+
                         .requestMatchers(
                                 "/redirigir", "/indicejugador", "/indice", "/datos", "/modificar",
-                                "/eliminarCuenta", "/equipo", "/torneos-vista", "/exportarExcel"
+                                "/eliminarCuenta", "/torneos-vista", "/exportarExcel"
                         ).authenticated()
                         .anyRequest().authenticated()
                 )
