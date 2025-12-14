@@ -14,7 +14,6 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
-import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -35,7 +34,7 @@ public class EquipoControlador {
     private CorreoServicio correoServicio;
 
     // ------------------------------------------------------------------------
-    // MOSTRAR EQUIPOS (GET /equipo)
+    // MOSTRAR EQUIPOS (GET /equipo) - Vista principal de la gestión de equipos
     // ------------------------------------------------------------------------
 
     @GetMapping
@@ -58,6 +57,7 @@ public class EquipoControlador {
             model.addAttribute("solicitudesEnviadas", solicitudesEnviadas);
             model.addAttribute("usuarioActual", usuarioActual);
 
+            // Retorna la vista principal de equipos (equipo.html)
             return "equipo";
         } catch (Exception e) {
             System.err.println("Error al cargar equipos: " + e.getMessage());
@@ -67,73 +67,78 @@ public class EquipoControlador {
     }
 
     // ------------------------------------------------------------------------
-    // FORMULARIO CREAR (GET /equipo/crear) - Filtrado de jugadores
+    // PASO 1: LISTAR JUGADORES DISPONIBLES (GET /equipo/invitar)
     // ------------------------------------------------------------------------
-
-    @GetMapping("/crear")
-    public String mostrarFormularioCrearEquipo(Model model, Authentication auth) {
+    @GetMapping("/invitar")
+    public String mostrarListaJugadoresParaInvitar(Model model, Authentication auth) {
 
         List<Usuario> todosLosUsuarios = usuarioServicio.listarTodos();
-
-        // 🔴 DEBUG 1: ¿Cuántos usuarios trae el DAO/Servicio? (DEBE SER >= 37)
-        System.out.println("DEBUG DAO: Usuarios totales traídos por listarTodos(): " + todosLosUsuarios.size());
-
         String nombreUsuario = auth.getName();
         Usuario usuarioActual = usuarioServicio.localizarPorNombreUsuario(nombreUsuario);
+        Integer idUsuarioActual = usuarioActual.getId_usuario();
 
         List<Integer> idsJugadoresConEquipo = equipoServicio.obtenerIdsJugadoresConEquipoActivo();
 
-        // 🔴 Inicializamos contadores para ver cuántos se pierden por filtro
-        final int[] excluidosPorIndividuo = {0};
-        final int[] excluidosPorPerfil = {0};
-        final int[] excluidosPorTenerEquipo = {0};
-
+        // Lógica de filtrado de jugadores disponibles
         List<Usuario> jugadoresDisponibles = todosLosUsuarios.stream()
-                .filter(u -> {
-
-                    boolean esUsuarioActual = u.getId_usuario().equals(usuarioActual.getId_usuario());
-                    boolean yaTieneEquipo = idsJugadoresConEquipo.contains(u.getId_usuario());
-
-                    // 1. Verificación de Individuo (Debe ser TRUE por el JOIN FETCH)
-                    boolean individuoExiste = u.getIndividuo() != null;
-
-                    // 🟢 CORRECCIÓN FINAL: Excluimos solo al Administrador (asumiendo Perfil ID 1)
-                    // Esto evita problemas si el Perfil de Jugador no es ID 2.
-                    boolean esJugador = u.getPerfil() != null && !u.getPerfil().getId_perfil().equals(1);
-
-                    // --- DEBUGGING ---
-                    if (!esUsuarioActual && !individuoExiste) {
-                        excluidosPorIndividuo[0]++;
-                    }
-                    if (!esUsuarioActual && yaTieneEquipo) {
-                        excluidosPorTenerEquipo[0]++;
-                    }
-                    if (!esUsuarioActual && !esJugador && u.getPerfil() != null) {
-                        excluidosPorPerfil[0]++;
-                    }
-                    // -----------------
-
-                    // Aplicamos todos los filtros necesarios
-                    return !esUsuarioActual && !yaTieneEquipo && individuoExiste && esJugador;
-                })
+                .filter(u ->
+                        // 1. No es el usuario actual
+                        !u.getId_usuario().equals(idUsuarioActual) &&
+                                // 2. Tiene información de Individuo
+                                u.getIndividuo() != null &&
+                                // 3. No tiene equipo activo
+                                !idsJugadoresConEquipo.contains(u.getId_usuario()) &&
+                                // 4. No es Administrador (ID 1)
+                                u.getPerfil() != null && !u.getPerfil().getId_perfil().equals(1)
+                )
                 .collect(Collectors.toList());
 
-        // 🔴 DEBUG 2: Imprimimos los contadores
-        System.out.println("DEBUG FILTRO: Jugadores excluidos por Individuo NULO: " + excluidosPorIndividuo[0]);
-        System.out.println("DEBUG FILTRO: Jugadores excluidos por Perfil NO Jugador (ID 1): " + excluidosPorPerfil[0]);
-        System.out.println("DEBUG FILTRO: Jugadores excluidos por tener equipo: " + excluidosPorTenerEquipo[0]);
-        System.out.println("DEBUG FILTRO: Usuarios restantes (DEBERÍA SER 36 o menos si hay ya tienen equipo): " + jugadoresDisponibles.size());
+        System.out.println("DEBUG INVITAR: Jugadores disponibles filtrados: " + jugadoresDisponibles.size());
 
-
-        model.addAttribute("equipo", new Equipo());
-        model.addAttribute("jugadoresDisponibles", jugadoresDisponibles);
+        // 'jugadores' se usa en la plantilla 'equipo-invitar.html'
+        model.addAttribute("jugadores", jugadoresDisponibles);
         model.addAttribute("usuarioActual", usuarioActual);
 
-        return "equipo-crear";
+        // Retorna la vista de selección de jugador
+        return "equipo-invitar";
     }
 
     // ------------------------------------------------------------------------
-    // CREAR EQUIPO (POST /equipo/crear) - Enviar Solicitud
+    // PASO 2: MUESTRA FORMULARIO PARA INGRESAR NOMBRE DE EQUIPO (GET /equipo/solicitud/{idJugador2}/nombre)
+    // ------------------------------------------------------------------------
+    @GetMapping("/solicitud/{idJugador2}/nombre")
+    public String mostrarFormularioNombreEquipo(
+            @PathVariable("idJugador2") Long idJugador2,
+            Model model,
+            Authentication auth,
+            RedirectAttributes redirectAttributes) {
+
+        Usuario jugador2 = usuarioServicio.obtenerUsuarioPorId(idJugador2);
+        String nombreUsuario = auth.getName();
+        Usuario jugador1 = usuarioServicio.localizarPorNombreUsuario(nombreUsuario);
+
+        if (jugador2 == null || jugador2.isEliminado()) {
+            redirectAttributes.addFlashAttribute("mensajeError", "El jugador seleccionado no es válido.");
+            return "redirect:/equipo/invitar";
+        }
+
+        // Verificar si ya existe una solicitud PENDIENTE
+        if (solicitudEquipoServicio.existeSolicitudPendienteEntreJugadores(jugador1.getId_usuario(), jugador2.getId_usuario())) {
+            redirectAttributes.addFlashAttribute("mensajeAdvertencia", "Ya tienes una solicitud pendiente con este jugador.");
+            return "redirect:/equipo";
+        }
+
+        model.addAttribute("jugador2", jugador2);
+        // Pasamos el ID del jugador 2 para que se envíe en el formulario POST
+        model.addAttribute("idJugador2", idJugador2);
+
+        // Retorna la vista del formulario de nombre
+        return "equipo-solicitud-nombre";
+    }
+
+
+    // ------------------------------------------------------------------------
+    // CREAR EQUIPO (POST /equipo/crear) - Enviar Solicitud (Recibe del formulario de nombre)
     // ------------------------------------------------------------------------
 
     @PostMapping("/crear")
@@ -146,19 +151,14 @@ public class EquipoControlador {
         try {
             String nombreUsuario = auth.getName();
             Usuario jugador1 = usuarioServicio.localizarPorNombreUsuario(nombreUsuario);
-
-            // CORRECCIÓN 1: Usar el método de búsqueda por ID (Long)
             Usuario jugador2 = usuarioServicio.obtenerUsuarioPorId(idJugador2);
 
             if (jugador2 == null || jugador2.isEliminado()) {
                 redirectAttributes.addFlashAttribute("mensajeError",
                         "El jugador seleccionado no está disponible.");
-                return "redirect:/equipo/crear";
+                // Redirigir al inicio del flujo
+                return "redirect:/equipo/invitar";
             }
-
-            // ⚠️ ATENCIÓN: Si permitiste invitar a jugadores que ya tienen equipo,
-            // la lógica aquí (en SolicitudEquipoServicio) DEBE manejar
-            // si el jugador2 ya tiene un equipo ACTIVO y si la aplicación lo permite.
 
             Integer idJugador1 = jugador1.getId_usuario();
             Integer idJugador2Int = jugador2.getId_usuario();
@@ -177,9 +177,9 @@ public class EquipoControlador {
             solicitud.setJugador2(jugador2);
             solicitud.setNombreEquipo(nombreEquipo);
 
-            // Usamos el método de negocio 'enviarSolicitud'
             solicitudEquipoServicio.enviarSolicitud(solicitud);
 
+            // Lógica de Correo
             String asunto = "Nueva Solicitud de Equipo - PadelApp";
             String mensaje = String.format(
                     "¡Hola %s!\n\n" +
@@ -205,7 +205,8 @@ public class EquipoControlador {
             System.err.println("Error al crear solicitud de equipo: " + e.getMessage());
             redirectAttributes.addFlashAttribute("mensajeError",
                     "Error al enviar la solicitud de equipo: " + e.getMessage());
-            return "redirect:/equipo/crear";
+            // Redirigir al inicio del flujo
+            return "redirect:/equipo/invitar";
         }
     }
 
@@ -237,7 +238,6 @@ public class EquipoControlador {
                 return "redirect:/equipo";
             }
 
-            // CORRECCIÓN 2: Usamos el método de negocio para ACEPTAR y CREAR el equipo
             Equipo equipo = solicitudEquipoServicio.aceptarSolicitud(idSolicitud);
 
             String asunto = "¡Solicitud de Equipo Aceptada! - PadelApp";
@@ -297,7 +297,6 @@ public class EquipoControlador {
                 return "redirect:/equipo";
             }
 
-            // CORRECCIÓN 3: Usamos el método de negocio para RECHAZAR
             solicitudEquipoServicio.rechazarSolicitud(idSolicitud, "Rechazada por el receptor");
 
 
