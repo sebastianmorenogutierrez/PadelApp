@@ -71,36 +71,59 @@ public class EquipoControlador {
     // ------------------------------------------------------------------------
     @GetMapping("/invitar")
     public String mostrarListaJugadoresParaInvitar(Model model, Authentication auth) {
+        try {
+            // ⚠️ NOTA: El UsuarioServicio.listarTodos() DEBE usar JOIN FETCH para cargar Individuo y Perfil
+            List<Usuario> todosLosUsuarios = usuarioServicio.listarTodos();
+            String nombreUsuario = auth.getName();
+            Usuario usuarioActual = usuarioServicio.localizarPorNombreUsuario(nombreUsuario);
+            Integer idUsuarioActual = usuarioActual.getId_usuario();
 
-        List<Usuario> todosLosUsuarios = usuarioServicio.listarTodos();
-        String nombreUsuario = auth.getName();
-        Usuario usuarioActual = usuarioServicio.localizarPorNombreUsuario(nombreUsuario);
-        Integer idUsuarioActual = usuarioActual.getId_usuario();
+            // 🟢 SOLUCIÓN AL ERROR DE VARIABLE EN LAMBDA Y NULIDAD
+            // 1. Obtener la lista
+            List<Integer> idsJugadoresConEquipo = equipoServicio.obtenerIdsJugadoresConEquipoActivo();
 
-        List<Integer> idsJugadoresConEquipo = equipoServicio.obtenerIdsJugadoresConEquipoActivo();
+            // 2. Crear una variable final (o efectivamente final)
+            final List<Integer> idsEquiposFinal = (idsJugadoresConEquipo != null)
+                    ? idsJugadoresConEquipo
+                    : List.of();
 
-        // Lógica de filtrado de jugadores disponibles
-        List<Usuario> jugadoresDisponibles = todosLosUsuarios.stream()
-                .filter(u ->
+            // Lógica de filtrado de jugadores disponible, segura contra NullPointerException:
+            List<Usuario> jugadoresDisponibles = todosLosUsuarios.stream()
+                    .filter(u -> {
                         // 1. No es el usuario actual
-                        !u.getId_usuario().equals(idUsuarioActual) &&
-                                // 2. Tiene información de Individuo
-                                u.getIndividuo() != null &&
-                                // 3. No tiene equipo activo
-                                !idsJugadoresConEquipo.contains(u.getId_usuario()) &&
-                                // 4. No es Administrador (ID 1)
-                                u.getPerfil() != null && !u.getPerfil().getId_perfil().equals(1)
-                )
-                .collect(Collectors.toList());
+                        boolean esOtroUsuario = !u.getId_usuario().equals(idUsuarioActual);
 
-        System.out.println("DEBUG INVITAR: Jugadores disponibles filtrados: " + jugadoresDisponibles.size());
+                        // 2. Chequeo de Nulidad: Si Individuo O Perfil son nulos, descartamos al usuario.
+                        if (u.getIndividuo() == null || u.getPerfil() == null) {
+                            return false;
+                        }
 
-        // 'jugadores' se usa en la plantilla 'equipo-invitar.html'
-        model.addAttribute("jugadores", jugadoresDisponibles);
-        model.addAttribute("usuarioActual", usuarioActual);
+                        // 3. Chequeo de Rol: No es Administrador (ID 1)
+                        boolean esJugador = !u.getPerfil().getId_perfil().equals(1);
 
-        // Retorna la vista de selección de jugador
-        return "equipo-invitar";
+                        // 4. Chequeo de Equipo: No tiene equipo activo
+                        // Usamos la variable final para evitar el error de compilación
+                        boolean tieneEquipoActivo = idsEquiposFinal.contains(u.getId_usuario());
+
+                        return esOtroUsuario && esJugador && !tieneEquipoActivo;
+                    })
+                    .collect(Collectors.toList());
+
+            System.out.println("DEBUG INVITAR: Jugadores disponibles filtrados: " + jugadoresDisponibles.size());
+
+            model.addAttribute("jugadores", jugadoresDisponibles);
+            model.addAttribute("usuarioActual", usuarioActual);
+
+            return "equipo-invitar";
+
+        } catch (Exception e) {
+            // Este catch es vital para atrapar el NullPointerException que causa el 500
+            System.err.println("FATAL ERROR 500 en /equipo/invitar: " + e.getMessage());
+            e.printStackTrace();
+
+            model.addAttribute("mensajeError", "Error interno al cargar la lista de jugadores disponibles. Revisar traza en la consola.");
+            return "equipo";
+        }
     }
 
     // ------------------------------------------------------------------------
