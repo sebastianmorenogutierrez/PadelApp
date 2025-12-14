@@ -104,8 +104,6 @@ public class UsuarioServicio {
         usuarioDao.save(usuario);
     }
 
-    /** * 🟡 REVERTIDO: Acepta Long, como indicaste, manteniendo la lógica interna de conversión.
-     */
     @Transactional
     public void eliminarCuentaPorId(Long idUsuario) {
         if (idUsuario == null) {
