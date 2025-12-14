@@ -23,7 +23,8 @@ public class Usuario implements Serializable {
     @JoinColumn(name = "id_perfil", referencedColumnName = "id_perfil")
     private Perfil perfil;
 
-    @OneToOne(cascade = CascadeType.ALL)
+    // 🟢 CAMBIO CRÍTICO: Forzar EAGER para garantizar que Individuo se carga con Usuario
+    @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     @JoinColumn(name = "id_individuo", referencedColumnName = "id_individuo")
     private Individuo individuo;
 
