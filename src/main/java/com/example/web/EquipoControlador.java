@@ -76,18 +76,21 @@ public class EquipoControlador {
         Usuario usuarioActual = usuarioServicio.localizarPorNombreUsuario(nombreUsuario);
 
         // PASO 1: Obtener IDs de jugadores ya en un equipo activo
-        List<Integer> idsJugadoresConEquipo = equipoServicio.obtenerIdsJugadoresConEquipoActivo();
+        // Aunque ya no lo usaremos para filtrar, mantenemos la llamada por si la usas en el futuro.
+        // List<Integer> idsJugadoresConEquipo = equipoServicio.obtenerIdsJugadoresConEquipoActivo();
 
         // PASO 2: Filtrar la lista
         List<Usuario> jugadoresDisponibles = usuarioServicio.listarTodos()
                 .stream()
                 .filter(u -> !u.isEliminado()
-                        && u.getIndividuo() != null
-                        && !u.getIndividuo().isEliminado()
-                        // 1. Excluir al usuario actual
-                        && !u.getId_usuario().equals(usuarioActual.getId_usuario())
+                                && u.getIndividuo() != null
+                                && !u.getIndividuo().isEliminado()
+                                // 1. Excluir al usuario actual
+                                && !u.getId_usuario().equals(usuarioActual.getId_usuario())
                         // 2. Excluir a los jugadores que ya tienen un equipo activo
-                        && !idsJugadoresConEquipo.contains(u.getId_usuario()))
+                        // HEMOS COMENTADO ESTA LÍNEA para que muestre a todos:
+                        // && !idsJugadoresConEquipo.contains(u.getId_usuario())
+                )
                 .collect(Collectors.toList());
 
         model.addAttribute("equipo", new Equipo());
@@ -120,6 +123,10 @@ public class EquipoControlador {
                         "El jugador seleccionado no está disponible.");
                 return "redirect:/equipo/crear";
             }
+
+            // ⚠️ ATENCIÓN: Si permitiste invitar a jugadores que ya tienen equipo,
+            // la lógica aquí (en SolicitudEquipoServicio) DEBE manejar
+            // si el jugador2 ya tiene un equipo ACTIVO y si la aplicación lo permite.
 
             Integer idJugador1 = jugador1.getId_usuario();
             Integer idJugador2Int = jugador2.getId_usuario();

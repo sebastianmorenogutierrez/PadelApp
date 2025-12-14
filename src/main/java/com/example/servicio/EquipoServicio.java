@@ -11,7 +11,7 @@ import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
-import java.util.Objects; // Necesario para el filtro Objects::nonNull
+import java.util.Objects;
 
 @Service
 public class EquipoServicio {
@@ -49,46 +49,18 @@ public class EquipoServicio {
     }
 
     // ----------------------------------------------------------------------
-    // 🟢 MÉTODO CORREGIDO: Filtra IDs de jugadores ya emparejados (Manejo de Lazy Load)
+    // 🟢 MÉTODO OPTIMIZADO: Usa la consulta directa del DAO para mayor eficiencia
     // ----------------------------------------------------------------------
     @Transactional(readOnly = true)
     /**
      * Obtiene una lista de IDs (Integer) de todos los usuarios que actualmente
-     * están registrados como Jugador1 o Jugador2 en CUALQUIER equipo.
+     * están registrados como Jugador1 o Jugador2 en CUALQUIER equipo ACTIVO.
      * Se utiliza para filtrar a los jugadores que ya tienen pareja.
      * @return Lista de IDs de usuarios que ya están en un equipo.
      */
     public List<Integer> obtenerIdsJugadoresConEquipoActivo() {
-        // Paso 1: Obtener todos los equipos dentro de la transacción
-        List<Equipo> equipos = equipoDao.findAll();
-
-        // 💡 CORRECCIÓN APLICADA: Forzar la inicialización de las entidades LAZY
-        // Esto asegura que getJugador1() y getJugador2() no fallen fuera de la transacción.
-        equipos.forEach(equipo -> {
-            if (equipo.getJugador1() != null) {
-                equipo.getJugador1().getId_usuario(); // Forzar carga
-            }
-            if (equipo.getJugador2() != null) {
-                equipo.getJugador2().getId_usuario(); // Forzar carga
-            }
-        });
-
-        // Paso 2: Procesar la lista de equipos (ahora con los jugadores cargados)
-        return equipos.stream()
-                // Combina los IDs de Jugador1 y Jugador2 en un solo stream
-                .flatMap(equipo -> {
-                    Usuario jugador1 = equipo.getJugador1();
-                    Usuario jugador2 = equipo.getJugador2();
-                    // Retorna un stream de IDs (Integer)
-                    return java.util.stream.Stream.of(
-                            jugador1 != null ? jugador1.getId_usuario() : null,
-                            jugador2 != null ? jugador2.getId_usuario() : null
-                    );
-                })
-                // Filtra los nulos (si existieran) y los IDs duplicados
-                .filter(Objects::nonNull) // Uso de java.util.Objects para filtrar nulos
-                .distinct()
-                .collect(Collectors.toList());
+        // Llama al nuevo método eficiente del DAO
+        return equipoDao.findDistinctIdsOfUsersInActiveTeams();
     }
     // ----------------------------------------------------------------------
 
