@@ -76,6 +76,11 @@ public class EquipoControlador {
             List<Usuario> todosLosUsuarios = usuarioServicio.listarTodos();
             String nombreUsuario = auth.getName();
             Usuario usuarioActual = usuarioServicio.localizarPorNombreUsuario(nombreUsuario);
+
+            // Chequeo crucial: Si el usuario actual no se encuentra, hay un problema de sesión o DB.
+            if (usuarioActual == null || usuarioActual.getId_usuario() == null) {
+                throw new IllegalStateException("Usuario actual no localizado o ID nulo.");
+            }
             Integer idUsuarioActual = usuarioActual.getId_usuario();
 
             // 🟢 SOLUCIÓN AL ERROR DE VARIABLE EN LAMBDA Y NULIDAD
@@ -87,21 +92,39 @@ public class EquipoControlador {
                     ? idsJugadoresConEquipo
                     : List.of();
 
-            // Lógica de filtrado de jugadores disponible, segura contra NullPointerException:
+            // Lógica de filtrado de jugadores disponible, ahora con CHEQUEOS DE NULIDAD ESTRICTOS:
             List<Usuario> jugadoresDisponibles = todosLosUsuarios.stream()
                     .filter(u -> {
-                        // 1. No es el usuario actual
-                        boolean esOtroUsuario = !u.getId_usuario().equals(idUsuarioActual);
+                        // 0. Chequeo de Usuario nulo
+                        if (u == null) return false;
 
-                        // 2. Chequeo de Nulidad: Si Individuo O Perfil son nulos, descartamos al usuario.
-                        if (u.getIndividuo() == null || u.getPerfil() == null) {
+                        // Chequeos de ID y Entidades (Debugging forzado para Error 500)
+                        if (u.getId_usuario() == null) {
+                            System.err.println("DEBUG FATAL: Usuario con ID nulo encontrado.");
+                            return false;
+                        }
+                        if (u.getIndividuo() == null) {
+                            System.err.println("DEBUG FATAL: Usuario ID " + u.getId_usuario() + " tiene Individuo NULO.");
+                            return false;
+                        }
+                        if (u.getPerfil() == null) {
+                            System.err.println("DEBUG FATAL: Usuario ID " + u.getId_usuario() + " tiene Perfil NULO.");
+                            return false;
+                        }
+                        if (u.getPerfil().getId_perfil() == null) {
+                            System.err.println("DEBUG FATAL: Usuario ID " + u.getId_usuario() + " tiene ID de Perfil NULO.");
                             return false;
                         }
 
-                        // 3. Chequeo de Rol: No es Administrador (ID 1)
+                        // --- Lógica de Negocio ---
+
+                        // 1. No es el usuario actual
+                        boolean esOtroUsuario = !u.getId_usuario().equals(idUsuarioActual);
+
+                        // 2. Chequeo de Rol: No es Administrador (ID 1)
                         boolean esJugador = !u.getPerfil().getId_perfil().equals(1);
 
-                        // 4. Chequeo de Equipo: No tiene equipo activo
+                        // 3. Chequeo de Equipo: No tiene equipo activo
                         // Usamos la variable final para evitar el error de compilación
                         boolean tieneEquipoActivo = idsEquiposFinal.contains(u.getId_usuario());
 
