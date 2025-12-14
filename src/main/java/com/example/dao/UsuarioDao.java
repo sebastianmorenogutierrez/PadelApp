@@ -15,7 +15,6 @@ public interface UsuarioDao extends JpaRepository<Usuario, Integer> {
         @Query("SELECT u FROM Usuario u WHERE u.nombreUsuario = :nombreUsuario AND u.eliminado = false")
         Usuario buscarPorNombre(@Param("nombreUsuario") String nombreUsuario);
 
-        Usuario findByNombreUsuario(String nombreUsuario);
-
+        @Query("SELECT u FROM Usuario u JOIN FETCH u.individuo WHERE u.eliminado = false")
         List<Usuario> findByEliminadoFalse();
 }
