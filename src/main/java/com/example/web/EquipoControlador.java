@@ -58,11 +58,11 @@ public class EquipoControlador {
             model.addAttribute("solicitudesEnviadas", solicitudesEnviadas);
             model.addAttribute("usuarioActual", usuarioActual);
 
-            return "equipo";
+            return "equipo-invitar";
         } catch (Exception e) {
             System.err.println("Error al cargar equipos: " + e.getMessage());
             model.addAttribute("mensajeError", "Error al cargar la información de equipos.");
-            return "equipo";
+            return "equipo.invitar";
         }
     }
 

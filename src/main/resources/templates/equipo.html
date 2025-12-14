@@ -1,0 +1,442 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Gestión de Equipos - PadelApp</title>
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+
+  <style>
+    /* [INICIO DE ESTILOS CSS BASE] */
+    :root {
+        --color-primary: #00b894;
+        --color-primary-dark: #00a383;
+        --color-secondary: #0984e3;
+        --color-danger: #d63031;
+        --color-text: #2d3436;
+        --color-text-light: #636e72;
+        --color-white: #ffffff;
+        --color-bg-soft: #F4FFF8;
+        --gradient-primary: linear-gradient(135deg, var(--color-primary) 0%, var(--color-primary-dark) 100%);
+    }
+
+    * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+    }
+
+    body {
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        background-color: var(--color-bg-soft);
+        min-height: 100vh;
+        color: var(--color-text);
+    }
+
+    .container {
+        display: flex;
+        min-height: 100vh;
+    }
+
+    .sidebar {
+        width: 280px;
+        background: var(--color-white);
+        padding: 2rem 0;
+        box-shadow: 4px 0 20px rgba(0, 0, 0, 0.1);
+        border-right: 1px solid rgba(0, 184, 148, 0.2);
+        flex-shrink: 0;
+    }
+
+    .logo {
+        text-align: center;
+        padding: 0 2rem 2rem;
+        border-bottom: 1px solid rgba(0, 184, 148, 0.2);
+        margin-bottom: 2rem;
+    }
+
+    .logo h2 {
+        color: var(--color-primary);
+        font-size: 1.5rem;
+        font-weight: 700;
+    }
+
+    .menu-section-title {
+        padding: 0 2rem 0.5rem;
+        color: var(--color-text-light);
+        font-size: 0.75rem;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+        font-weight: 600;
+    }
+
+    .menu-item {
+        display: block;
+        padding: 1rem 2rem;
+        text-decoration: none;
+        color: var(--color-text);
+        transition: all 0.3s ease;
+        border-left: 4px solid transparent;
+    }
+
+    .menu-item:hover, .menu-item.active {
+        background: linear-gradient(90deg, rgba(0, 184, 148, 0.1) 0%, rgba(0, 163, 131, 0.05) 100%);
+        color: var(--color-primary);
+        border-left-color: var(--color-primary);
+        transform: translateX(5px);
+    }
+
+    .menu-item i {
+        margin-right: 0.8rem;
+        width: 20px;
+        text-align: center;
+    }
+
+    /* Estilos del contenido principal */
+    .main-content {
+        flex: 1;
+        padding: 2rem;
+        overflow-y: auto;
+    }
+
+    .page-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 2rem;
+    }
+
+    .page-header h1 {
+        font-size: 2rem;
+        color: var(--color-text);
+    }
+
+    .btn {
+        padding: 0.75rem 1.5rem;
+        border: none;
+        border-radius: 8px;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        text-decoration: none;
+        display: inline-flex;
+        align-items: center;
+        gap: 0.5rem;
+    }
+
+    .btn-primary {
+        background: var(--gradient-primary);
+        color: white;
+        box-shadow: 0 4px 10px rgba(0, 184, 148, 0.3);
+    }
+
+    .btn-primary:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 6px 15px rgba(0, 184, 148, 0.5);
+    }
+
+    .section-title {
+        font-size: 1.5rem;
+        color: var(--color-primary-dark);
+        margin-bottom: 1rem;
+        border-bottom: 2px solid rgba(0, 184, 148, 0.2);
+        padding-bottom: 0.5rem;
+    }
+
+    .grid-container {
+        display: grid;
+        gap: 2rem;
+        margin-bottom: 3rem;
+    }
+
+    .card {
+        background: var(--color-white);
+        border-radius: 12px;
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+        padding: 1.5rem;
+        border-left: 5px solid var(--color-primary);
+        transition: transform 0.3s ease;
+    }
+
+    .card:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 6px 20px rgba(0, 0, 0, 0.1);
+    }
+
+    .team-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 1rem;
+    }
+
+    .team-name {
+        font-size: 1.25rem;
+        font-weight: 700;
+        color: var(--color-text);
+    }
+
+    .team-member-list {
+        list-style: none;
+        padding: 0;
+    }
+
+    .team-member-item {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        font-size: 0.9rem;
+        color: var(--color-text-light);
+        margin-bottom: 0.5rem;
+    }
+
+    .team-member-item i {
+        color: var(--color-secondary);
+    }
+
+    .card-actions {
+        margin-top: 1rem;
+        display: flex;
+        gap: 0.75rem;
+    }
+
+    .btn-view {
+        background: var(--color-secondary);
+        color: white;
+    }
+
+    .btn-danger {
+        background: var(--color-danger);
+        color: white;
+    }
+
+    /* Estilos de Solicitudes */
+    .solicitud-list {
+        padding: 0;
+        list-style: none;
+    }
+
+    .solicitud-item {
+        background: var(--color-white);
+        border: 1px solid rgba(0, 184, 148, 0.2);
+        border-radius: 8px;
+        padding: 1rem;
+        margin-bottom: 1rem;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        gap: 1rem;
+    }
+
+    .solicitud-info {
+        flex-grow: 1;
+    }
+
+    .solicitud-header {
+        font-weight: 600;
+        color: var(--color-text);
+        margin-bottom: 0.3rem;
+    }
+
+    .solicitud-player {
+        font-size: 0.9rem;
+        color: var(--color-text-light);
+    }
+
+    .solicitud-actions {
+        display: flex;
+        gap: 0.5rem;
+    }
+
+    .btn-success {
+        background: var(--color-primary);
+        color: white;
+    }
+
+    .btn-reject {
+        background: #ff7675;
+        color: white;
+    }
+
+    .btn-cancel {
+        background: #b2bec3;
+        color: white;
+    }
+
+    .alert-message {
+        padding: 1rem;
+        border-radius: 8px;
+        margin-bottom: 1rem;
+        font-weight: 600;
+    }
+
+    .alert-exito {
+        background-color: rgba(0, 184, 148, 0.1);
+        color: var(--color-primary-dark);
+        border: 1px solid var(--color-primary);
+    }
+
+    .alert-error {
+        background-color: rgba(214, 48, 49, 0.1);
+        color: var(--color-danger);
+        border: 1px solid var(--color-danger);
+    }
+
+    /* [FIN DE ESTILOS CSS BASE] */
+  </style>
+</head>
+<body>
+<div class="container">
+  <nav class="sidebar">
+    <div class="logo">
+      <h2><i class="fas fa-trophy"></i> PadelApp</h2>
+    </div>
+
+    <div class="menu-section-title">Navegación Principal</div>
+    <a th:href="@{/indice}" class="menu-item">
+      <i class="fas fa-home"></i> Inicio
+    </a>
+
+    <div class="menu-section-title" style="margin-top: 2rem;">Gestión Principal</div>
+    <a th:href="@{/partido}" class="menu-item">
+      <i class="fas fa-gamepad"></i> Partidos
+    </a>
+    <a th:href="@{/equipo}" class="menu-item active">
+      <i class="fas fa-users"></i> Equipos
+    </a>
+    <a th:href="@{/torneo}" class="menu-item">
+      <i class="fas fa-trophy"></i> Torneos
+    </a>
+    <a th:href="@{/jugadores}" class="menu-item">
+      <i class="fas fa-user-friends"></i> Jugadores
+    </a>
+
+    <div class="menu-section-title" style="margin-top: 2rem;">Usuario & Datos</div>
+    <a th:href="@{/datos}" class="menu-item">
+      <i class="fas fa-user-cog"></i> Mi Perfil
+    </a>
+    <a th:href="@{/exportarExcel}" class="menu-item accent">
+      <i class="fas fa-file-excel"></i> Exportar Excel
+    </a>
+
+    <form th:action="@{/logout}" method="post" style="margin: 2rem 0 0 0;">
+      <a href="#" onclick="this.parentNode.submit()" class="menu-item danger">
+        <i class="fas fa-sign-out-alt"></i> Cerrar Sesión
+      </a>
+    </form>
+  </nav>
+
+  <main class="main-content">
+
+    <div th:if="${mensajeExito}" class="alert-message alert-exito">
+      <i class="fas fa-check-circle"></i> [[${mensajeExito}]]
+    </div>
+    <div th:if="${mensajeError}" class="alert-message alert-error">
+      <i class="fas fa-exclamation-triangle"></i> [[${mensajeError}]]
+    </div>
+    <div th:if="${mensajeAdvertencia}" class="alert-message" style="background-color: #ffeaa7; color: #d63031; border: 1px solid #fab1a0;">
+      <i class="fas fa-exclamation-circle"></i> [[${mensajeAdvertencia}]]
+    </div>
+
+    <div class="page-header">
+      <h1><i class="fas fa-users"></i> Mis Equipos</h1>
+
+      <a th:href="@{/equipo/invitar}" class="btn btn-primary">
+        <i class="fas fa-plus"></i> Crear Nuevo Equipo
+      </a>
+    </div>
+
+    <section th:if="${solicitudesPendientes != null and not #lists.isEmpty(solicitudesPendientes)}"
+             style="margin-bottom: 3rem;">
+      <h2 class="section-title"><i class="fas fa-bell"></i> Solicitudes Recibidas</h2>
+      <div class="solicitud-list">
+        <div th:each="solicitud : ${solicitudesPendientes}" class="solicitud-item">
+          <div class="solicitud-info">
+            <div class="solicitud-header" th:text="'Invitación para unirte a: ' + ${solicitud.nombreEquipo}"></div>
+            <div class="solicitud-player" th:text="'Enviada por: ' + ${solicitud.jugador1.individuo.nombre} + ' ' + ${solicitud.jugador1.individuo.apellido} + ' (@' + ${solicitud.jugador1.nombreUsuario} + ')'"></div>
+          </div>
+          <div class="solicitud-actions">
+            <form th:action="@{/equipo/solicitud/{idSolicitud}/aceptar(idSolicitud=${solicitud.id_solicitud})}" method="post">
+              <button type="submit" class="btn btn-success" style="padding: 0.5rem 1rem;">
+                <i class="fas fa-check"></i> Aceptar
+              </button>
+            </form>
+            <form th:action="@{/equipo/solicitud/{idSolicitud}/rechazar(idSolicitud=${solicitud.id_solicitud})}" method="post">
+              <button type="submit" class="btn btn-reject" style="padding: 0.5rem 1rem;">
+                <i class="fas fa-times"></i> Rechazar
+              </button>
+            </form>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <h2 class="section-title"><i class="fas fa-futbol"></i> Equipos Creados</h2>
+
+    <div th:if="${misEquipos != null and not #lists.isEmpty(misEquipos)}"
+         class="grid-container"
+         style="grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));">
+
+      <div th:each="equipo : ${misEquipos}" class="card">
+        <div class="team-header">
+          <span class="team-name" th:text="${equipo.nombreEquipo}">Nombre del Equipo</span>
+          <i class="fas fa-users" style="color: var(--color-primary);"></i>
+        </div>
+
+        <ul class="team-member-list">
+          <li class="team-member-item">
+            <i class="fas fa-user-circle"></i>
+            <span th:text="${equipo.jugador1.individuo.nombre + ' ' + equipo.jugador1.individuo.apellido} + ' (@' + ${equipo.jugador1.nombreUsuario} + ')'">Jugador 1</span>
+            <span th:if="${equipo.jugador1.id_usuario == usuarioActual.id_usuario}" style="font-style: italic;"> (Tú)</span>
+          </li>
+
+          <li class="team-member-item">
+            <i class="fas fa-user-circle"></i>
+            <span th:text="${equipo.jugador2.individuo.nombre + ' ' + equipo.jugador2.individuo.apellido} + ' (@' + ${equipo.jugador2.nombreUsuario} + ')'">Jugador 2</span>
+            <span th:if="${equipo.jugador2.id_usuario == usuarioActual.id_usuario}" style="font-style: italic;"> (Tú)</span>
+          </li>
+        </ul>
+
+        <div class="card-actions">
+          <a th:href="@{/equipo/{idEquipo}(idEquipo=${equipo.id_equipo})}" class="btn btn-view">
+            <i class="fas fa-eye"></i> Ver Detalles
+          </a>
+
+          <form th:action="@{/equipo/{idEquipo}/eliminar(idEquipo=${equipo.id_equipo})}" method="post">
+            <button type="submit" class="btn btn-danger"
+                    onclick="return confirm('¿Estás seguro de que deseas disolver el equipo \'' + this.form.parentElement.parentElement.querySelector('.team-name').textContent + '\'? Esta acción no se puede deshacer.');">
+              <i class="fas fa-trash"></i> Disolver
+            </button>
+          </form>
+        </div>
+      </div>
+    </div>
+
+    <div th:unless="${misEquipos != null and not #lists.isEmpty(misEquipos)}"
+         class="alert-message" style="background-color: #f0f0f0; color: var(--color-text-light); border: 1px solid #ccc;">
+      <i class="fas fa-info-circle"></i> Aún no formas parte de ningún equipo. ¡Crea uno con el botón de arriba!
+    </div>
+
+    <section th:if="${solicitudesEnviadas != null and not #lists.isEmpty(solicitudesEnviadas)}"
+             style="margin-top: 3rem;">
+      <h2 class="section-title"><i class="fas fa-history"></i> Solicitudes Enviadas</h2>
+      <div class="solicitud-list">
+        <div th:each="solicitud : ${solicitudesEnviadas}" class="solicitud-item">
+          <div class="solicitud-info">
+            <div class="solicitud-header" th:text="'Equipo: ' + ${solicitud.nombreEquipo} + ' (Pendiente)'"></div>
+            <div class="solicitud-player" th:text="'Enviada a: ' + ${solicitud.jugador2.individuo.nombre} + ' ' + ${solicitud.jugador2.individuo.apellido} + ' (@' + ${solicitud.jugador2.nombreUsuario} + ')'"></div>
+          </div>
+          <div class="solicitud-actions">
+            <form th:action="@{/equipo/solicitud/{idSolicitud}/cancelar(idSolicitud=${solicitud.id_solicitud})}" method="post">
+              <button type="submit" class="btn btn-cancel" style="padding: 0.5rem 1rem;">
+                <i class="fas fa-ban"></i> Cancelar Solicitud
+              </button>
+            </form>
+          </div>
+        </div>
+      </div>
+    </section>
+
+  </main>
+</div>
+</body>
+</html>
