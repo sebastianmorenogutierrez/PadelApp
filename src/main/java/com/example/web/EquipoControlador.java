@@ -58,11 +58,11 @@ public class EquipoControlador {
             model.addAttribute("solicitudesEnviadas", solicitudesEnviadas);
             model.addAttribute("usuarioActual", usuarioActual);
 
-            return "equipo";
+            return "equipo-crear";
         } catch (Exception e) {
             System.err.println("Error al cargar equipos: " + e.getMessage());
             model.addAttribute("mensajeError", "Error al cargar la información de equipos.");
-            return "equipo";
+            return "equipo-crear";
         }
     }
 
@@ -77,7 +77,6 @@ public class EquipoControlador {
     @GetMapping("/crear")
     public String mostrarFormularioCrearEquipo(Model model, Authentication auth) {
 
-        // 🔴 DEBUG 1: ¿Cuántos usuarios trae el DAO/Servicio? (DEBE SER 37)
         List<Usuario> todosLosUsuarios = usuarioServicio.listarTodos();
         System.out.println("DEBUG DAO: Usuarios totales traídos por listarTodos(): " + todosLosUsuarios.size());
 
