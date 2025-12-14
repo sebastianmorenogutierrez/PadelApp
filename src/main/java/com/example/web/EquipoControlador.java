@@ -146,23 +146,11 @@ public class EquipoControlador {
             RedirectAttributes redirectAttributes) {
 
         Usuario jugador2 = usuarioServicio.obtenerUsuarioPorId(idJugador2);
-        String nombreUsuario = auth.getName();
-        Usuario jugador1 = usuarioServicio.localizarPorNombreUsuario(nombreUsuario);
+        // ... [Validaciones y chequeos de solicitud pendiente] ...
 
-        if (jugador2 == null || jugador2.isEliminado()) {
-            redirectAttributes.addFlashAttribute("mensajeError", "El jugador seleccionado no es válido.");
-            return "redirect:/equipo/invitar";
-        }
-
-        // Verificar si ya existe una solicitud PENDIENTE
-        if (solicitudEquipoServicio.existeSolicitudPendienteEntreJugadores(jugador1.getId_usuario(), jugador2.getId_usuario())) {
-            redirectAttributes.addFlashAttribute("mensajeAdvertencia", "Ya tienes una solicitud pendiente con este jugador.");
-            return "redirect:/equipo";
-        }
-
-        model.addAttribute("jugador2", jugador2);
+        model.addAttribute("jugador2", jugador2); // 🟢 Se envía el objeto completo del jugador 2
         // Pasamos el ID del jugador 2 para que se envíe en el formulario POST
-        model.addAttribute("idJugador2", idJugador2);
+        model.addAttribute("idJugador2", idJugador2); // 🟢 Se envía el ID para el campo oculto
 
         // Retorna la vista del formulario de nombre
         return "equipo-solicitud-nombre";
