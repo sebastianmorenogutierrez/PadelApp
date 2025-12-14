@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>Invitar Jugador - PadelApp</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style th:replace="~{equipo-crear :: style}"></style>
+</head>
+<body>
+<div class="container">
+    <nav class="sidebar">
+        <div class="logo">
+            <h2><i class="fas fa-trophy"></i> PadelApp</h2>
+        </div>
+
+        <div class="menu-section-title">Navegación Principal</div>
+        <a th:href="@{/indice}" class="menu-item">
+            <i class="fas fa-home"></i> Inicio
+        </a>
+
+        <div class="menu-section-title" style="margin-top: 2rem;">Gestión Principal</div>
+        <a th:href="@{/partido}" class="menu-item">
+            <i class="fas fa-gamepad"></i> Partidos
+        </a>
+        <a th:href="@{/equipo}" class="menu-item active">
+            <i class="fas fa-users"></i> Equipos
+        </a>
+        <a th:href="@{/torneo}" class="menu-item">
+            <i class="fas fa-trophy"></i> Torneos
+        </a>
+        <a th:href="@{/jugadores}" class="menu-item">
+            <i class="fas fa-user-friends"></i> Jugadores
+        </a>
+
+        <div class="menu-section-title" style="margin-top: 2rem;">Usuario & Datos</div>
+        <a th:href="@{/datos}" class="menu-item">
+            <i class="fas fa-user-cog"></i> Mi Perfil
+        </a>
+        <a th:href="@{/exportarExcel}" class="menu-item accent">
+            <i class="fas fa-file-excel"></i> Exportar Excel
+        </a>
+
+        <form th:action="@{/logout}" method="post" style="margin: 2rem 0 0 0;">
+            <a href="#" onclick="this.parentNode.submit()" class="menu-item danger">
+                <i class="fas fa-sign-out-alt"></i> Cerrar Sesión
+            </a>
+        </form>
+    </nav>
+
+    <main class="main-content">
+        <div class="form-container">
+            <div class="form-header">
+                <h1><i class="fas fa-user-plus"></i> Selecciona un Compañero</h1>
+                <p>Elige un jugador disponible para iniciar el proceso de creación de equipo.</p>
+            </div>
+
+            <div class="search-box">
+                <i class="fas fa-search"></i>
+                <input
+                        type="text"
+                        id="buscarJugador"
+                        class="form-control"
+                        placeholder="Buscar jugador por nombre o usuario..."
+                        onkeyup="filtrarJugadores()">
+            </div>
+
+            <div class="player-select-container" id="listaJugadores">
+
+                <div th:if="${jugadores != null and not #lists.isEmpty(jugadores)}">
+
+                    <div th:each="jugador : ${jugadores}"
+                         class="player-option"
+                         th:attr="data-nombre=${jugador.individuo.nombre + ' ' + jugador.individuo.apellido}, data-username=${jugador.nombreUsuario}">
+                        <div class="player-avatar"
+                             th:text="${#strings.substring(jugador.individuo.nombre, 0, 1)}">J</div>
+                        <div class="player-info">
+                            <div class="player-name"
+                                 th:text="${jugador.individuo.nombre + ' ' + jugador.individuo.apellido}">
+                                Nombre Jugador
+                            </div>
+                            <div class="player-username"
+                                 th:text="'@' + ${jugador.nombreUsuario}">
+                                @username
+                            </div>
+                        </div>
+                        <a th:href="@{/equipo/solicitud/{idJugador2}/nombre(idJugador2=${jugador.id_usuario})}"
+                           class="btn btn-primary" style="padding: 0.5rem 1rem; margin: 0; font-size: 0.9rem;">
+                            <i class="fas fa-paper-plane"></i> Seleccionar
+                        </a>
+                    </div>
+                </div>
+
+                <div th:unless="${jugadores != null and not #lists.isEmpty(jugadores)}"
+                     class="no-players">
+                    <i class="fas fa-user-slash"></i>
+                    <h4>No hay jugadores disponibles</h4>
+                    <p>Todos los demás jugadores ya tienen equipo o no pueden ser invitados.</p>
+                </div>
+            </div>
+
+        </div>
+    </main>
+</div>
+
+<script>
+    // Reutilizamos la función de filtrado del código original
+    function filtrarJugadores() {
+        const input = document.getElementById('buscarJugador');
+        const filter = input.value.toLowerCase();
+        // Usamos .player-option como contenedor de datos
+        const jugadores = document.querySelectorAll('.player-option');
+
+        jugadores.forEach(jugador => {
+            const nombre = jugador.getAttribute('data-nombre').toLowerCase();
+            const username = jugador.getAttribute('data-username').toLowerCase();
+
+            if (nombre.includes(filter) || username.includes(filter)) {
+                jugador.style.display = 'flex';
+            } else {
+                jugador.style.display = 'none';
+            }
+        });
+    }
+</script>
+</body>
+</html>
