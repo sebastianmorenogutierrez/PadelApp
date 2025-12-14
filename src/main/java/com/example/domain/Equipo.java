@@ -17,6 +17,7 @@ public class Equipo implements Serializable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "id_equipo")
     private Long idEquipo;
 
     @NotBlank(message = "El nombre del equipo es obligatorio")
@@ -25,10 +26,12 @@ public class Equipo implements Serializable {
     private String nombreEquipo;
 
     @ManyToOne(fetch = FetchType.EAGER)
+    // Mantengo 'id_jugador1' asumiendo que es el nombre de columna correcto en tu tabla 'equipos'
     @JoinColumn(name = "id_jugador1", nullable = false)
     private Usuario jugador1;
 
     @ManyToOne(fetch = FetchType.EAGER)
+    // Mantengo 'id_jugador2' asumiendo que es el nombre de columna correcto en tu tabla 'equipos'
     @JoinColumn(name = "id_jugador2", nullable = false)
     private Usuario jugador2;
 
@@ -64,19 +67,11 @@ public class Equipo implements Serializable {
         this.estado = "ACTIVO";
         this.fechaCreacion = LocalDateTime.now();
     }
-
-    /**
-     * Verifica si el usuario es miembro del equipo. El ID del usuario es de tipo Integer.
-     */
-    public boolean esMiembro(Integer idUsuario) { // ⬅️ CORREGIDO: De Long a Integer
+    public boolean esMiembro(Integer idUsuario) {
         return (jugador1 != null && jugador1.getId_usuario() != null && jugador1.getId_usuario().equals(idUsuario)) ||
                 (jugador2 != null && jugador2.getId_usuario() != null && jugador2.getId_usuario().equals(idUsuario));
     }
-
-    /**
-     * Obtiene el compañero de equipo. El ID del usuario es de tipo Integer.
-     */
-    public Usuario obtenerCompanero(Integer idUsuario) { // ⬅️ CORREGIDO: De Long a Integer
+    public Usuario obtenerCompanero(Integer idUsuario) {
         if (jugador1 != null && jugador1.getId_usuario() != null && jugador1.getId_usuario().equals(idUsuario)) {
             return jugador2;
         } else if (jugador2 != null && jugador2.getId_usuario() != null && jugador2.getId_usuario().equals(idUsuario)) {
