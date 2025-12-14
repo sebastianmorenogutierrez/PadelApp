@@ -23,8 +23,9 @@ public class Usuario implements Serializable {
     @JoinColumn(name = "id_perfil", referencedColumnName = "id_perfil")
     private Perfil perfil;
 
-    // 🟢 CAMBIO CRÍTICO: Forzar EAGER para garantizar que Individuo se carga con Usuario
-    @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    // 🟢 CAMBIO CRÍTICO APLICADO: Se usa @ManyToOne en lugar de @OneToOne
+    // Esto es más estable para la clave foránea en la tabla "usuario".
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "id_individuo", referencedColumnName = "id_individuo")
     private Individuo individuo;
 

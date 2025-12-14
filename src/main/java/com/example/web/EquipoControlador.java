@@ -72,10 +72,15 @@ public class EquipoControlador {
 
     // ARVHIVO: com.example.web.EquipoControlador.java
 
+    // ARVHIVO: com.example.web.EquipoControlador.java (Diagnóstico Final)
+
     @GetMapping("/crear")
     public String mostrarFormularioCrearEquipo(Model model, Authentication auth) {
 
+        // 🔴 DEBUG 1: ¿Cuántos usuarios trae el DAO/Servicio? (DEBE SER 37)
         List<Usuario> todosLosUsuarios = usuarioServicio.listarTodos();
+        System.out.println("DEBUG DAO: Usuarios totales traídos por listarTodos(): " + todosLosUsuarios.size());
+
         String nombreUsuario = auth.getName();
         Usuario usuarioActual = usuarioServicio.localizarPorNombreUsuario(nombreUsuario);
 
@@ -85,12 +90,19 @@ public class EquipoControlador {
                 .filter(u -> {
 
                     boolean esUsuarioActual = u.getId_usuario().equals(usuarioActual.getId_usuario());
-
                     boolean yaTieneEquipo = idsJugadoresConEquipo.contains(u.getId_usuario());
 
-                    return !esUsuarioActual && !yaTieneEquipo;
+                    // 🔴 DEBUG 2: Reintroducimos la verificación de Individuo SOLO en el log.
+                    if (u.getIndividuo() == null && !esUsuarioActual) {
+                        System.out.println("DEBUG FILTRO: Usuario ID " + u.getId_usuario() + " excluido por Individuo NULO.");
+                    }
+
+                    return !esUsuarioActual && !yaTieneEquipo && u.getIndividuo() != null; // ⬅️ DEBEMOS VOLVER A PONER ESTE FILTRO
                 })
                 .collect(Collectors.toList());
+
+        // 🔴 DEBUG 3: ¿Cuántos usuarios quedan al final? (DEBE SER 36)
+        System.out.println("DEBUG FILTRO: Usuarios restantes (después de excluir filtros): " + jugadoresDisponibles.size());
 
         model.addAttribute("equipo", new Equipo());
         model.addAttribute("jugadoresDisponibles", jugadoresDisponibles);
