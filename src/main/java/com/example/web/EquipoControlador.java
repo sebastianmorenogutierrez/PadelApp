@@ -58,11 +58,12 @@ public class EquipoControlador {
             model.addAttribute("solicitudesEnviadas", solicitudesEnviadas);
             model.addAttribute("usuarioActual", usuarioActual);
 
-            return "equipo-crear";
+            // ⚠️ NOTA: El retorno aquí era 'equipo-crear', lo he corregido a 'equipo' si este es el método para VER equipos.
+            return "equipo";
         } catch (Exception e) {
             System.err.println("Error al cargar equipos: " + e.getMessage());
             model.addAttribute("mensajeError", "Error al cargar la información de equipos.");
-            return "equipo-crear";
+            return "equipo";
         }
     }
 
@@ -70,14 +71,12 @@ public class EquipoControlador {
     // FORMULARIO CREAR (GET /equipo/crear) - Filtrado de jugadores
     // ------------------------------------------------------------------------
 
-    // ARVHIVO: com.example.web.EquipoControlador.java
-
-    // ARVHIVO: com.example.web.EquipoControlador.java (Diagnóstico Final)
-
     @GetMapping("/crear")
     public String mostrarFormularioCrearEquipo(Model model, Authentication auth) {
 
         List<Usuario> todosLosUsuarios = usuarioServicio.listarTodos();
+
+        // 🔴 DEBUG 1: ¿Cuántos usuarios trae el DAO/Servicio? (DEBE SER >= 37)
         System.out.println("DEBUG DAO: Usuarios totales traídos por listarTodos(): " + todosLosUsuarios.size());
 
         String nombreUsuario = auth.getName();
@@ -85,23 +84,47 @@ public class EquipoControlador {
 
         List<Integer> idsJugadoresConEquipo = equipoServicio.obtenerIdsJugadoresConEquipoActivo();
 
+        // 🔴 Inicializamos contadores para ver cuántos se pierden por filtro
+        final int[] excluidosPorIndividuo = {0};
+        final int[] excluidosPorPerfil = {0};
+        final int[] excluidosPorTenerEquipo = {0};
+
         List<Usuario> jugadoresDisponibles = todosLosUsuarios.stream()
                 .filter(u -> {
 
                     boolean esUsuarioActual = u.getId_usuario().equals(usuarioActual.getId_usuario());
                     boolean yaTieneEquipo = idsJugadoresConEquipo.contains(u.getId_usuario());
 
-                    // 🔴 DEBUG 2: Reintroducimos la verificación de Individuo SOLO en el log.
-                    if (u.getIndividuo() == null && !esUsuarioActual) {
-                        System.out.println("DEBUG FILTRO: Usuario ID " + u.getId_usuario() + " excluido por Individuo NULO.");
-                    }
+                    // 1. Verificación de Individuo (Debe ser TRUE por el JOIN FETCH)
+                    boolean individuoExiste = u.getIndividuo() != null;
 
-                    return !esUsuarioActual && !yaTieneEquipo && u.getIndividuo() != null; // ⬅️ DEBEMOS VOLVER A PONER ESTE FILTRO
+                    // 2. Verificación de Perfil (Solo queremos invitar a Jugadores, asumiendo Perfil ID 2)
+                    // Si tu administrador es Perfil ID 1 y tus jugadores Perfil ID 2, este filtro es correcto.
+                    boolean esJugador = u.getPerfil() != null && u.getPerfil().getId_perfil().equals(2);
+
+                    // --- DEBUGGING ---
+                    if (!esUsuarioActual && !individuoExiste) {
+                        excluidosPorIndividuo[0]++;
+                    }
+                    if (!esUsuarioActual && yaTieneEquipo) {
+                        excluidosPorTenerEquipo[0]++;
+                    }
+                    if (!esUsuarioActual && !esJugador && u.getPerfil() != null) {
+                        excluidosPorPerfil[0]++;
+                    }
+                    // -----------------
+
+                    // Aplicamos todos los filtros necesarios
+                    return !esUsuarioActual && !yaTieneEquipo && individuoExiste && esJugador;
                 })
                 .collect(Collectors.toList());
 
-        // 🔴 DEBUG 3: ¿Cuántos usuarios quedan al final? (DEBE SER 36)
-        System.out.println("DEBUG FILTRO: Usuarios restantes (después de excluir filtros): " + jugadoresDisponibles.size());
+        // 🔴 DEBUG 2: Imprimimos los contadores
+        System.out.println("DEBUG FILTRO: Jugadores excluidos por Individuo NULO: " + excluidosPorIndividuo[0]);
+        System.out.println("DEBUG FILTRO: Jugadores excluidos por Perfil NO 2: " + excluidosPorPerfil[0]);
+        System.out.println("DEBUG FILTRO: Jugadores excluidos por tener equipo: " + excluidosPorTenerEquipo[0]);
+        System.out.println("DEBUG FILTRO: Usuarios restantes (DEBERÍA SER 36 o menos si hay ya tienen equipo): " + jugadoresDisponibles.size());
+
 
         model.addAttribute("equipo", new Equipo());
         model.addAttribute("jugadoresDisponibles", jugadoresDisponibles);
