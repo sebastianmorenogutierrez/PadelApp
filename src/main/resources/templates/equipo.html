@@ -351,33 +351,23 @@
       <div class="solicitud-list">
         <div th:each="solicitud : ${solicitudesPendientes}" class="solicitud-item"
              style="display: flex; justify-content: space-between; align-items: center;">
-
           <div class="solicitud-info">
             <div class="solicitud-header" th:text="'Invitación para unirte a: ' + ${solicitud.nombreEquipo}"></div>
             <div class="solicitud-player" th:text="'Enviada por: ' + ${solicitud.jugador1.individuo.nombre} + ' ' + ${solicitud.jugador1.individuo.apellido} + ' (@' + ${solicitud.jugador1.nombreUsuario} + ')'"></div>
           </div>
-
-          <div th:if="${solicitud.id_solicitud != null}"
-               class="solicitud-actions"
+          <div class="solicitud-actions"
                style="border: 1px dashed red; padding: 0.25rem; min-width: 200px; justify-content: flex-end;">
-
             <form th:action="@{/equipo/solicitud/{idSolicitud}/aceptar(idSolicitud=${solicitud.id_solicitud})}" method="post">
               <button type="submit" class="btn btn-success" style="padding: 0.5rem 0.75rem; font-size: 0.85rem;">
                 <i class="fas fa-check"></i> Aceptar
               </button>
             </form>
-
             <form th:action="@{/equipo/solicitud/{idSolicitud}/rechazar(idSolicitud=${solicitud.id_solicitud})}" method="post">
               <button type="submit" class="btn btn-reject" style="padding: 0.5rem 0.75rem; font-size: 0.85rem;">
                 <i class="fas fa-times"></i> Rechazar
               </button>
             </form>
           </div>
-
-          <div th:unless="${solicitud.id_solicitud != null}" class="solicitud-actions">
-            <span style="color: red; font-weight: bold;">[ERROR: ID de Solicitud NULA]</span>
-          </div>
-
         </div>
       </div>
     </section>
