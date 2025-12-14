@@ -58,7 +58,6 @@ public class EquipoControlador {
             model.addAttribute("solicitudesEnviadas", solicitudesEnviadas);
             model.addAttribute("usuarioActual", usuarioActual);
 
-            // ⚠️ NOTA: El retorno aquí era 'equipo-crear', lo he corregido a 'equipo' si este es el método para VER equipos.
             return "equipo";
         } catch (Exception e) {
             System.err.println("Error al cargar equipos: " + e.getMessage());
@@ -98,9 +97,9 @@ public class EquipoControlador {
                     // 1. Verificación de Individuo (Debe ser TRUE por el JOIN FETCH)
                     boolean individuoExiste = u.getIndividuo() != null;
 
-                    // 2. Verificación de Perfil (Solo queremos invitar a Jugadores, asumiendo Perfil ID 2)
-                    // Si tu administrador es Perfil ID 1 y tus jugadores Perfil ID 2, este filtro es correcto.
-                    boolean esJugador = u.getPerfil() != null && u.getPerfil().getId_perfil().equals(2);
+                    // 🟢 CORRECCIÓN FINAL: Excluimos solo al Administrador (asumiendo Perfil ID 1)
+                    // Esto evita problemas si el Perfil de Jugador no es ID 2.
+                    boolean esJugador = u.getPerfil() != null && !u.getPerfil().getId_perfil().equals(1);
 
                     // --- DEBUGGING ---
                     if (!esUsuarioActual && !individuoExiste) {
@@ -121,7 +120,7 @@ public class EquipoControlador {
 
         // 🔴 DEBUG 2: Imprimimos los contadores
         System.out.println("DEBUG FILTRO: Jugadores excluidos por Individuo NULO: " + excluidosPorIndividuo[0]);
-        System.out.println("DEBUG FILTRO: Jugadores excluidos por Perfil NO 2: " + excluidosPorPerfil[0]);
+        System.out.println("DEBUG FILTRO: Jugadores excluidos por Perfil NO Jugador (ID 1): " + excluidosPorPerfil[0]);
         System.out.println("DEBUG FILTRO: Jugadores excluidos por tener equipo: " + excluidosPorTenerEquipo[0]);
         System.out.println("DEBUG FILTRO: Usuarios restantes (DEBERÍA SER 36 o menos si hay ya tienen equipo): " + jugadoresDisponibles.size());
 
