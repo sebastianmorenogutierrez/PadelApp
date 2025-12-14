@@ -5,9 +5,8 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Gestión de Equipos - PadelApp</title>
   <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
-
   <style>
-    /* [INICIO DE ESTILOS CSS BASE] */
+    /* [ESTILOS OMITIDOS POR BREVEDAD] */
     :root {
         --color-primary: #00b894;
         --color-primary-dark: #00a383;
@@ -333,7 +332,8 @@
     <div th:if="${mensajeError}" class="alert-message alert-error">
       <i class="fas fa-exclamation-triangle"></i> [[${mensajeError}]]
     </div>
-    <div th:if="${mensajeAdvertencia}" class="alert-message" style="background-color: #ffeaa7; color: #d63031; border: 1px solid #fab1a0;">
+    <div th:if="${mensajeAdvertencia}" class="alert-message"
+         style="background-color: #ffeaa7; color: #d63031; border: 1px solid #fab1a0;">
       <i class="fas fa-exclamation-circle"></i> [[${mensajeAdvertencia}]]
     </div>
 
@@ -353,30 +353,36 @@
              style="display: flex; justify-content: space-between; align-items: center;">
 
           <div class="solicitud-info">
-            <div class="solicitud-header" th:text="'Invitación para unirte a: ' + ${solicitud.nombreEquipo}"></div>
-            <div class="solicitud-player" th:text="'Enviada por: ' + ${solicitud.jugador1.individuo.nombre} + ' ' + ${solicitud.jugador1.individuo.apellido} + ' (@' + ${solicitud.jugador1.nombreUsuario} + ')'"></div>
+            <div class="solicitud-header"
+                 th:text="'Invitación para unirte a: ' + ${solicitud.nombreEquipo}"></div>
+            <div class="solicitud-player"
+                 th:text="'Enviada por: ' + ${solicitud.jugador1.individuo.nombre} + ' ' + ${solicitud.jugador1.individuo.apellido} + ' (@' + ${solicitud.jugador1.nombreUsuario} + ')'"></div>
           </div>
 
-          <div th:if="${solicitud.id_solicitud != null}"
+          <div th:if="${solicitud.idSolicitud != null}"
                class="solicitud-actions"
-               style="border: 1px dashed red; padding: 0.25rem; min-width: 200px; justify-content: flex-end;">
+               style="border: 1px dashed green; padding: 0.25rem; min-width: 200px; justify-content: flex-end;">
 
-            <form th:action="@{/equipo/solicitud/{idSolicitud}/aceptar(idSolicitud=${solicitud.id_solicitud})}" method="post">
-              <button type="submit" class="btn btn-success" style="padding: 0.5rem 0.75rem; font-size: 0.85rem;">
+            <form th:action="@{/equipo/solicitud/{idSolicitud}/aceptar(idSolicitud=${solicitud.idSolicitud})}"
+                  method="post">
+              <button type="submit" class="btn btn-success"
+                      style="padding: 0.5rem 0.75rem; font-size: 0.85rem;">
                 <i class="fas fa-check"></i> Aceptar
               </button>
             </form>
 
-            <form th:action="@{/equipo/solicitud/{idSolicitud}/rechazar(idSolicitud=${solicitud.id_solicitud})}" method="post">
-              <button type="submit" class="btn btn-reject" style="padding: 0.5rem 0.75rem; font-size: 0.85rem;">
+            <form th:action="@{/equipo/solicitud/{idSolicitud}/rechazar(idSolicitud=${solicitud.idSolicitud})}"
+                  method="post">
+              <button type="submit" class="btn btn-reject"
+                      style="padding: 0.5rem 0.75rem; font-size: 0.85rem;">
                 <i class="fas fa-times"></i> Rechazar
               </button>
             </form>
           </div>
 
-          <div th:unless="${solicitud.id_solicitud != null}"
+          <div th:unless="${solicitud.idSolicitud != null}"
                style="color: white; background-color: var(--color-danger); padding: 0.5rem; border-radius: 4px; font-weight: bold;">
-            ¡ERROR! ID NULA. Revisar Entidad/Servicio.
+            ¡ERROR! ID Solicitud NULA. Revisar Entidad/Servicio.
           </div>
 
         </div>
@@ -399,13 +405,15 @@
           <li class="team-member-item">
             <i class="fas fa-user-circle"></i>
             <span th:text="${equipo.jugador1.individuo.nombre + ' ' + equipo.jugador1.individuo.apellido} + ' (@' + ${equipo.jugador1.nombreUsuario} + ')'">Jugador 1</span>
-            <span th:if="${equipo.jugador1.id_usuario == usuarioActual.id_usuario}" style="font-style: italic;"> (Tú)</span>
+            <span th:if="${equipo.jugador1.id_usuario == usuarioActual.id_usuario}"
+                  style="font-style: italic;"> (Tú)</span>
           </li>
 
           <li class="team-member-item">
             <i class="fas fa-user-circle"></i>
             <span th:text="${equipo.jugador2.individuo.nombre + ' ' + equipo.jugador2.individuo.apellido} + ' (@' + ${equipo.jugador2.nombreUsuario} + ')'">Jugador 2</span>
-            <span th:if="${equipo.jugador2.id_usuario == usuarioActual.id_usuario}" style="font-style: italic;"> (Tú)</span>
+            <span th:if="${equipo.jugador2.id_usuario == usuarioActual.id_usuario}"
+                  style="font-style: italic;"> (Tú)</span>
           </li>
         </ul>
 
@@ -425,7 +433,8 @@
     </div>
 
     <div th:unless="${misEquipos != null and not #lists.isEmpty(misEquipos)}"
-         class="alert-message" style="background-color: #f0f0f0; color: var(--color-text-light); border: 1px solid #ccc;">
+         class="alert-message"
+         style="background-color: #f0f0f0; color: var(--color-text-light); border: 1px solid #ccc;">
       <i class="fas fa-info-circle"></i> Aún no formas parte de ningún equipo. ¡Crea uno con el botón de arriba!
     </div>
 
@@ -435,11 +444,14 @@
       <div class="solicitud-list">
         <div th:each="solicitud : ${solicitudesEnviadas}" class="solicitud-item">
           <div class="solicitud-info">
-            <div class="solicitud-header" th:text="'Equipo: ' + ${solicitud.nombreEquipo} + ' (Pendiente)'"></div>
-            <div class="solicitud-player" th:text="'Enviada a: ' + ${solicitud.jugador2.individuo.nombre} + ' ' + ${solicitud.jugador2.individuo.apellido} + ' (@' + ${solicitud.jugador2.nombreUsuario} + ')'"></div>
+            <div class="solicitud-header"
+                 th:text="'Equipo: ' + ${solicitud.nombreEquipo} + ' (Pendiente)'"></div>
+            <div class="solicitud-player"
+                 th:text="'Enviada a: ' + ${solicitud.jugador2.individuo.nombre} + ' ' + ${solicitud.jugador2.individuo.apellido} + ' (@' + ${solicitud.jugador2.nombreUsuario} + ')'"></div>
           </div>
           <div class="solicitud-actions">
-            <form th:action="@{/equipo/solicitud/{idSolicitud}/cancelar(idSolicitud=${solicitud.id_solicitud})}" method="post">
+            <form th:action="@{/equipo/solicitud/{idSolicitud}/cancelar(idSolicitud=${solicitud.idSolicitud})}"
+                  method="post">
               <button type="submit" class="btn btn-cancel" style="padding: 0.5rem 1rem;">
                 <i class="fas fa-ban"></i> Cancelar Solicitud
               </button>
