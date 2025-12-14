@@ -29,7 +29,6 @@ public class UsuarioServicio {
     @Autowired
     private PasswordEncoder passwordEncoder;
 
-    // --- Métodos de Localización y Obtención de Usuario ---
 
     public Usuario obtenerUsuarioActual() {
         Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
@@ -52,10 +51,6 @@ public class UsuarioServicio {
         String nombrePerfil = usuario.getPerfil().getDescripcion_perfil();
         return "ROLE_ADMINISTRADOR".equalsIgnoreCase(nombrePerfil);
     }
-
-    /** * 🟢 NUEVO: Localiza un usuario por su ID, aceptando Long (para el controlador)
-     * y convirtiendo a Integer (para el DAO).
-     */
     public Usuario obtenerUsuarioPorId(Long idUsuario) {
         if (idUsuario == null) {
             return null;
@@ -65,7 +60,6 @@ public class UsuarioServicio {
         return usuarioDao.findById(idInt).orElse(null);
     }
 
-    // El método encontrarPorId que acepta Integer es redundante si se usa el anterior, pero lo dejamos si quieres mantenerlo.
     public Usuario encontrarPorId(Integer idUsuario) {
         return usuarioDao.findById(idUsuario).orElse(null);
     }
@@ -82,15 +76,11 @@ public class UsuarioServicio {
             return null;
         }
     }
-
-    // 🟢 CORRECCIÓN: Se añade @Transactional(readOnly = true) para asegurar que la
-    // sesión de JPA esté activa y cargue la relación EAGER 'individuo'.
     @Transactional(readOnly = true)
     public List<Usuario> listarTodos() {
-        return usuarioDao.findAll();
+        return usuarioDao.findByEliminadoFalse();
     }
 
-    // --- Métodos Transaccionales de Escritura ---
 
     @Transactional
     public void registrarNuevoUsuario(Usuario usuario) {
