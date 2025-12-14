@@ -83,6 +83,9 @@ public class UsuarioServicio {
         }
     }
 
+    // 🟢 CORRECCIÓN: Se añade @Transactional(readOnly = true) para asegurar que la
+    // sesión de JPA esté activa y cargue la relación EAGER 'individuo'.
+    @Transactional(readOnly = true)
     public List<Usuario> listarTodos() {
         return usuarioDao.findAll();
     }
