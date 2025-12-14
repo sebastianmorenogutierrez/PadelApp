@@ -70,28 +70,41 @@ public class EquipoControlador {
     // FORMULARIO CREAR (GET /equipo/crear) - Filtrado de jugadores
     // ------------------------------------------------------------------------
 
+    // ARVHIVO: com.example.web.EquipoControlador.java
+
     @GetMapping("/crear")
     public String mostrarFormularioCrearEquipo(Model model, Authentication auth) {
+
+        // Paso 0a: Traer TODOS los usuarios (REQUIERE EAGER y @Transactional)
+        List<Usuario> todosLosUsuarios = usuarioServicio.listarTodos();
+
+        // 🔴 DEBUG 1: ¿Cuántos usuarios trae el DAO?
+        System.out.println("DEBUG DAO: Usuarios totales traídos por listarTodos(): " + todosLosUsuarios.size());
+
         String nombreUsuario = auth.getName();
         Usuario usuarioActual = usuarioServicio.localizarPorNombreUsuario(nombreUsuario);
 
-        // PASO 1: Obtener IDs de jugadores ya en un equipo activo
-        // Aunque ya no lo usaremos para filtrar, mantenemos la llamada por si la usas en el futuro.
-        // List<Integer> idsJugadoresConEquipo = equipoServicio.obtenerIdsJugadoresConEquipoActivo();
+        // PASO 1: Obtener IDs de jugadores ya en un equipo activo (aún vacía)
+        List<Integer> idsJugadoresConEquipo = equipoServicio.obtenerIdsJugadoresConEquipoActivo();
 
         // PASO 2: Filtrar la lista
-        List<Usuario> jugadoresDisponibles = usuarioServicio.listarTodos()
-                .stream()
-                .filter(u -> !u.isEliminado()
-                                && u.getIndividuo() != null
-                                && !u.getIndividuo().isEliminado()
-                                // 1. Excluir al usuario actual
-                                && !u.getId_usuario().equals(usuarioActual.getId_usuario())
-                        // 2. Excluir a los jugadores que ya tienen un equipo activo
-                        // HEMOS COMENTADO ESTA LÍNEA para que muestre a todos:
-                        // && !idsJugadoresConEquipo.contains(u.getId_usuario())
-                )
+        List<Usuario> jugadoresDisponibles = todosLosUsuarios.stream()
+                .filter(u -> {
+
+                    boolean esUsuarioActual = u.getId_usuario().equals(usuarioActual.getId_usuario());
+
+                    // 2. Excluir a los que tienen equipo activo
+                    boolean yaTieneEquipo = idsJugadoresConEquipo.contains(u.getId_usuario());
+
+                    // 3. Verificamos que Individuo NO es NULL (debe pasar con EAGER y Transactional)
+                    boolean individuoExiste = u.getIndividuo() != null;
+
+                    // Retornamos true si NO es el usuario actual Y NO tiene equipo Y el Individuo EXISTE
+                    return !esUsuarioActual && !yaTieneEquipo && individuoExiste;
+                })
                 .collect(Collectors.toList());
+
+        System.out.println("DEBUG FILTRO: Usuarios restantes (después de excluirse a sí mismo): " + jugadoresDisponibles.size());
 
         model.addAttribute("equipo", new Equipo());
         model.addAttribute("jugadoresDisponibles", jugadoresDisponibles);
