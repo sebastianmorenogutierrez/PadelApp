@@ -10,7 +10,7 @@ import java.time.LocalDateTime;
 
 @Data
 @Entity
-// CORRECCIÓN 1: El nombre de la tabla debe coincidir con el SQL
+// El nombre de la tabla debe coincidir con el SQL
 @Table(name = "solicitud_equipo")
 public class SolicitudEquipo implements Serializable {
 
@@ -18,17 +18,24 @@ public class SolicitudEquipo implements Serializable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    // CORRECCIÓN 2: Mapear el camelCase 'idSolicitud' al snake_case 'id_solicitud' de la DB
+    // Mapear el camelCase 'idSolicitud' al snake_case 'id_solicitud' de la DB
     @Column(name = "id_solicitud")
     private Long idSolicitud;
+    public Long getIdSolicitud() {
+        return idSolicitud;
+    }
+
+    public void setIdSolicitud(Long idSolicitud) {
+        this.idSolicitud = idSolicitud;
+    }
 
     @ManyToOne(fetch = FetchType.EAGER)
-    // CORRECCIÓN 3: La columna de clave foránea se llama 'jugador_invitador_id'
+    // La columna de clave foránea se llama 'jugador_invitador_id'
     @JoinColumn(name = "jugador_invitador_id", nullable = false)
     private Usuario jugador1; // Jugador que envía la invitación (Jugador Invitador)
 
     @ManyToOne(fetch = FetchType.EAGER)
-    // CORRECCIÓN 4: La columna de clave foránea se llama 'jugador_invitado_id'
+    // La columna de clave foránea se llama 'jugador_invitado_id'
     @JoinColumn(name = "jugador_invitado_id", nullable = false)
     private Usuario jugador2; // Jugador que recibe la invitación (Jugador Invitado)
 
