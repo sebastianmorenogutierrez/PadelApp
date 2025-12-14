@@ -146,17 +146,11 @@ public class EquipoControlador {
             RedirectAttributes redirectAttributes) {
 
         Usuario jugador2 = usuarioServicio.obtenerUsuarioPorId(idJugador2);
-        // ... [Validaciones y chequeos de solicitud pendiente] ...
 
-        model.addAttribute("jugador2", jugador2); // 🟢 Se envía el objeto completo del jugador 2
-        // Pasamos el ID del jugador 2 para que se envíe en el formulario POST
-        model.addAttribute("idJugador2", idJugador2); // 🟢 Se envía el ID para el campo oculto
-
-        // Retorna la vista del formulario de nombre
+        model.addAttribute("jugador2", jugador2);
+        model.addAttribute("idJugador2", idJugador2);
         return "equipo-solicitud-nombre";
     }
-
-
     // ------------------------------------------------------------------------
     // CREAR EQUIPO (POST /equipo/crear) - Enviar Solicitud (Recibe del formulario de nombre)
     // ------------------------------------------------------------------------
@@ -176,8 +170,7 @@ public class EquipoControlador {
             if (jugador2 == null || jugador2.isEliminado()) {
                 redirectAttributes.addFlashAttribute("mensajeError",
                         "El jugador seleccionado no está disponible.");
-                // Redirigir al inicio del flujo
-                return "redirect:/equipo/invitar";
+                return "redirect:/equipo";
             }
 
             Integer idJugador1 = jugador1.getId_usuario();

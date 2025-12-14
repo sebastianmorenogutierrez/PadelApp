@@ -3,8 +3,9 @@
 <head>
     <meta charset="UTF-8"/>
     <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-    <title>Crear Equipo - PadelApp</title>
+    <title th:text="'Crear Equipo con ' + ${jugador2.individuo.nombre}">Crear Equipo - PadelApp</title>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+
     <style>
         :root {
             --color-primary: #00b894;
@@ -113,7 +114,7 @@
 
         .form-container {
             width: 100%;
-            max-width: 700px;
+            max-width: 500px; /* Tamaño reducido para un formulario más simple */
             background: var(--color-white);
             border-radius: 20px;
             box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
@@ -139,6 +140,30 @@
 
         .form-header p {
             color: var(--color-text-light);
+            margin-bottom: 1.5rem;
+        }
+
+        .player-display {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 1rem;
+            padding: 1rem;
+            background: #e6f7f3; /* Fondo suave para el compañero */
+            border-radius: 10px;
+            margin-bottom: 1.5rem;
+            border: 1px solid rgba(0, 184, 148, 0.3);
+        }
+
+        .player-display .player-avatar {
+             width: 45px;
+             height: 45px;
+             font-size: 1.2rem;
+        }
+
+        .player-display .player-name {
+            font-weight: 700;
+            color: var(--color-primary-dark);
         }
 
         .form-group {
@@ -172,62 +197,6 @@
             outline: none;
             border-color: var(--color-primary);
             box-shadow: 0 0 0 3px rgba(0, 184, 148, 0.1);
-        }
-
-        .player-select-container {
-            position: relative;
-        }
-
-        .player-option {
-            display: flex;
-            align-items: center;
-            gap: 0.8rem;
-            padding: 0.8rem;
-            background: rgba(0, 184, 148, 0.05);
-            border-radius: 10px;
-            margin-bottom: 0.8rem;
-            border: 2px solid transparent;
-            cursor: pointer;
-            transition: all 0.3s ease;
-        }
-
-        .player-option:hover {
-            border-color: var(--color-primary);
-            background: rgba(0, 184, 148, 0.1);
-        }
-
-        .player-avatar {
-            width: 40px;
-            height: 40px;
-            border-radius: 50%;
-            background: var(--gradient-primary);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: white;
-            font-weight: 700;
-            flex-shrink: 0;
-        }
-
-        .player-info {
-            flex: 1;
-        }
-
-        .player-name {
-            font-weight: 600;
-            color: var(--color-text);
-        }
-
-        .player-username {
-            font-size: 0.85rem;
-            color: var(--color-text-light);
-        }
-
-        .radio-input {
-            width: 20px;
-            height: 20px;
-            cursor: pointer;
-            accent-color: var(--color-primary);
         }
 
         .form-actions {
@@ -272,34 +241,24 @@
             background: var(--color-text);
         }
 
-        .search-box {
-            position: relative;
-            margin-bottom: 1rem;
+        /* Estilos necesarios para avatar y nombre usados en .player-display */
+        .player-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: var(--gradient-primary);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: 700;
+            flex-shrink: 0;
+        }
+        .player-name {
+            font-weight: 600;
+            color: var(--color-text);
         }
 
-        .search-box input {
-            padding-left: 2.5rem;
-        }
-
-        .search-box i {
-            position: absolute;
-            left: 1rem;
-            top: 50%;
-            transform: translateY(-50%);
-            color: var(--color-text-light);
-        }
-
-        .no-players {
-            text-align: center;
-            padding: 2rem;
-            color: var(--color-text-light);
-        }
-
-        .no-players i {
-            font-size: 3rem;
-            margin-bottom: 1rem;
-            opacity: 0.5;
-        }
 
         @media (max-width: 768px) {
             .container {
@@ -373,11 +332,23 @@
     <main class="main-content">
         <div class="form-container">
             <div class="form-header">
-                <h1><i class="fas fa-users"></i> Crear Nuevo Equipo</h1>
-                <p>Invita a otro jugador para formar tu equipo de pádel</p>
+                <h1><i class="fas fa-users"></i> Finalizar Creación de Equipo</h1>
+                <p>Estás creando un equipo con:</p>
+            </div>
+
+            <div class="player-display">
+                <div class="player-avatar"
+                     th:text="${#strings.substring(jugador2.individuo.nombre, 0, 1)}">J</div>
+                <div class="player-name"
+                     th:text="${jugador2.individuo.nombre + ' ' + jugador2.individuo.apellido}">
+                    Nombre del Compañero
+                </div>
             </div>
 
             <form th:action="@{/equipo/crear}" method="post" id="formCrearEquipo">
+
+                <input type="hidden" name="idJugador2" th:value="${idJugador2}">
+
                 <div class="form-group">
                     <label for="nombreEquipo">
                         <i class="fas fa-tag"></i> Nombre del Equipo
@@ -393,52 +364,15 @@
                 </div>
 
                 <div class="form-group">
-                    <label>
-                        <i class="fas fa-user-plus"></i> Selecciona tu Compañero
+                    <label for="descripcion">
+                        <i class="fas fa-file-alt"></i> Descripción (Opcional)
                     </label>
-                    <div class="search-box">
-                        <i class="fas fa-search"></i>
-                        <input
-                                type="text"
-                                id="buscarJugador"
-                                class="form-control"
-                                placeholder="Buscar jugador por nombre..."
-                                onkeyup="filtrarJugadores()">
-                    </div>
-
-                    <div class="player-select-container" id="listaJugadores">
-                        <div th:if="${jugadoresDisponibles != null and not #lists.isEmpty(jugadoresDisponibles)}">
-                            <label th:each="jugador : ${jugadoresDisponibles}"
-                                   class="player-option"
-                                   th:attr="data-nombre=${jugador.individuo.nombre + ' ' + jugador.individuo.apellido}, data-username=${jugador.nombreUsuario}">
-                                <div class="player-avatar"
-                                     th:text="${#strings.substring(jugador.individuo.nombre, 0, 1)}">J</div>
-                                <div class="player-info">
-                                    <div class="player-name"
-                                         th:text="${jugador.individuo.nombre + ' ' + jugador.individuo.apellido}">
-                                        Nombre Jugador
-                                    </div>
-                                    <div class="player-username"
-                                         th:text="'@' + ${jugador.nombreUsuario}">
-                                        @username
-                                    </div>
-                                </div>
-                                <input
-                                        type="radio"
-                                        name="idJugador2"
-                                        th:value="${jugador.id_usuario}"
-                                        class="radio-input"
-                                        required>
-                            </label>
-                        </div>
-
-                        <div th:unless="${jugadoresDisponibles != null and not #lists.isEmpty(jugadoresDisponibles)}"
-                             class="no-players">
-                            <i class="fas fa-user-slash"></i>
-                            <h4>No hay jugadores disponibles</h4>
-                            <p>Todos los jugadores ya forman parte de tus equipos</p>
-                        </div>
-                    </div>
+                    <textarea
+                            id="descripcion"
+                            name="descripcion"
+                            class="form-control"
+                            rows="3"
+                            placeholder="Añade una breve descripción o lema del equipo (máx. 255 caracteres)"></textarea>
                 </div>
 
                 <div class="form-actions">
@@ -446,31 +380,12 @@
                         <i class="fas fa-paper-plane"></i> Enviar Solicitud
                     </button>
                     <a th:href="@{/equipo/invitar}" class="btn btn-secondary">
-                        <i class="fas fa-times"></i> Cancelar
+                        <i class="fas fa-arrow-left"></i> Volver a Seleccionar
                     </a>
                 </div>
             </form>
         </div>
     </main>
 </div>
-
-<script>
-    function filtrarJugadores() {
-        const input = document.getElementById('buscarJugador');
-        const filter = input.value.toLowerCase();
-        const jugadores = document.querySelectorAll('.player-option');
-
-        jugadores.forEach(jugador => {
-            const nombre = jugador.getAttribute('data-nombre').toLowerCase();
-            const username = jugador.getAttribute('data-username').toLowerCase();
-
-            if (nombre.includes(filter) || username.includes(filter)) {
-                jugador.style.display = 'flex';
-            } else {
-                jugador.style.display = 'none';
-            }
-        });
-    }
-</script>
 </body>
 </html>
