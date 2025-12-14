@@ -51,6 +51,7 @@ public class UsuarioServicio {
         String nombrePerfil = usuario.getPerfil().getDescripcion_perfil();
         return "ROLE_ADMINISTRADOR".equalsIgnoreCase(nombrePerfil);
     }
+
     public Usuario obtenerUsuarioPorId(Long idUsuario) {
         if (idUsuario == null) {
             return null;
@@ -76,9 +77,15 @@ public class UsuarioServicio {
             return null;
         }
     }
+
+    /**
+     * Lista todos los usuarios activos (eliminado=false) asegurando que las entidades
+     * relacionadas Individuo y Perfil se carguen en la misma consulta (JOIN FETCH).
+     * Esto resuelve los NullPointerExceptions en el controlador al acceder a u.getIndividuo().
+     */
     @Transactional(readOnly = true)
     public List<Usuario> listarTodos() {
-        return usuarioDao.findByEliminadoFalse();
+        return usuarioDao.findAllActiveWithDetails();
     }
 
 
