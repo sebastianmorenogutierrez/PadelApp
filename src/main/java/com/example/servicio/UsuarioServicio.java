@@ -100,7 +100,6 @@ public class UsuarioServicio {
             System.out.println("ID de usuario es nulo. No se puede modificar.");
             return;
         }
-
         Integer idInt = idUsuario.intValue();
         Usuario usuario = usuarioDao.findById(idInt).orElse(null);
 
