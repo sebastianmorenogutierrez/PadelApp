@@ -85,12 +85,29 @@ public class UsuarioServicio {
      */
     @Transactional(readOnly = true)
     public List<Usuario> listarTodos() {
+        // Asumo que tienes un método find AllActiveWithDetails en tu UsuarioDao
         return usuarioDao.findAllActiveWithDetails();
     }
 
-
+    /**
+     * Registra un nuevo usuario en el sistema, asegurando que el Individuo se guarde primero.
+     * * @param usuario El objeto Usuario a registrar, que contiene un objeto Individuo no persistente.
+     */
     @Transactional
     public void registrarNuevoUsuario(Usuario usuario) {
+        // 1. OBTENER Y GUARDAR EL INDIVIDUO
+        Individuo individuo = usuario.getIndividuo();
+
+        if (individuo == null) {
+            throw new IllegalArgumentException("La información personal (Individuo) no puede ser nula.");
+        }
+
+        // 🟢 PASO CLAVE: Guardar el Individuo para que la DB le asigne un ID
+        // Sin esto, el campo id_individuo en la tabla usuario es NULL, causando el error de persistencia.
+        individuo.setEliminado(false);
+        individuoDao.save(individuo);
+
+        // 2. ENCRIPTAR CONTRASEÑA Y GUARDAR EL USUARIO
         guardarUsuario(usuario);
     }
 
@@ -98,6 +115,7 @@ public class UsuarioServicio {
         String passEncriptada = passwordEncoder.encode(usuario.getPass_usuario());
         usuario.setPass_usuario(passEncriptada);
         usuario.setEliminado(false);
+        // Ahora el 'usuario' tiene un 'individuo' con un ID válido (persistente)
         usuarioDao.save(usuario);
     }
 
