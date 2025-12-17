@@ -44,11 +44,17 @@ public class ConfSeg {
         http
                 .authenticationProvider(authenticationProvider())
                 .authorizeHttpRequests(auth -> auth
+
+                        .requestMatchers("/API/registro").permitAll()
+
+                        // Permitir todas las rutas de acceso público (principalmente GET)
                         .requestMatchers(
                                 "/css/**", "/js/**", "/images/**",
-                                "/", "/principal", "/login","/registro", "/API/registro",
+                                "/", "/principal", "/login", "/registro",
                                 "/login?rolDesconocido"
                         ).permitAll()
+
+                        // Rutas que requieren autenticación
                         .requestMatchers("/api/**").authenticated()
                         .requestMatchers(
                                 "/correo/enviar", "/correo/masivo", "/correo/individual/{idUsuario}",

@@ -130,6 +130,36 @@
             border-top: 2px solid rgba(0, 184, 148, 0.3); /* Línea basada en primary */
         }
 
+        /* Estilos para mensajes de feedback */
+        .feedback {
+            padding: 15px;
+            margin-bottom: 20px;
+            border-radius: 10px;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .feedback.success {
+            background-color: rgba(0, 184, 148, 0.1); /* Fondo muy suave basado en primary */
+            color: var(--color-primary-dark);
+            border: 1px solid var(--color-primary);
+        }
+
+        .feedback.error {
+            background-color: rgba(214, 48, 49, 0.1); /* Fondo basado en danger */
+            color: var(--color-danger);
+            border: 1px solid var(--color-danger);
+        }
+
+        .validation-error {
+            color: var(--color-danger);
+            font-size: 13px;
+            margin-top: 5px;
+            font-weight: 500;
+        }
+
         .input-group {
             position: relative;
         }
@@ -154,41 +184,68 @@
 <body>
 <div class="container">
     <h2><i class="fas fa-user-plus"></i> Formulario de Registro</h2>
+
+    <div th:if="${mensajeExito}" class="feedback success">
+        <i class="fas fa-check-circle"></i>
+        <span th:text="${mensajeExito}"></span>
+    </div>
+
+    <div th:if="${mensajeError}" class="feedback error">
+        <i class="fas fa-exclamation-triangle"></i>
+        <span th:text="${mensajeError}"></span>
+    </div>
+
     <form th:action="@{/API/registro}" th:object="${usuario}" method="post">
+
+        <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
 
         <label for="nombreUsuario"><i class="fas fa-user"></i> Nombre de Usuario</label>
         <input type="text" id="nombreUsuario" th:field="*{nombreUsuario}" placeholder="Elige un nombre de usuario único" required>
+        <p th:if="${#fields.hasErrors('nombreUsuario')}" th:errors="*{nombreUsuario}" class="validation-error"></p>
 
         <label for="pass_usuario"><i class="fas fa-lock"></i> Contraseña</label>
         <input type="password" id="pass_usuario" th:field="*{pass_usuario}" placeholder="Mínimo 6 caracteres" required>
+        <p th:if="${#fields.hasErrors('pass_usuario')}" th:errors="*{pass_usuario}" class="validation-error"></p>
 
         <hr>
 
         <label for="nombreIndividuo"><i class="fas fa-signature"></i> Nombre</label>
         <input type="text" id="nombreIndividuo" th:field="*{individuo.nombre}" required>
+        <p th:if="${#fields.hasErrors('individuo.nombre')}" th:errors="*{individuo.nombre}" class="validation-error"></p>
+
 
         <label for="apellidoIndividuo"><i class="fas fa-signature"></i> Apellido</label>
         <input type="text" id="apellidoIndividuo" th:field="*{individuo.apellido}" required>
+        <p th:if="${#fields.hasErrors('individuo.apellido')}" th:errors="*{individuo.apellido}" class="validation-error"></p>
+
 
         <label for="cedulaIndividuo"><i class="fas fa-id-card"></i> Cédula</label>
         <input type="text" id="cedulaIndividuo" th:field="*{individuo.cedula}" required
                placeholder="Solo números (máx. 15 dígitos)"
                pattern="\d+" inputmode="numeric" maxlength="15"
                title="Solo números permitidos">
+        <p th:if="${#fields.hasErrors('individuo.cedula')}" th:errors="*{individuo.cedula}" class="validation-error"></p>
+
 
         <label for="correoIndividuo"><i class="fas fa-envelope"></i> Correo Electrónico</label>
         <input type="email" id="correoIndividuo" th:field="*{individuo.correo}" required>
+        <p th:if="${#fields.hasErrors('individuo.correo')}" th:errors="*{individuo.correo}" class="validation-error"></p>
+
 
         <label for="telefonoIndividuo"><i class="fas fa-phone"></i> Teléfono</label>
         <input type="text" id="telefonoIndividuo" th:field="*{individuo.telefono}" required
                placeholder="10 dígitos"
                pattern="\d{10}" inputmode="tel" maxlength="10"
                title="Debe contener exactamente 10 dígitos numéricos">
+        <p th:if="${#fields.hasErrors('individuo.telefono')}" th:errors="*{individuo.telefono}" class="validation-error"></p>
+
 
         <label for="edadIndividuo"><i class="fas fa-calendar-alt"></i> Edad</label>
         <input type="number" id="edadIndividuo" th:field="*{individuo.edad}" required
                min="1" max="120"
                title="Edad válida entre 1 y 120 años">
+        <p th:if="${#fields.hasErrors('individuo.edad')}" th:errors="*{individuo.edad}" class="validation-error"></p>
+
 
         <hr>
 
