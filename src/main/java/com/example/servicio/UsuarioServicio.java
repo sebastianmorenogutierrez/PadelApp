@@ -95,6 +95,11 @@ public class UsuarioServicio {
      */
     @Transactional
     public void registrarNuevoUsuario(Usuario usuario) {
+
+        if (usuarioDao.buscarPorNombre(usuario.getNombreUsuario()) != null) {
+            // Lanza una excepción que debe ser capturada por el controlador.
+            throw new IllegalStateException("El nombre de usuario '" + usuario.getNombreUsuario() + "' ya está registrado.");
+        }
         // 1. OBTENER Y GUARDAR EL INDIVIDUO
         Individuo individuo = usuario.getIndividuo();
 

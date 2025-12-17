@@ -84,16 +84,27 @@ public class ControladorREST {
 
             usuario.getIndividuo().setEliminado(false);
 
+            // 🟢 El servicio ahora verifica unicidad y guarda el Individuo primero.
             usuarioServicio.registrarNuevoUsuario(usuario);
 
             redirectAttributes.addFlashAttribute("mensajeExito", "¡Registro exitoso! Ya puedes iniciar sesión.");
             return "redirect:/login";
 
-        } catch (Exception e) {
-            System.err.println("Error al guardar el nuevo usuario: " + e.getMessage());
+            // 🟢 CORRECCIÓN: Manejar la excepción específica de unicidad/lógica del negocio
+        } catch (IllegalStateException e) {
+            // Captura errores lanzados por el servicio (ej: nombre de usuario ya existe)
+            System.err.println("Error de Lógica/Unicidad en el registro: " + e.getMessage());
             e.printStackTrace();
 
-            redirectAttributes.addFlashAttribute("mensajeError", "Hubo un error al crear la cuenta: " + e.getMessage());
+            // Pasa el mensaje de error al formulario de registro
+            redirectAttributes.addFlashAttribute("mensajeError", e.getMessage());
+            return "redirect:/registro";
+
+        } catch (Exception e) {
+            System.err.println("Error grave al guardar el nuevo usuario: " + e.getMessage());
+            e.printStackTrace();
+
+            redirectAttributes.addFlashAttribute("mensajeError", "Hubo un error interno al crear la cuenta. Intenta de nuevo.");
             return "redirect:/registro";
         }
     }
