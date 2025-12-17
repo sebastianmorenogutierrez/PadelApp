@@ -22,10 +22,7 @@ public class Usuario implements Serializable {
     @ManyToOne
     @JoinColumn(name = "id_perfil", referencedColumnName = "id_perfil")
     private Perfil perfil;
-
-    // 🟢 CAMBIO CRÍTICO APLICADO: Se usa @ManyToOne en lugar de @OneToOne
-    // Esto es más estable para la clave foránea en la tabla "usuario".
-    @ManyToOne(fetch = FetchType.EAGER)
+    @ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.PERSIST)
     @JoinColumn(name = "id_individuo", referencedColumnName = "id_individuo")
     private Individuo individuo;
 
